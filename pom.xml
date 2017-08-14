@@ -112,10 +112,10 @@
                         </goals>
                         <configuration>
                             <headerType>console</headerType>
-                            <outfile>target/uadb.exe</outfile>
+                            <outfile>target/dice.exe</outfile>
                             <icon>misc/icon.ico</icon>
-                            <jar>target/uber-adb-tools-${project.version}.jar</jar>
-                            <errTitle>uadb</errTitle>
+                            <jar>target/dice-${project.version}.jar</jar>
+                            <errTitle>dice</errTitle>
                             <classPath>
                                 <mainClass>at.favre.tools.dice.RndTool</mainClass>
                                 <addDependencies>false</addDependencies>
@@ -135,9 +135,9 @@
                                 <copyright>Patrick Favre-Bulle, 2016</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}</txtProductVersion>
-                                <productName>Uber Adb Tools</productName>
-                                <internalName>uber-adb-tools</internalName>
-                                <originalFilename>uadb.exe</originalFilename>
+                                <productName>Dice Random Generator</productName>
+                                <internalName>dice</internalName>
+                                <originalFilename>dice.exe</originalFilename>
                                 <language>EN</language>
                             </versionInfo>
                         </configuration>
