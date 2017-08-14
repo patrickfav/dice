@@ -8,9 +8,23 @@ import static org.junit.Assert.assertNull;
 
 public class CLIParserTest {
     @Test
-    public void testSimple() throws Exception {
-        Arg parsedArg = CLIParser.parse(asArgArray("-l 4 -" + CLIParser.ARG_COUNT + " 1123 " + "-" + CLIParser.ARG_FORMAT + " testTest"));
+    public void testSimpleDefaults() throws Exception {
+        Arg parsedArg = CLIParser.parse(asArgArray("67"));
+        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, null, 67, Arg.DEFAULT_COUNT, false);
+        assertEquals(expectedArg, parsedArg);
+    }
+
+    @Test
+    public void testSimpleCount() throws Exception {
+        Arg parsedArg = CLIParser.parse(asArgArray("4 -" + CLIParser.ARG_COUNT + " 1123 " + "-" + CLIParser.ARG_ENCODING + " testTest"));
         Arg expectedArg = new Arg("testTest", null, 4, 1123, false);
+        assertEquals(expectedArg, parsedArg);
+    }
+
+    @Test
+    public void testSimpleSeed() throws Exception {
+        Arg parsedArg = CLIParser.parse(asArgArray("128 -" + CLIParser.ARG_SEED + " ahdalsudzasldjhasdu"));
+        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, "ahdalsudzasldjhasdu", 128, Arg.DEFAULT_COUNT, false);
         assertEquals(expectedArg, parsedArg);
     }
 

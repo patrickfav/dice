@@ -10,6 +10,6 @@ public class DecimalEncoder extends AlphabetEncoder {
 
     @Override
     public String[] names() {
-        return new String[]{"dec"};
+        return new String[]{"dec", "decimal"};
     }
 }

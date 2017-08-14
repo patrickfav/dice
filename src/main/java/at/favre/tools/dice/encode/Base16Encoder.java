@@ -1,5 +1,6 @@
 package at.favre.tools.dice.encode;
 
+import at.favre.tools.dice.ui.Arg;
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -23,6 +24,6 @@ public class Base16Encoder implements Encoder {
 
     @Override
     public String[] names() {
-        return new String[]{"base16", "hex"};
+        return new String[]{"base16", Arg.DEFAULT_ENCODING};
     }
 }
