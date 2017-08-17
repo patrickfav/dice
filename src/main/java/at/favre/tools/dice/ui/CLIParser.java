@@ -9,6 +9,7 @@ public class CLIParser {
     static final String ARG_ENCODING = "e";
     static final String ARG_COUNT = "c";
     static final String ARG_SEED = "s";
+    static final String ARG_ONLINE = "o";
     static final String ARG_DEBUG = "d";
 
     public static Arg parse(String[] args) {
@@ -48,6 +49,7 @@ public class CLIParser {
             }
 
             argument.debug = commandLine.hasOption(ARG_DEBUG);
+            argument.online = commandLine.hasOption(ARG_ONLINE);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -74,7 +76,9 @@ public class CLIParser {
         Option count = Option.builder(ARG_COUNT).longOpt("count").argName("number").desc("How many randoms should be generated").hasArgs().build();
         Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("What output encode should be used").build();
         Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string").hasArgs().desc("Uses the utf-8 byte representation to seed the SecureRandom.").build();
-        Option debugOpt = Option.builder().longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
+        Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
+        Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("online").hasArg(false).desc("Will try to seed the random generator with a seed from Random.org (needs internet connection)").build();
+
 
         Option help = Option.builder("h").longOpt("help").desc("Prints docs").build();
         Option version = Option.builder("v").longOpt("version").desc("Prints current version.").build();
@@ -83,7 +87,9 @@ public class CLIParser {
 
         options.addOptionGroup(mainArgs);
         options.addOption(count).addOption(encodeing)
-                .addOption(seed).addOption(debugOpt).addOption(help).addOption(version);
+                .addOption(seed).addOption(onlineOpt)
+                .addOption(debugOpt).addOption(help)
+                .addOption(version);
 
         return options;
     }

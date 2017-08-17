@@ -12,15 +12,17 @@ public class Arg {
     public int count;
 
     public boolean debug = false;
+    public boolean online = false;
 
     public Arg() {
     }
 
-    public Arg(String encoding, String seed, int length, int count, boolean debug) {
+    public Arg(String encoding, String seed, int length, int count, boolean online, boolean debug) {
         this.encoding = encoding;
         this.seed = seed;
         this.length = length;
         this.count = count;
+        this.online = online;
         this.debug = debug;
     }
 
@@ -34,6 +36,7 @@ public class Arg {
         if (length != arg.length) return false;
         if (count != arg.count) return false;
         if (debug != arg.debug) return false;
+        if (online != arg.online) return false;
         if (encoding != null ? !encoding.equals(arg.encoding) : arg.encoding != null) return false;
         return seed != null ? seed.equals(arg.seed) : arg.seed == null;
     }
@@ -45,6 +48,7 @@ public class Arg {
         result = 31 * result + length;
         result = 31 * result + count;
         result = 31 * result + (debug ? 1 : 0);
+        result = 31 * result + (online ? 1 : 0);
         return result;
     }
 }

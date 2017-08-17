@@ -2,6 +2,7 @@ package at.favre.tools.dice;
 
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.Loader;
+import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 
@@ -26,9 +27,16 @@ public class RndTool {
         Loader loader = new Loader();
         List<Encoder> encoders = loader.load();
 
+        byte[] seed;
+        SecureRandom secureRandom = new SecureRandom();
+        if (arguments.online) {
+            seed = new RandomOrgServiceHandler(arguments.debug).getRandom();
+            secureRandom.setSeed(seed);
+        }
+
         for (Encoder encoder : encoders) {
             if (Arrays.asList(encoder.names()).contains(arguments.encoding)) {
-                printRandoms(arguments, encoder);
+                printRandoms(arguments, encoder, secureRandom);
                 return true;
             }
         }
@@ -36,10 +44,9 @@ public class RndTool {
         return false;
     }
 
-    private static void printRandoms(Arg arguments, Encoder encoder) {
+    private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
         for (int i = 0; i < arguments.count; i++) {
             byte[] rnd = new byte[arguments.length];
-            SecureRandom secureRandom = new SecureRandom();
             secureRandom.nextBytes(rnd);
             if (arguments.seed != null) {
                 secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
