@@ -19,7 +19,12 @@ after_success:
 deploy:
   - provider: releases
     api_key:
-      secure: "Y43tHaZXsc1K+FT1C8MO3A9BnjqYmfySXoC9CDEZvR6bzV71+rP/1hk4h4sRGqD1S6b5K0+TdGrpfWa1Isf1XOtHSPjp5qMvsQ+suydMlVh6wCE2l08m747/9Cq2LKT+c7uxNgq8ySZwuCWyinXDQpwxS2FThbs09XNu8GSH6eg++BAGAuLAwWctuyY9xYw1R5RPPUCDziWQE45xHxOK/HE1LHs3X4843DBZlN2tpJlUbQgCzSBgy+KdaCU5jC1pxH+haKBKUsCqVQFPaBoZT2UQAP7XmwSD7pxjevAn5+j8KrRU2dlCKgHqlf9ZrqA1sfC+Hv4lAbPdPaLL7s+qhtPDQn5SoNdTLvG0nIh1hvsOmT+9mYWxD45Ujbib20CReicwSlQX3t+4jkQGIEawBpozjZMKWyWksA0WMDuXZwWkCp/GA44Bcjbb8fjJp4K70COtQziphLTl9BAfb24kLxCaJ83Vo60aAp03KUChk+u5q9jqFvl7n0DGoUqhfiYyguG3yBfNGoFDTbz39DRsaf9QGaxBkIaBemw77Q7PnZEuhDIShSPconWZBOZb1KSgIugPzw2SQp1PuFvZYNYd2yg6PvyNVjl1OMrFY5pwyeJHrcE/7rwNQTnA1QeINOn8WRNr/eUlMHeTvpj3DW/f6OhTdW3meVzWoCqG5fvGw1k="
+      secure: "MB0WOVvAm07Csmt1o+9Wqb2l6nnEuvRS4eSHqTVDacdz4/HZLYhd04dtSsP4LIi3flN5pgPHUt2xNv7TfgaA1/xK9QXHpnA02QA15q1Zx8H2XxiDZQPy1JD04AVGve
+      jZ0+SFZadM5CyRZt1Oe3j4+fl+RsZuC6OLmimN+Mk8jwjyjtckEKyRqNvjJ+rCpjOHQv2a+0R241CNSfilamOR8zFxtxsbGziyPns0kpi/nEDn9Yjbk6XWc5P69OHlHDT9MnXPW65
+      zVX5fc+eLRHlRxcJD/zSLC/chvRVo8WsXgahpr4U2uCkBWzwdNwnCQjokd+sRGGv5Vf1SBMHH6cLZcso18cgCci/Zsi7rgVOOCdNb+WcAl4fdP30Iz31hvdwxuRHILja+6JiCu272
+      aDkxayHOk7TjGNPbBUwt7w01ChU+hKOGSw8vaT1NByuur84IkfFdF3FD8LzpRPbqG2SBIxnctZT6OqQaAs/6xyKxXWejNwIA+qRrOLe9TJ889FUlsEeiKBcDWKc99nBi9i4fw4uHt
+      yAD9+VCF3/MVw+EzK1SgbzLGw1tUENPTPTfd6UCektWFknF62VKB+zi4Nl+t5OgYeUbHDUxQkwvOyMKF5NLk1PYT6cFIQwMdA0i/WMYoK8jGOCm46jasKjH3SkOyNp0mMz/XEmJCY
+      b2+Tce5KM="
     file_glob: true
     file:
       - "target/dice-*.jar"

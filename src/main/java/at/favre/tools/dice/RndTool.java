@@ -5,6 +5,7 @@ import at.favre.tools.dice.encode.Loader;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
+import at.favre.tools.dice.util.ByteUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -30,8 +31,10 @@ public class RndTool {
         byte[] seed;
         SecureRandom secureRandom = new SecureRandom();
         if (arguments.online) {
+            System.out.println("Getting seed from random.org ...");
             seed = new RandomOrgServiceHandler(arguments.debug).getRandom();
             secureRandom.setSeed(seed);
+            System.out.println("Using seed "+ ByteUtils.bytesToHex(seed)+"\n");
         }
 
         for (Encoder encoder : encoders) {
