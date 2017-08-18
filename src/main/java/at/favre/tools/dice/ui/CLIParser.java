@@ -63,7 +63,7 @@ public class CLIParser {
     }
 
     private static Integer parseLength(List<String> args) {
-        if (args.get(0).matches("^-?\\d+$")) {
+        if (!args.isEmpty() && args.get(0).matches("^-?\\d+$")) {
             return Integer.valueOf(args.get(0));
         } else {
             return Arg.DEFAULT_LENGTH;

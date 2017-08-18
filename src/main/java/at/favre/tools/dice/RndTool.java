@@ -9,6 +9,7 @@ import at.favre.tools.dice.ui.CLIParser;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,15 +49,17 @@ public class RndTool {
     }
 
     private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
+        List<String> outputList = new ArrayList<>(arguments.length);
         for (int i = 0; i < arguments.count; i++) {
             byte[] rnd = new byte[arguments.length];
             secureRandom.nextBytes(rnd);
             if (arguments.seed != null) {
                 secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
             }
-            String encoded = encoder.encode(rnd);
-            System.out.println(encoded);
+            outputList.add(encoder.encode(rnd));
         }
+
+        new ColumnRenderer().render(outputList, System.out);
         System.out.println();
     }
 }

@@ -3,7 +3,7 @@ package at.favre.tools.dice.ui;
 
 public class Arg {
     static final int DEFAULT_LENGTH = 16;
-    static final int DEFAULT_COUNT = 10;
+    static final int DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
     public String encoding;
