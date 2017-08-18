@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-public class AsciiEncoderTest extends AEncoderTest {
+public class Ascii94EncoderTest extends AEncoderTest {
     @Override
     void check(byte[] original, String encode) {
 
@@ -8,6 +8,6 @@ public class AsciiEncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new AsciiEncoder();
+        return new Ascii94Encoder();
     }
 }

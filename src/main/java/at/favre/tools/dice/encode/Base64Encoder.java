@@ -9,7 +9,7 @@ public class Base64Encoder implements Encoder {
 
     @Override
     public String encode(byte[] array) {
-        return new Base64().encodeAsString(array);
+        return new Base64().encodeAsString(array).replace("=", "");
     }
 
     @Override

@@ -1,11 +1,11 @@
 package at.favre.tools.dice;
 
+import at.favre.tools.dice.encode.Base64Encoder;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.Loader;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
-import org.apache.commons.codec.binary.Base32;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -34,7 +34,7 @@ public class RndTool {
             System.out.print("Getting seed from random.org. ");
             seed = new RandomOrgServiceHandler(arguments.debug).getRandom();
             secureRandom.setSeed(seed);
-            System.out.println("Using seed " + new Base32().encodeToString(seed) + "\n");
+            System.out.println("Using seed '" + new Base64Encoder().encode(seed) + "'\n");
         }
 
         for (Encoder encoder : encoders) {
@@ -57,5 +57,6 @@ public class RndTool {
             String encoded = encoder.encode(rnd);
             System.out.println(encoded);
         }
+        System.out.println();
     }
 }
