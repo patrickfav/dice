@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-public class DecimalEncoderTest extends AEncoderTest {
+public class DecimalByteEncoderTest extends AEncoderTest {
     @Override
     void check(byte[] original, String encode) {
 
@@ -8,6 +8,6 @@ public class DecimalEncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new DecimalEncoder();
+        return new DecimalByteEncoder();
     }
 }
