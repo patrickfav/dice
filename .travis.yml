@@ -11,7 +11,7 @@ before_script:
 
 script:
   - mvn install -X
-  - mvn clean package
+  - mvn clean package checksum:artifacts
 
 after_success:
   - mvn test jacoco:report coveralls:report
@@ -24,6 +24,7 @@ deploy:
     file:
       - "target/dice-*.jar"
       - "target/dice.exe"
+      - "target/checksum-sha256.txt"
     skip_cleanup: true
     on:
       branch: master
