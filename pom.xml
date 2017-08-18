@@ -175,6 +175,11 @@
             <version>3.8.1</version>
         </dependency>
         <dependency>
+            <groupId>com.github.fzakaria</groupId>
+            <artifactId>ascii85</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
