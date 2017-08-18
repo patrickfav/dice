@@ -7,7 +7,7 @@ import at.favre.tools.dice.encode.logic.Ascii85;
  *
  * See https://github.com/fzakaria/ascii85
  */
-public class Ascii85Encoder implements Encoder {
+public class Ascii85Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {

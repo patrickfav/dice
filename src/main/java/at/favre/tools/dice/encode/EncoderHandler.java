@@ -2,7 +2,7 @@ package at.favre.tools.dice.encode;
 
 import java.util.*;
 
-public class Loader {
+public class EncoderHandler {
 
     public static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
             new AlphaNumericEncoder(),
@@ -37,5 +37,29 @@ public class Loader {
         }
 
         return ENCODERS;
+    }
+
+    public Encoder findByName(String name) {
+        if (name != null) {
+            for (Encoder encoder : ENCODERS) {
+                if (Arrays.asList(encoder.names()).contains(name)) {
+                    return encoder;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String returnRegistryInfo() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Encoder encoder : ENCODERS) {
+            for (String name : encoder.names()) {
+                sb.append(name).append(", ");
+            }
+            sb.delete(sb.length() - 2, sb.length()).append("\n");
+            sb.append("\tDescription: ").append(encoder.getDescription()).append("\n");
+        }
+        return sb.toString();
     }
 }

@@ -7,7 +7,7 @@ import java.util.Arrays;
 /**
  * Encodes in to binary representation e.g. <code>010010011</code>
  */
-public class BinaryEncoder implements Encoder {
+public class BinaryEncoder extends AByteEncoder {
 
     private final static int GROUP_LENGTH = 8;
 
@@ -28,5 +28,10 @@ public class BinaryEncoder implements Encoder {
     @Override
     public String[] names() {
         return new String[]{"binary", "base2", "bin", "bit"};
+    }
+
+    @Override
+    public String getDescription() {
+        return "Binary encoding in 8 bit groups e.g 010010011 110000011";
     }
 }

@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Encodes every byte as a decimal
  */
-public class DecimalByteEncoder implements Encoder {
+public class DecimalByteEncoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {

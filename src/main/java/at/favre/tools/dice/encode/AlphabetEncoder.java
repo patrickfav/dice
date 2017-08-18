@@ -19,4 +19,9 @@ public abstract class AlphabetEncoder implements Encoder {
         }
         return sb.toString();
     }
+
+    @Override
+    public String getDescription() {
+        return "<TODO>";
+    }
 }

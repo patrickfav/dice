@@ -8,10 +8,10 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class LoaderTest {
+public class EncoderHandlerTest {
     @Test
     public void load() throws Exception {
-        List<Encoder> encoders = new Loader().load();
+        List<Encoder> encoders = new EncoderHandler().load();
 
         System.out.println(Arrays.toString(encoders.toArray()));
 

@@ -2,7 +2,7 @@ package at.favre.tools.dice;
 
 import at.favre.tools.dice.encode.Base32Encoder;
 import at.favre.tools.dice.encode.Encoder;
-import at.favre.tools.dice.encode.Loader;
+import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
@@ -13,7 +13,6 @@ import org.apache.commons.codec.net.URLCodec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RndTool {
@@ -29,8 +28,16 @@ public class RndTool {
     }
 
     static boolean execute(Arg arguments) {
-        Loader loader = new Loader();
-        List<Encoder> encoders = loader.load();
+        EncoderHandler loader = new EncoderHandler();
+        loader.load();
+
+        Encoder encoder = loader.findByName(arguments.encoding);
+
+        if (encoder == null) {
+            System.err.println("Given encoder '" + arguments.encoding + "' is not available.");
+            System.err.println("\nAvailable encoders:\n\n" + loader.returnRegistryInfo());
+            System.exit(2);
+        }
 
         SecureRandom secureRandom = new SecureRandom();
         if (arguments.urlencode) {
@@ -58,14 +65,8 @@ public class RndTool {
 
         System.out.println();
 
-        for (Encoder encoder : encoders) {
-            if (Arrays.asList(encoder.names()).contains(arguments.encoding)) {
-                printRandoms(arguments, encoder, secureRandom);
-                return true;
-            }
-        }
-
-        return false;
+        printRandoms(arguments, encoder, secureRandom);
+        return true;
     }
 
     private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {

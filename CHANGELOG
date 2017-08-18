@@ -4,6 +4,7 @@
 * add proguard
 * add column output
 * add url encode flag
+* add list of encodings
 
 ## v0.2.0
 * add external seeding with random.org

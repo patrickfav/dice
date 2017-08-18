@@ -1,5 +1,6 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.util.CmdUtil;
 import org.apache.commons.cli.*;
 
@@ -76,7 +77,7 @@ public class CLIParser {
         Options options = new Options();
 
         Option count = Option.builder(ARG_COUNT).longOpt("count").argName("number").desc("How many randoms should be generated").hasArgs().build();
-        Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("What output encode should be used").build();
+        Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("What output encode should be used. Available encodings include:\n" + new EncoderHandler().returnRegistryInfo()).build();
         Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string").hasArgs().desc("Uses the utf-8 byte representation to seed the SecureRandom.").build();
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
         Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();

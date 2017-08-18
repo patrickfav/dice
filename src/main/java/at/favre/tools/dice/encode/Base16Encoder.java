@@ -6,7 +6,7 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * Encodes in to base16 (ie. hex) e.g. <code>6e33a8f4c9f69e91</code>
  */
-public class Base16Encoder implements Encoder {
+public class Base16Encoder extends AByteEncoder {
     private boolean lowerCase;
 
     public Base16Encoder() {
@@ -25,5 +25,10 @@ public class Base16Encoder implements Encoder {
     @Override
     public String[] names() {
         return new String[]{"base16", Arg.DEFAULT_ENCODING};
+    }
+
+    @Override
+    public String getDescription() {
+        return "Hex or Base16 encoding (lowercase) e.g 6e33a8f4c";
     }
 }
