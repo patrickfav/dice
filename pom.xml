@@ -100,6 +100,40 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.11</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                        <configuration>
+                            <includeDependency>false</includeDependency>
+                            <attachArtifactClassifier>proguard</attachArtifactClassifier>
+                            <attach>true</attach>
+                            <proguardVersion>5.3.3</proguardVersion>
+                            <obfuscate>true</obfuscate>
+                            <options>
+                                <option>-include ${project.basedir}/proguard-rules.pro</option>
+                            </options>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>5.3.3</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
                 <version>1.7.15</version>
@@ -114,7 +148,7 @@
                             <headerType>console</headerType>
                             <outfile>target/dice.exe</outfile>
                             <icon>misc/icon.ico</icon>
-                            <jar>target/dice-${project.version}.jar</jar>
+                            <jar>target/dice-${project.version}-proguard.jar</jar>
                             <errTitle>dice</errTitle>
                             <classPath>
                                 <mainClass>at.favre.tools.dice.RndTool</mainClass>
@@ -192,11 +226,6 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
             <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.11</version>
         </dependency>
         <!-- test -->
         <dependency>

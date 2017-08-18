@@ -24,7 +24,8 @@ deploy:
     file:
       - "target/dice-*.jar"
       - "target/dice.exe"
-      - "target/checksum-sha256.txt"
+      - "target/proguard_map.txt"
+      - "target/*.sha256"
     skip_cleanup: true
     on:
       branch: master

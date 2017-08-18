@@ -1,6 +1,6 @@
 package at.favre.tools.dice;
 
-import at.favre.tools.dice.encode.Base64Encoder;
+import at.favre.tools.dice.encode.Base32Encoder;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.Loader;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
@@ -32,10 +32,10 @@ public class RndTool {
         byte[] seed;
         SecureRandom secureRandom = new SecureRandom();
         if (arguments.online) {
-            System.out.print("Getting seed from random.org. ");
+            System.out.print("Fetching from random.org. ");
             seed = new RandomOrgServiceHandler(arguments.debug).getRandom();
             secureRandom.setSeed(seed);
-            System.out.println("Using seed '" + new Base64Encoder().encode(seed) + "'\n");
+            System.out.println("Got seed [" + new Base32Encoder().encode(seed) + "] after " + 500 + "ms\n");
         }
 
         for (Encoder encoder : encoders) {

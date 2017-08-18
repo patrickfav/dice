@@ -1,34 +1,33 @@
 package at.favre.tools.dice.encode;
 
-import org.reflections.Reflections;
-
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Loader {
 
+    public static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
+            new AlphaNumericEncoder(),
+            new Ascii85Encoder(),
+            new Ascii94Encoder(),
+            new Base16Encoder(),
+            new Base32Encoder(),
+            new Base64Encoder(),
+            new BinaryEncoder(),
+            new CEncoder(),
+            new CSharpEncoder(),
+            new DecimalByteEncoder(),
+            new JavaByteArrayEncoder(),
+            new KotlinByteArrayEncoder(),
+            new NodeJsEncoder(),
+            new NumericEncoder(),
+            new PhpEncoder(),
+            new Python3Encoder(),
+            new SwiftEncoder()
+    ));
+
     public List<Encoder> load() {
-        Reflections reflections = new Reflections("at.favre.tools.dice.encode");
-
-        Set<Class<? extends Encoder>> allClasses = reflections.getSubTypesOf(Encoder.class);
-
-        List<Encoder> encoders = new ArrayList<>(allClasses.size());
-        for (Class<? extends Encoder> clazz : allClasses) {
-            if (!Modifier.isAbstract(clazz.getModifiers())) {
-                try {
-                    encoders.add(clazz.newInstance());
-                } catch (Exception e) {
-                    throw new IllegalStateException("cannot instanciate " + clazz.getSimpleName() + ". Does it have a no-arg constructor?");
-                }
-            }
-        }
-
         Set<String> modes = new HashSet<>();
 
-        for (Encoder encoder : encoders) {
+        for (Encoder encoder : ENCODERS) {
             for (String name : encoder.names()) {
                 if (modes.contains(name)) {
                     throw new IllegalStateException(name + " is already defined in another encoder");
@@ -37,6 +36,6 @@ public class Loader {
             }
         }
 
-        return encoders;
+        return ENCODERS;
     }
 }
