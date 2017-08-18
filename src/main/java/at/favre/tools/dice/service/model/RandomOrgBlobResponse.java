@@ -1,4 +1,4 @@
-package at.favre.tools.dice.service;
+package at.favre.tools.dice.service.model;
 
 import java.util.Arrays;
 

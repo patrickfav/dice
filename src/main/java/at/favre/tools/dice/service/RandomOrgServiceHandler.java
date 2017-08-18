@@ -1,5 +1,7 @@
 package at.favre.tools.dice.service;
 
+import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
+import at.favre.tools.dice.service.model.RandomOrgBlobResponse;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.codec.binary.Base64;
@@ -22,9 +24,13 @@ public class RandomOrgServiceHandler {
          */
     private static final String API_KEY = "ae169728-dec5-4771-b2e8-cc1801aaad70";
 
-    public byte[] getRandom() {
+    public Result getRandom() {
+        long startTime = System.currentTimeMillis();
+
         OkHttpClient client;
-        if(debug) {
+        Exception error = null;
+        String errMsg = null;
+        if (debug) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -44,12 +50,39 @@ public class RandomOrgServiceHandler {
             Response<RandomOrgBlobResponse> response = service.getRandom(new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(API_KEY, 1, 128))).execute();
 
             if (response.isSuccessful() && response.body() != null) {
-                return new Base64().decode(response.body().result.random.data[0]);
+                return new Result(new Base64().decode(response.body().result.random.data[0]), System.currentTimeMillis() - startTime);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            error = e;
+            errMsg = "Error during http request: " + e.getMessage();
         }
-        return null;
+
+        return new Result(error, errMsg);
+    }
+
+    public static class Result {
+        public final byte[] seed;
+        public final long durationMs;
+        public final Throwable t;
+        public final String errorMsg;
+
+        public Result(byte[] seed, long durationMs) {
+            this.seed = seed;
+            this.durationMs = durationMs;
+            this.t = null;
+            this.errorMsg = null;
+        }
+
+        public Result(Throwable t, String errorMsg) {
+            this.durationMs = 0;
+            this.seed = null;
+            this.t = t;
+            this.errorMsg = errorMsg;
+        }
+
+        public boolean isError() {
+            return seed == null;
+        }
     }
 }

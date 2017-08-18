@@ -49,7 +49,7 @@ public class CLIParser {
             }
 
             argument.debug = commandLine.hasOption(ARG_DEBUG);
-            argument.online = commandLine.hasOption(ARG_ONLINE);
+            argument.offline = commandLine.hasOption(ARG_ONLINE);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -77,7 +77,7 @@ public class CLIParser {
         Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("What output encode should be used").build();
         Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string").hasArgs().desc("Uses the utf-8 byte representation to seed the SecureRandom.").build();
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
-        Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("online").hasArg(false).desc("Will try to seed the random generator with a seed from Random.org (needs internet connection)").build();
+        Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();
 
 
         Option help = Option.builder("h").longOpt("help").desc("Prints docs").build();

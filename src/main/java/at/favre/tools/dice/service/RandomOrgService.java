@@ -1,5 +1,7 @@
 package at.favre.tools.dice.service;
 
+import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
+import at.favre.tools.dice.service.model.RandomOrgBlobResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;

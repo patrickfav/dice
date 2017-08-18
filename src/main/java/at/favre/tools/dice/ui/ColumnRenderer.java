@@ -1,4 +1,4 @@
-package at.favre.tools.dice;
+package at.favre.tools.dice.ui;
 
 import java.io.PrintStream;
 import java.util.List;

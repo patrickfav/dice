@@ -53,7 +53,17 @@
 
 # keep all public classes in main package
 -keep public class at.favre.tools.dice.RndTool { public *; }
+-keep class at.favre.tools.dice.service.model.** { *; }
+-keep class at.favre.tools.dice.service.model.**$* { *; }
+-keep class at.favre.tools.dice.service.** { *; }
+
 
 -dontwarn okio.**
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
+
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+-keep class sun.misc.Unsafe { *; }

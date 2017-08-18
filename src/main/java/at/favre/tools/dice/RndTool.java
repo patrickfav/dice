@@ -6,6 +6,7 @@ import at.favre.tools.dice.encode.Loader;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
+import at.favre.tools.dice.ui.ColumnRenderer;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -29,14 +30,29 @@ public class RndTool {
         Loader loader = new Loader();
         List<Encoder> encoders = loader.load();
 
-        byte[] seed;
         SecureRandom secureRandom = new SecureRandom();
-        if (arguments.online) {
+
+        if (arguments.seed != null) {
+            System.out.println("Use provided seed [" + new Base32Encoder().encode(arguments.seed.getBytes(StandardCharsets.UTF_8)) + "].");
+            secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
+        } else if (!arguments.offline) {
             System.out.print("Fetching from random.org. ");
-            seed = new RandomOrgServiceHandler(arguments.debug).getRandom();
-            secureRandom.setSeed(seed);
-            System.out.println("Got seed [" + new Base32Encoder().encode(seed) + "] after " + 500 + "ms\n");
+            RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug).getRandom();
+            if (!seedResult.isError()) {
+                secureRandom.setSeed(seedResult.seed);
+                System.out.println("Got seed [" + new Base32Encoder().encode(seedResult.seed) + "] after " + seedResult.durationMs + "ms");
+            } else {
+                System.err.println("ERROR " + seedResult.errorMsg);
+                System.err.println("Try using --offline to skip online seeding or --debug for more information.");
+
+                if (arguments.debug && seedResult.t != null) {
+                    seedResult.t.printStackTrace();
+                }
+                System.exit(500);
+            }
         }
+
+        System.out.println();
 
         for (Encoder encoder : encoders) {
             if (Arrays.asList(encoder.names()).contains(arguments.encoding)) {
@@ -53,9 +69,7 @@ public class RndTool {
         for (int i = 0; i < arguments.count; i++) {
             byte[] rnd = new byte[arguments.length];
             secureRandom.nextBytes(rnd);
-            if (arguments.seed != null) {
-                secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
-            }
+
             outputList.add(encoder.encode(rnd));
         }
 
