@@ -10,6 +10,7 @@ public class CLIParser {
     static final String ARG_COUNT = "c";
     static final String ARG_SEED = "s";
     static final String ARG_ONLINE = "o";
+    static final String ARG_URLENCODE = "u";
     static final String ARG_DEBUG = "d";
 
     public static Arg parse(String[] args) {
@@ -50,6 +51,7 @@ public class CLIParser {
 
             argument.debug = commandLine.hasOption(ARG_DEBUG);
             argument.offline = commandLine.hasOption(ARG_ONLINE);
+            argument.urlencode = commandLine.hasOption(ARG_URLENCODE);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -78,6 +80,7 @@ public class CLIParser {
         Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string").hasArgs().desc("Uses the utf-8 byte representation to seed the SecureRandom.").build();
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
         Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();
+        Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
 
 
         Option help = Option.builder("h").longOpt("help").desc("Prints docs").build();
@@ -88,6 +91,7 @@ public class CLIParser {
         options.addOptionGroup(mainArgs);
         options.addOption(count).addOption(encodeing)
                 .addOption(seed).addOption(onlineOpt)
+                .addOption(urlencodeOpt)
                 .addOption(debugOpt).addOption(help)
                 .addOption(version);
 

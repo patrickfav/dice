@@ -13,16 +13,18 @@ public class Arg {
 
     public boolean debug = false;
     public boolean offline = false;
+    public boolean urlencode = false;
 
     public Arg() {
     }
 
-    public Arg(String encoding, String seed, int length, int count, boolean offline, boolean debug) {
+    public Arg(String encoding, String seed, int length, int count, boolean offline, boolean urlencode, boolean debug) {
         this.encoding = encoding;
         this.seed = seed;
         this.length = length;
         this.count = count;
         this.offline = offline;
+        this.urlencode = urlencode;
         this.debug = debug;
     }
 
@@ -37,6 +39,7 @@ public class Arg {
         if (count != arg.count) return false;
         if (debug != arg.debug) return false;
         if (offline != arg.offline) return false;
+        if (urlencode != arg.urlencode) return false;
         if (encoding != null ? !encoding.equals(arg.encoding) : arg.encoding != null) return false;
         return seed != null ? seed.equals(arg.seed) : arg.seed == null;
     }
@@ -49,6 +52,7 @@ public class Arg {
         result = 31 * result + count;
         result = 31 * result + (debug ? 1 : 0);
         result = 31 * result + (offline ? 1 : 0);
+        result = 31 * result + (urlencode ? 1 : 0);
         return result;
     }
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class RndToolTest {
     @Test
     public void execute() throws Exception {
-        RndTool.execute(new Arg("java", null, 12, 10, false, false));
+        RndTool.execute(new Arg("java", null, 12, 10, false, false, false));
     }
 
 }

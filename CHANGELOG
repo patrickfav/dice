@@ -3,6 +3,7 @@
 ## v0.3.0
 * add proguard
 * add column output
+* add url encode flag
 
 ## v0.2.0
 * add external seeding with random.org
