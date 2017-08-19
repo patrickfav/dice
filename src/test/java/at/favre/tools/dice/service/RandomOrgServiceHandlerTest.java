@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class RandomOrgServiceHandlerTest {
     @Test
     public void getRandom() throws Exception {
-        RandomOrgServiceHandler.Result random = new RandomOrgServiceHandler(false).getRandom();
+        RandomOrgServiceHandler.Result random = new RandomOrgServiceHandler(true).getRandom();
         System.out.println(ByteUtils.bytesToHex(random.seed));
         assertTrue(random.seed.length == ENTROPY_SEED_LENGTH_BIT / 8);
     }

@@ -5,7 +5,7 @@ import java.util.Random;
 public final class RandomOrgBlobRequest {
 
     public final String jsonrpc = "2.0";
-    public final String method = "generateBlobs";
+    public final String method = "generateSignedBlobs";
     public final int id;
     public final Params params;
 
@@ -22,6 +22,7 @@ public final class RandomOrgBlobRequest {
         public final String apiKey; //Your API key, which is used to track the true random bit usage for your client.
         public final int n; //How many random blobs you need.
         public final int size; //The size of each blob, measured in bits.
+        public final String format = "base64";
 
         public Params(String apiKey, int n, int size) {
             this.apiKey = apiKey;

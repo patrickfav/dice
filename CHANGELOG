@@ -2,6 +2,7 @@
 
 ## v0.4.0
 * add entropy warning for seed
+* add signed random org call
 
 
 ## v0.3.0
