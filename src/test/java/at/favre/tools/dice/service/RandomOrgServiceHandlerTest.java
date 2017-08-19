@@ -3,6 +3,7 @@ package at.favre.tools.dice.service;
 import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
+import static at.favre.tools.dice.service.RandomOrgServiceHandler.ENTROPY_SEED_LENGTH_BIT;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -13,7 +14,7 @@ public class RandomOrgServiceHandlerTest {
     public void getRandom() throws Exception {
         RandomOrgServiceHandler.Result random = new RandomOrgServiceHandler(false).getRandom();
         System.out.println(ByteUtils.bytesToHex(random.seed));
-        assertTrue(random.seed.length == 16);
+        assertTrue(random.seed.length == ENTROPY_SEED_LENGTH_BIT / 8);
     }
 
 }

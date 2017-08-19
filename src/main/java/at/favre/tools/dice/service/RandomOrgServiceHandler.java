@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  */
 public class RandomOrgServiceHandler {
-
+    final static int ENTROPY_SEED_LENGTH_BIT = 192;
     private final boolean debug;
 
     public RandomOrgServiceHandler(boolean debug) {
@@ -20,8 +20,8 @@ public class RandomOrgServiceHandler {
     }
 
     /*
-        It will be possible to convert beta keys production keys before the beta ends on 31 December 2017.
-         */
+     * It will be possible to convert beta keys production keys before the beta ends on 31 December 2017.
+     */
     private static final String API_KEY = "ae169728-dec5-4771-b2e8-cc1801aaad70";
 
     public Result getRandom() {
@@ -47,9 +47,9 @@ public class RandomOrgServiceHandler {
         RandomOrgService service = retrofit.create(RandomOrgService.class);
 
         try {
-            Response<RandomOrgBlobResponse> response = service.getRandom(new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(API_KEY, 1, 128))).execute();
+            Response<RandomOrgBlobResponse> response = service.getRandom(new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(API_KEY, 1, ENTROPY_SEED_LENGTH_BIT))).execute();
 
-            if (response.isSuccessful() && response.body() != null) {
+            if (response != null && response.isSuccessful() && response.body() != null) {
                 return new Result(new Base64().decode(response.body().result.random.data[0]), System.currentTimeMillis() - startTime);
             }
 

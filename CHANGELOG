@@ -1,5 +1,9 @@
 # Releases
 
+## v0.4.0
+* add entropy warning for seed
+
+
 ## v0.3.0
 * add proguard
 * add column output

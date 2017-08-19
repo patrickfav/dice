@@ -1,7 +1,9 @@
 package at.favre.tools.dice.util;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -80,5 +82,13 @@ public class ByteUtils {
         byte[] out = new byte[length];
         new Random().nextBytes(out);
         return out;
+    }
+
+    public static List<Byte> toList(byte[] arr) {
+        List<Byte> list = new ArrayList<>();
+        for (byte b : arr) {
+            list.add(b);
+        }
+        return list;
     }
 }

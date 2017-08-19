@@ -7,6 +7,8 @@ import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
+import at.favre.tools.dice.util.ByteUtils;
+import at.favre.tools.dice.util.Entropy;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
@@ -14,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class RndTool {
 
@@ -44,14 +47,14 @@ public class RndTool {
             System.out.println("Url encode output.");
         }
         if (arguments.seed != null) {
-            System.out.println("Use provided seed [" + new Base32Encoder().encode(arguments.seed.getBytes(StandardCharsets.UTF_8)) + "].");
+            System.out.println("Use provided seed " + printWithEntropy(arguments.seed.getBytes(StandardCharsets.UTF_8)) + ".");
             secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
         } else if (!arguments.offline) {
             System.out.print("Fetching from random.org. ");
             RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug).getRandom();
             if (!seedResult.isError()) {
                 secureRandom.setSeed(seedResult.seed);
-                System.out.println("Got seed [" + new Base32Encoder().encode(seedResult.seed) + "] after " + seedResult.durationMs + "ms");
+                System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
             } else {
                 System.err.println("ERROR " + seedResult.errorMsg);
                 System.err.println("Try using --offline to skip online seeding or --debug for more information.");
@@ -67,6 +70,16 @@ public class RndTool {
 
         printRandoms(arguments, encoder, secureRandom);
         return true;
+    }
+
+    private static String printWithEntropy(byte[] seed) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(new Base32Encoder().encode(seed));
+        double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
+        if (entropy < 3) {
+            sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");
+        }
+        return sb.toString();
     }
 
     private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
