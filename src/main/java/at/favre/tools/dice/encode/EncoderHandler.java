@@ -52,14 +52,17 @@ public class EncoderHandler {
     }
 
     public String returnRegistryInfo() {
+        final byte[] exampleBytes = new byte[]{(byte) 0xC6, 0x1A, 0x66, 0x3F, 0x3E, 0x1A, (byte) 0x8B, (byte) 0xAB};
         StringBuilder sb = new StringBuilder();
 
         for (Encoder encoder : ENCODERS) {
+            sb.append("[");
             for (String name : encoder.names()) {
                 sb.append(name).append(", ");
             }
-            sb.delete(sb.length() - 2, sb.length()).append("\n");
-            sb.append("\tDescription: ").append(encoder.getDescription()).append("\n");
+            sb.delete(sb.length() - 2, sb.length()).append("]").append("\n");
+            sb.append("\t").append(encoder.getDescription()).append("\n");
+            sb.append("\tExample: ").append(encoder.encode(exampleBytes)).append("\n");
         }
         return sb.toString();
     }
