@@ -24,7 +24,7 @@ public class EntropyTest {
         double entropyMeasure = entropy.entropy();
         double perplexity = entropy.perplexity();
 
-        System.out.println(new Base16Encoder().encode(bytes) + " - entropy: " + entropyMeasure + " - perplexity: " + perplexity);
+        System.out.println(new Base16Encoder.Base16LowerCaseEncoder().encode(bytes) + " - entropy: " + entropyMeasure + " - perplexity: " + perplexity);
         assertTrue(entropyMeasure >= biggerThanEntropy);
     }
 }

@@ -52,6 +52,11 @@ Use maven (3.1+) to create a jar including all dependencies
 
 * Java 8
 * Maven
+* apache-commons-codec
+* apache-commons-cli
+* Retrofit2
+* Proguard
+* Launch4j
 
 # Credits
 
