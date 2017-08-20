@@ -20,7 +20,7 @@ public abstract class Base16Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Hex or Base16 encoding (lowercase) e.g 6e33a8f4c";
+        return "Base16 or hex is one of the simplest binary-to-text encodings, which stores each byte as a pair of hexadecimal digits.";
     }
 
     public static class Base16LowerCaseEncoder extends Base16Encoder {
@@ -31,6 +31,11 @@ public abstract class Base16Encoder extends AByteEncoder {
         @Override
         public String[] names() {
             return new String[]{"base16", Arg.DEFAULT_ENCODING};
+        }
+
+        @Override
+        public String getDescription() {
+            return super.getDescription() + " Lowercase (a-f) letters are used for digits greater than 9.";
         }
     }
 
@@ -46,7 +51,7 @@ public abstract class Base16Encoder extends AByteEncoder {
 
         @Override
         public String getDescription() {
-            return "Hex or Base16 encoding (uppercase) e.g 6E33A8F4C";
+            return super.getDescription() + " Uppercase (A-F) letters are used for digits greater than 9.";
         }
     }
 }
