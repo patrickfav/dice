@@ -1,3 +1,5 @@
+**WORK IN PROGRESS**
+
 # Dice
 A simple tool that generates random string from the best random source of your machine and encodes them in various formats: normal byte encodings like hex or base64, custom encodings like alpha-numeric strings and for many programming languages.
 
@@ -14,10 +16,10 @@ Basic usage:
 
 More features:
     
-    java -jar uber-adb-tools.jar --force-stop com.your.packa*
-    java -jar uber-adb-tools.jar --clear com.your.packa*
-    java -jar uber-adb-tools.jar --appinfo com.your.packa*
-    java -jar uber-adb-tools.jar --start com.your.packa*
+    java -jar dice.jar 16 --count 100
+    java -jar dice.jar 16 --encoding "base32"
+    java -jar dice.jar 16 --encoding "base85" --urlencode
+    java -jar dice.jar 24 --seed "myBadRandomSeed"
 
 This should run on any Windows, Mac or Linux machine,
 
@@ -33,11 +35,9 @@ This should run on any Windows, Mac or Linux machine,
 
  ![logo](misc/icon_sm.png)
 
- [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required. If a single argument will be passed (ie. a path) the tool will automatically install if it is an `.apk` (or folder with apks), so you can use it to drag an `.apk` over the `.exe` or use it to "Open with..." to automatically install an apk if double clicked.
+ [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
 
 ## Demo
-
-[![asciicast](https://asciinema.org/a/91091.png)](https://asciinema.org/a/91091)
 
 ## Command Line Interface
 

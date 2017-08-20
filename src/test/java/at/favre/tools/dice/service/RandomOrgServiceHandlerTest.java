@@ -16,6 +16,7 @@ public class RandomOrgServiceHandlerTest {
         System.out.println(ByteUtils.bytesToHex(random.seed));
         assertNotNull(random.seed);
         assertFalse(random.equals(1));
+        assertFalse(random.toString().isEmpty());
         assertFalse(random.hashCode() == 0);
         assertTrue(random.seed.length == ENTROPY_SEED_LENGTH_BIT / 8);
     }
