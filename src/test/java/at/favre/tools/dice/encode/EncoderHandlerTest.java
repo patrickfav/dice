@@ -1,5 +1,6 @@
 package at.favre.tools.dice.encode;
 
+import at.favre.tools.dice.ui.Arg;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -23,5 +24,18 @@ public class EncoderHandlerTest {
 
         assertNotNull(encoders);
         assertTrue(encoders.size() > 10);
+    }
+
+    @Test
+    public void testFindByName() {
+        assertNotNull(new EncoderHandler().findByName(Arg.DEFAULT_ENCODING));
+    }
+
+    @Test
+    public void testDescription() {
+        String description = new EncoderHandler().returnRegistryInfo();
+        assertNotNull(description);
+        assertTrue(description.length() > 100);
+        System.out.println(description);
     }
 }

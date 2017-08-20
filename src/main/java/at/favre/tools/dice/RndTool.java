@@ -102,4 +102,12 @@ public class RndTool {
         new ColumnRenderer().render(outputList, System.out);
         System.out.println();
     }
+
+    public static String jarVersion() {
+        String version = RndTool.class.getPackage().getImplementationVersion();
+        if (version == null) {
+            version = "debug";
+        }
+        return version;
+    }
 }

@@ -1,6 +1,7 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.logic.Ascii85;
+
+import com.github.fzakaria.ascii85.Ascii85;
 
 /**
  * Encodes in to ascii85 e.g. <code>9jqo^BlbD-BleB1DJ</code>, used by Adobe.

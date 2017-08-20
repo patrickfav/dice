@@ -1,7 +1,7 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.encode.EncoderHandler;
-import at.favre.tools.dice.util.CmdUtil;
 import org.apache.commons.cli.*;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class CLIParser {
             }
 
             if (commandLine.hasOption("v") || commandLine.hasOption("version")) {
-                System.out.println("Version: " + CmdUtil.jarVersion());
+                System.out.println("Version: " + RndTool.jarVersion());
                 return null;
             }
 
@@ -104,6 +104,6 @@ public class CLIParser {
         help.setWidth(120);
         help.setLeftPadding(4);
         help.setDescPadding(3);
-        help.printHelp("<length> | --help", "Version:" + CmdUtil.jarVersion(), options, " ", false);
+        help.printHelp("<length> | --help", "Version:" + RndTool.jarVersion(), options, " ", false);
     }
 }

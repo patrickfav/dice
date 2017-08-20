@@ -16,4 +16,9 @@ public class DecimalByteEncoder extends AByteEncoder {
     public String[] names() {
         return new String[]{"dec", "decimal"};
     }
+
+    @Override
+    public String getDescription() {
+        return "Decimal positive sign-magnitude representation representation in big-endian byte-order.";
+    }
 }

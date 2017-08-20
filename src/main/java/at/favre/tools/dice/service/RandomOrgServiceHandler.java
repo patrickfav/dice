@@ -1,5 +1,6 @@
 package at.favre.tools.dice.service;
 
+import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
 import at.favre.tools.dice.service.model.RandomOrgBlobResponse;
 import at.favre.tools.dice.util.SecurityUtil;
@@ -10,11 +11,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  */
 public class RandomOrgServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BIT = 192;
     private final boolean debug;
+    private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
 
     public RandomOrgServiceHandler(boolean debug) {
         this.debug = debug;
@@ -34,7 +39,7 @@ public class RandomOrgServiceHandler {
         if (debug) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+            client = new OkHttpClient.Builder().addNetworkInterceptor(interceptor).build();
         } else {
             client = new OkHttpClient.Builder().build();
         }
@@ -50,7 +55,7 @@ public class RandomOrgServiceHandler {
         try {
             final RandomOrgBlobRequest randomOrgBlobRequest = new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(API_KEY, 1, ENTROPY_SEED_LENGTH_BIT));
 
-            Response<RandomOrgBlobResponse> response = service.getRandom(randomOrgBlobRequest).execute();
+            Response<RandomOrgBlobResponse> response = service.getRandom(createHeaderMap(), randomOrgBlobRequest).execute();
 
             if (response != null && response.isSuccessful() && response.body() != null) {
                 RandomOrgBlobResponse orgBlobResponse = response.body();
@@ -72,6 +77,12 @@ public class RandomOrgServiceHandler {
         }
 
         return new Result(error, errMsg);
+    }
+
+    private Map<String, String> createHeaderMap() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", USER_AGENT);
+        return headers;
     }
 
     public static class Result {
