@@ -33,6 +33,7 @@ public abstract class AEncoderTest {
         testByteArray(new byte[]{1, 2});
         testByteArray(new byte[]{1, 2, 3});
         testByteArray(new byte[]{1, 2, 3, 4});
+        testByteArray(new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF});
         testByteArray(randomBytes8);
         testByteArray(randomBytes16);
         testByteArray(randomBytes24);
