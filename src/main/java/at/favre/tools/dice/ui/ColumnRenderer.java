@@ -1,6 +1,7 @@
 package at.favre.tools.dice.ui;
 
 import java.io.PrintStream;
+import java.util.Comparator;
 import java.util.List;
 
 public class ColumnRenderer {
@@ -19,7 +20,7 @@ public class ColumnRenderer {
 
     public void render(List<String> outputList, PrintStream outStream) {
         if (!outputList.isEmpty()) {
-            final int exampleLength = outputList.get(0).length();
+            final int exampleLength = outputList.stream().max(Comparator.comparingInt(String::length)).get().length();
             final int columns = Math.max(1, targetWidth / exampleLength);
 
             int columnCounter = columns;
