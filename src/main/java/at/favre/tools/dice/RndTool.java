@@ -1,6 +1,6 @@
 package at.favre.tools.dice;
 
-import at.favre.tools.dice.encode.Base32Encoder;
+import at.favre.tools.dice.encode.Base36Encoder;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
@@ -74,7 +74,7 @@ public class RndTool {
 
     private static String printWithEntropy(byte[] seed) {
         StringBuilder sb = new StringBuilder();
-        sb.append(new Base32Encoder().encode(seed));
+        sb.append(new Base36Encoder().encode(seed));
         double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
         if (entropy < 3) {
             sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");

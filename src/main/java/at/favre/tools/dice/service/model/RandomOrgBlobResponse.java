@@ -116,6 +116,17 @@ public final class RandomOrgBlobResponse {
             result = 31 * result + serialNumber;
             return result;
         }
+
+        @Override
+        public String toString() {
+            return "Random{" +
+                    "data=" + Arrays.toString(data) +
+                    ", completionTime='" + completionTime + '\'' +
+                    ", hashedApiKey='" + hashedApiKey + '\'' +
+                    ", format='" + format + '\'' +
+                    ", serialNumber=" + serialNumber +
+                    '}';
+        }
     }
 
     @Override

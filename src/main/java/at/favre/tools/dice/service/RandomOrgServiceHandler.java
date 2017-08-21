@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  */
 public class RandomOrgServiceHandler {
-    final static int ENTROPY_SEED_LENGTH_BIT = 192;
+    final static int ENTROPY_SEED_LENGTH_BIT = 128;
     private final boolean debug;
     private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
 
@@ -68,7 +68,7 @@ public class RandomOrgServiceHandler {
                     throw new IllegalArgumentException("used api key does not match");
                 }
 
-                return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), System.currentTimeMillis() - startTime);
+                return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
             }
 
         } catch (Exception e) {
@@ -87,19 +87,22 @@ public class RandomOrgServiceHandler {
 
     public static class Result {
         public final byte[] seed;
+        public final RandomOrgBlobResponse response;
         public final long durationMs;
         public final Throwable t;
         public final String errorMsg;
 
-        public Result(byte[] seed, long durationMs) {
+        public Result(byte[] seed, RandomOrgBlobResponse response, long durationMs) {
             this.seed = seed;
             this.durationMs = durationMs;
+            this.response = response;
             this.t = null;
             this.errorMsg = null;
         }
 
         public Result(Throwable t, String errorMsg) {
             this.durationMs = 0;
+            this.response = null;
             this.seed = null;
             this.t = t;
             this.errorMsg = errorMsg;
