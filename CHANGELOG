@@ -5,6 +5,7 @@
 * add signed random org call
 * add user agent to webservice
 * fix binary encoding
+* add base36 encoding
 
 ## v0.3.0
 * add proguard

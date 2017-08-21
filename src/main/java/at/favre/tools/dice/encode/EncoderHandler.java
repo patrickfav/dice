@@ -4,13 +4,14 @@ import java.util.*;
 
 public class EncoderHandler {
 
-    public static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
             new AlphaNumericEncoder(),
             new Ascii85Encoder(),
             new Ascii94Encoder(),
             new Base16Encoder.Base16LowerCaseEncoder(),
             new Base16Encoder.Base16UpperCaseEncoder(),
             new Base32Encoder(),
+            new Base36Encoder(),
             new Base64Encoder(),
             new BinaryEncoder(),
             new CEncoder(),

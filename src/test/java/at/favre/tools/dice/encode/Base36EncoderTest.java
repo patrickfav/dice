@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-public class Base16EncoderTest extends AEncoderTest {
+public class Base36EncoderTest extends AEncoderTest {
     @Override
     void check(byte[] original, String encode) {
 
@@ -8,6 +8,6 @@ public class Base16EncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new Base16Encoder.Base16LowerCaseEncoder();
+        return new Base36Encoder();
     }
 }
