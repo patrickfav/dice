@@ -6,6 +6,7 @@
 * add user agent to webservice
 * fix binary encoding
 * add base36, base8 (oct) and utf8 encoding
+* better column renderer
 
 ## v0.3.0
 * add proguard

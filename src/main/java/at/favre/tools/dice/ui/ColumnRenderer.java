@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ColumnRenderer {
     private static final int MAX_WIDTH = 80;
-    private static final char SEPERATOR = ' ';
+    private static final char SEPARATOR = ' ';
 
     private final int targetWidth;
 
@@ -20,20 +20,29 @@ public class ColumnRenderer {
 
     public void render(List<String> outputList, PrintStream outStream) {
         if (!outputList.isEmpty()) {
-            final int exampleLength = outputList.stream().max(Comparator.comparingInt(String::length)).get().length();
-            final int columns = Math.max(1, targetWidth / exampleLength);
+            final int maxLength = outputList.stream().max(Comparator.comparingInt(String::length)).get().length();
+            int columns = Math.max(1, targetWidth / maxLength);
+
+            while (maxLength * columns + columns > targetWidth) {
+                columns--;
+            }
 
             int columnCounter = columns;
             for (String randomString : outputList) {
 
-                outStream.print(randomString);
+                if (columns == 1) {
+                    outStream.print(randomString);
+                } else {
+                    outStream.print(String.format("%-" + maxLength + "s", randomString));
+                }
+
                 columnCounter--;
 
                 if (columnCounter == 0) {
                     columnCounter = columns;
                     outStream.print("\n");
                 } else {
-                    outStream.print(SEPERATOR);
+                    outStream.print(SEPARATOR);
                 }
             }
         }

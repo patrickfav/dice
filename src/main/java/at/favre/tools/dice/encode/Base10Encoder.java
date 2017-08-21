@@ -14,7 +14,7 @@ public class Base10Encoder extends AByteEncoder {
 
     @Override
     public String[] names() {
-        return new String[]{"dec", "decimal"};
+        return new String[]{"dec", "decimal", "base10"};
     }
 
     @Override
