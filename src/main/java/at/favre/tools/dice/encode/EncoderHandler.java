@@ -8,23 +8,24 @@ public class EncoderHandler {
             new AlphaNumericEncoder(),
             new Ascii85Encoder(),
             new Ascii94Encoder(),
+            new Base2Encoder(),
             new Base8Encoder(),
+            new Base10Encoder(),
             new Base16Encoder.Base16LowerCaseEncoder(),
             new Base16Encoder.Base16UpperCaseEncoder(),
             new Base32Encoder(),
             new Base36Encoder(),
             new Base64Encoder(),
-            new BinaryEncoder(),
             new CEncoder(),
             new CSharpEncoder(),
-            new DecimalByteEncoder(),
             new JavaByteArrayEncoder(),
             new KotlinByteArrayEncoder(),
             new NodeJsEncoder(),
             new NumericEncoder(),
             new PhpEncoder(),
             new Python3Encoder(),
-            new SwiftEncoder()
+            new SwiftEncoder(),
+            new Utf8Encoder()
     ));
 
     public List<Encoder> load() {

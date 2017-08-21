@@ -7,7 +7,7 @@ import java.util.Arrays;
 /**
  * Encodes in to binary representation e.g. <code>010010011</code>
  */
-public class BinaryEncoder extends AByteEncoder {
+public class Base2Encoder extends AByteEncoder {
 
     private final static int GROUP_LENGTH = 8;
 
