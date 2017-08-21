@@ -8,6 +8,7 @@ public class EncoderHandler {
             new AlphaNumericEncoder(),
             new Ascii85Encoder(),
             new Ascii94Encoder(),
+            new Base8Encoder(),
             new Base16Encoder.Base16LowerCaseEncoder(),
             new Base16Encoder.Base16UpperCaseEncoder(),
             new Base32Encoder(),

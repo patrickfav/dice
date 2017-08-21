@@ -9,7 +9,7 @@ public class DecimalByteEncoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return new BigInteger(1, array).toString();
+        return new BigInteger(1, array).toString(10);
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Base36Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return new BigInteger(new Base16Encoder.Base16LowerCaseEncoder().encode(array), 16).toString(36);
+        return new BigInteger(1, array).toString(36);
     }
 
     @Override
