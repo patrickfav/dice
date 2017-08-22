@@ -6,7 +6,6 @@ public class EncoderHandler {
 
     private static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
             new AlphaNumericEncoder(),
-            new Ascii85Encoder(),
             new Ascii94Encoder(),
             new Base2Encoder(),
             new Base8Encoder(),
@@ -15,7 +14,9 @@ public class EncoderHandler {
             new Base16Encoder.Base16UpperCaseEncoder(),
             new Base32Encoder(),
             new Base36Encoder(),
-            new Base64Encoder(),
+            new Base64Encoder.Default(),
+            new Base64Encoder.UrlSafe(),
+            new Base85Encoder(),
             new CEncoder(),
             new CSharpEncoder(),
             new JavaByteArrayEncoder(),

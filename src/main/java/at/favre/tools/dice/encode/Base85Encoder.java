@@ -8,7 +8,7 @@ import com.github.fzakaria.ascii85.Ascii85;
  *
  * See https://github.com/fzakaria/ascii85
  */
-public class Ascii85Encoder extends AByteEncoder {
+public class Base85Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {

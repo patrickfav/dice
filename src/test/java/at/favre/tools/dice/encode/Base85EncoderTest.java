@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-public class Base64EncoderTest extends AEncoderTest {
+public class Base85EncoderTest extends AEncoderTest {
     @Override
     void check(byte[] original, String encode) {
 
@@ -8,6 +8,6 @@ public class Base64EncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new Base64Encoder.Default();
+        return new Base85Encoder();
     }
 }
