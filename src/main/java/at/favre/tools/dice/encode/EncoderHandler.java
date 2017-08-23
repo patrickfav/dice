@@ -26,7 +26,8 @@ public class EncoderHandler {
             new PhpEncoder(),
             new Python3Encoder(),
             new SwiftEncoder(),
-            new Utf8Encoder()
+            new Utf8Encoder(),
+            new UUEncoder()
     ));
 
     public List<Encoder> load() {
