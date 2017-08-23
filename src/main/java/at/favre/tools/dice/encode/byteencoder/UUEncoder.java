@@ -1,8 +1,8 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.byteencoder;
 
 
 /**
- * Encodes in the same format as unix to unix (uuencode) e.g. <code>9jqo^BlbD-BleB1DJ</code>, used by Adobe.
+ * Encodes in the same format as unix to unix (uuencode) e.g. <code>(H%(]5H6I(P ! </code>
  * <p>
  * See https://en.wikipedia.org/wiki/Uuencoding
  */

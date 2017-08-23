@@ -1,5 +1,11 @@
 package at.favre.tools.dice.encode;
 
+import at.favre.tools.dice.encode.byteencoder.*;
+import at.favre.tools.dice.encode.character.AlphaNumericEncoder;
+import at.favre.tools.dice.encode.character.Ascii94Encoder;
+import at.favre.tools.dice.encode.character.NumericEncoder;
+import at.favre.tools.dice.encode.languages.*;
+
 import java.util.*;
 
 public class EncoderHandler {
@@ -20,6 +26,7 @@ public class EncoderHandler {
             new CEncoder(),
             new CSharpEncoder(),
             new JavaByteArrayEncoder(),
+            new GoByteArrayEncoder(),
             new KotlinByteArrayEncoder(),
             new NodeJsEncoder(),
             new NumericEncoder(),

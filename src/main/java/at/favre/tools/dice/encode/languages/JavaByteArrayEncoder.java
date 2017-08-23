@@ -1,11 +1,11 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.languages;
 
 import at.favre.tools.dice.util.ByteUtils;
 
 /**
  * Encodes in java syntax byte array (e.g. <code>new byte[]{0x3A,...}</code>)
  */
-public class JavaByteArrayEncoder extends AEncoder {
+public class JavaByteArrayEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
         return encodeInternal(array, "new byte[]{", "};", ",", b -> {

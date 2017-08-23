@@ -1,8 +1,8 @@
 package at.favre.tools.dice;
 
-import at.favre.tools.dice.encode.Base36Encoder;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
+import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;

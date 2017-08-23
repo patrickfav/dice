@@ -1,8 +1,8 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.character.NumericEncoder;
+import at.favre.tools.dice.encode.languages.GoByteArrayEncoder;
 
-public class NumericEncoderTest extends AEncoderTest {
+public class GoEncoderTest extends AEncoderTest {
     @Override
     void check(byte[] original, String encode) {
 
@@ -10,6 +10,6 @@ public class NumericEncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new NumericEncoder();
+        return new GoByteArrayEncoder();
     }
 }

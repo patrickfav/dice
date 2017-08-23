@@ -1,7 +1,7 @@
 # Releases
 
 ## v0.5.0
-* add uuencode
+* add uuencode and go encoder
 
 ## v0.4.0
 * add entropy warning for seed

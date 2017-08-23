@@ -1,9 +1,11 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.character;
+
+import at.favre.tools.dice.encode.Encoder;
 
 /**
  * Encodes with given alphabet
  */
-public abstract class AlphabetEncoder implements Encoder {
+abstract class AlphabetEncoder implements Encoder {
 
     private final String alphabet;
 

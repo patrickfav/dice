@@ -1,6 +1,6 @@
 package at.favre.tools.dice.util;
 
-import at.favre.tools.dice.encode.Base16Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base16Encoder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;

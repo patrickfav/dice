@@ -1,4 +1,4 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.character;
 
 /**
  * Encodes every byte with full range of ascii chars

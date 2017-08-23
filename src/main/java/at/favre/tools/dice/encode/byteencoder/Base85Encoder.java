@@ -1,4 +1,4 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.byteencoder;
 
 
 import com.github.fzakaria.ascii85.Ascii85;

@@ -1,11 +1,11 @@
-package at.favre.tools.dice.encode;
+package at.favre.tools.dice.encode.languages;
 
 import at.favre.tools.dice.util.ByteUtils;
 
 /**
  * Encodes in kotlin syntax byte array (e.g. <code>byteArrayOf(0x3A,...)</code>)
  */
-public class KotlinByteArrayEncoder extends AEncoder {
+public class KotlinByteArrayEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
         return encodeInternal(array, "byteArrayOf(", ")", ",", b -> {
