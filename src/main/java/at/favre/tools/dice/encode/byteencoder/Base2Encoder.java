@@ -41,6 +41,21 @@ public class Base2Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "A simple binary representation with '0' and '1' divided into 8 bit groups. This is a very inefficient representation therfore only for special use cases";
+        return "A simple binary representation with '0' and '1' divided into 8 bit groups.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.125;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return false;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return false;
     }
 }

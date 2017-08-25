@@ -20,7 +20,22 @@ public abstract class Base16Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Base16 or hex is one of the simplest binary-to-text encodings, which stores each byte as a pair of hexadecimal digits.";
+        return "Base16 or hex stores each byte as a pair of hexadecimal digits.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.5;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return false;
     }
 
     public static class Base16LowerCaseEncoder extends Base16Encoder {

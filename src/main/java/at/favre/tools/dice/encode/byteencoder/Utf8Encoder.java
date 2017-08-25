@@ -21,4 +21,19 @@ public class Utf8Encoder extends AByteEncoder {
     public String getDescription() {
         return "UTF-8 is a compromise character encoding that can be as compact as ASCII (if the file is just plain English text) but can also contain any unicode characters (with some increase in file size).";
     }
+
+    @Override
+    public double spaceEfficiency() {
+        return 1;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return false;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return false;
+    }
 }

@@ -24,7 +24,22 @@ public class Base64Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding. This implementation does not use padding.";
+        return "Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.70;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return false;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return true;
     }
 
     public static class Default extends Base64Encoder {
@@ -51,6 +66,11 @@ public class Base64Encoder extends AByteEncoder {
         @Override
         public String getDescription() {
             return super.getDescription() + ". Uses url safe mode";
+        }
+
+        @Override
+        public boolean urlSafe() {
+            return true;
         }
     }
 }

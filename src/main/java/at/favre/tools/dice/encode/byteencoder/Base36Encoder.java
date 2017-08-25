@@ -19,6 +19,21 @@ public class Base36Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Base36 is a binary-to-text encoding scheme that represents binary data in an ASCII string format by translating it into a radix-36 (aka Hexatrigesimal) representation. The choice of 36 is convenient in that the digits can be represented using the Arabic numerals 0-9 and the Latin letters A-Z.";
+        return "Base36 translating into a radix-36 (aka Hexatrigesimal) representation.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.65;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return true;
     }
 }

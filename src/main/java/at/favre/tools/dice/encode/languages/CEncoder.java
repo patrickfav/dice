@@ -15,4 +15,9 @@ public class CEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"c", "c++"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "C";
+    }
 }

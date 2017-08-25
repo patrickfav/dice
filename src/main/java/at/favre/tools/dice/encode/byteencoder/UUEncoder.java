@@ -22,4 +22,19 @@ public class UUEncoder extends AByteEncoder {
     public String getDescription() {
         return "The name 'uuencoding' is derived from 'Unix-to-Unix encoding', i.e. the idea of using a safe encoding to transfer Unix files from one Unix system to another Unix system but without guarantee that the intervening links would all be Unix systems. Since an email message might be forwarded through or to computers with different character sets or through transports which are not 8-bit clean, or handled by programs that are not 8-bit clean";
     }
+
+    @Override
+    public double spaceEfficiency() {
+        return 1;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return false;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return true;
+    }
 }

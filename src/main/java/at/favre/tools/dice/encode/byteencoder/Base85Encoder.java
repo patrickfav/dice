@@ -19,4 +19,24 @@ public class Base85Encoder extends AByteEncoder {
     public String[] names() {
         return new String[]{"ascii85", "base85"};
     }
+
+    @Override
+    public String getDescription() {
+        return "Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.85;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return true;
+    }
 }

@@ -15,4 +15,9 @@ public class CSharpEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"c#"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "C#";
+    }
 }

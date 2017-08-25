@@ -21,4 +21,19 @@ public class Base10Encoder extends AByteEncoder {
     public String getDescription() {
         return "Decimal positive sign-magnitude representation representation in big-endian byte-order.";
     }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.33;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return false;
+    }
 }

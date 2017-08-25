@@ -15,4 +15,9 @@ public class SwiftEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"swift"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Swift";
+    }
 }

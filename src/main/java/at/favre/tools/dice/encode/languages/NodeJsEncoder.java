@@ -15,4 +15,9 @@ public class NodeJsEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"node", "nodejs", "js", "javascript"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Javascript";
+    }
 }

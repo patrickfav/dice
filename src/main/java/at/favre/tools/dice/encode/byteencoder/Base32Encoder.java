@@ -19,6 +19,21 @@ public class Base32Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Base32 is one of several base 32 transfer encodings using a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. Base32 representation takes roughly 20% more space than Base64. This implementation does not use padding.";
+        return "Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.6;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return true;
     }
 }

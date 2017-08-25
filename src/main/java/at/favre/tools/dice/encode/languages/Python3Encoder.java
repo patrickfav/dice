@@ -15,4 +15,9 @@ public class Python3Encoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"python3"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Python 3";
+    }
 }

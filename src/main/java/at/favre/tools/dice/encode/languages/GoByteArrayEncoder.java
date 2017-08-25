@@ -15,4 +15,9 @@ public class GoByteArrayEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"go"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Go";
+    }
 }

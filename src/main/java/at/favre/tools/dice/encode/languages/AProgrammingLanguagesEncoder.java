@@ -16,4 +16,11 @@ abstract class AProgrammingLanguagesEncoder extends AEncoder {
     interface ByteEncoder {
         String encodeByte(byte b);
     }
+
+    @Override
+    public String getDescription() {
+        return "Syntax for initializing an array of type byte in " + getProgrammingLanguageName() + ".";
+    }
+
+    abstract String getProgrammingLanguageName();
 }

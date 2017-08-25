@@ -74,6 +74,11 @@ public class EncoderHandler {
             }
             sb.delete(sb.length() - 2, sb.length()).append("]").append("\n");
             sb.append("\t").append(encoder.getDescription()).append("\n");
+            if (encoder instanceof AByteEncoder) {
+                sb.append("\tSpace Efficiency: ").append(((AByteEncoder) encoder).spaceEfficiency() * 100).append("%");
+                sb.append("; Url-Safe: ").append(((AByteEncoder) encoder).urlSafe());
+                sb.append("; Needs padding: ").append(((AByteEncoder) encoder).mayNeedPadding()).append("\n");
+            }
             sb.append("\tExample: ").append(encoder.encode(exampleBytes)).append("\n\n");
         }
         return sb.toString();

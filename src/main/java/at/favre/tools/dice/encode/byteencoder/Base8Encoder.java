@@ -19,6 +19,21 @@ public class Base8Encoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "The octal numeral system, or oct for short, is the base-8 number system, and uses the digits 0 to 7. Octal numerals can be made from binary numerals by grouping consecutive binary digits into groups of three (starting from the right)";
+        return "The octal numeral system, is the base-8 number system, and uses the digits 0 to 7.";
+    }
+
+    @Override
+    public double spaceEfficiency() {
+        return 0.25;
+    }
+
+    @Override
+    public boolean urlSafe() {
+        return true;
+    }
+
+    @Override
+    public boolean mayNeedPadding() {
+        return false;
     }
 }

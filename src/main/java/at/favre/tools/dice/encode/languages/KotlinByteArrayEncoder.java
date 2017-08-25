@@ -22,4 +22,9 @@ public class KotlinByteArrayEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"kotlin"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Kotlin";
+    }
 }

@@ -22,4 +22,9 @@ public class JavaByteArrayEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"java"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "Java";
+    }
 }

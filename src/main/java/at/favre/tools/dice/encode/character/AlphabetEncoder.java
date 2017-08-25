@@ -5,6 +5,7 @@ import at.favre.tools.dice.encode.Encoder;
 /**
  * Encodes with given alphabet
  */
+@Deprecated
 abstract class AlphabetEncoder implements Encoder {
 
     private final String alphabet;

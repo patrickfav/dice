@@ -13,4 +13,9 @@ public class PhpEncoder extends AProgrammingLanguagesEncoder {
     public String[] names() {
         return new String[]{"php"};
     }
+
+    @Override
+    String getProgrammingLanguageName() {
+        return "PHP";
+    }
 }
