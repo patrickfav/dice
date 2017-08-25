@@ -30,7 +30,9 @@ public class ColumnRenderer {
             final int maxLength = getMaxLength(outputList);
             final int columns = getColumnCount(maxLength);
             int columnCounter = columns;
-            for (String randomString : outputList) {
+
+            for (int i = 0; i < outputList.size(); i++) {
+                String randomString = outputList.get(i);
                 if (columns == 1) {
                     outStream.print(randomString);
                 } else {
@@ -39,7 +41,7 @@ public class ColumnRenderer {
 
                 columnCounter--;
 
-                if (columnCounter == 0) {
+                if (columnCounter == 0 && i + 1 != outputList.size()) {
                     columnCounter = columns;
                     outStream.print("\n");
                 } else {
@@ -47,6 +49,7 @@ public class ColumnRenderer {
                 }
             }
         }
+
     }
 
     private int getMaxLength(List<String> outputList) {
