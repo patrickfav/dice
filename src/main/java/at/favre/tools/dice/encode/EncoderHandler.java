@@ -1,9 +1,6 @@
 package at.favre.tools.dice.encode;
 
 import at.favre.tools.dice.encode.byteencoder.*;
-import at.favre.tools.dice.encode.character.AlphaNumericEncoder;
-import at.favre.tools.dice.encode.character.Ascii94Encoder;
-import at.favre.tools.dice.encode.character.NumericEncoder;
 import at.favre.tools.dice.encode.languages.*;
 
 import java.util.*;
@@ -11,8 +8,8 @@ import java.util.*;
 public class EncoderHandler {
 
     private static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
-            new AlphaNumericEncoder(),
-            new Ascii94Encoder(),
+            //new AlphaNumericEncoder(),
+            //new Ascii94Encoder(),
             new Base2Encoder(),
             new Base8Encoder(),
             new Base10Encoder(),
@@ -29,7 +26,7 @@ public class EncoderHandler {
             new GoByteArrayEncoder(),
             new KotlinByteArrayEncoder(),
             new NodeJsEncoder(),
-            new NumericEncoder(),
+            //new NumericEncoder(),
             new PhpEncoder(),
             new Python3Encoder(),
             new SwiftEncoder(),

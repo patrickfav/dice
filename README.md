@@ -2,25 +2,27 @@
 
 # Dice
 
-A simple tool that generates random text encoded byte arrays from the best random source of your machine and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.
+A simple tool that generates random text encoded byte arrays from the best random source from your machine* and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
 [![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master)
 
+<sup>*as promised by the contract of Java's `SecureRandom`</sup>
+
 Main features:
 
  * Supports all common byte encodings and more (hex, base32, base36, base64, base85, etc.)
- * Secure seeding of random generator with [random.org](https://www.random.org/)
+ * Automatic secure seeding of random generator with [random.org](https://www.random.org/)
  * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swifth, go,...)
  * Entropy warnings if seed is weak
  * Additional output configuration like "www-form-urlencoding" and padding of output
 
-Example usage generating randoms with 32 byte length and default encoding:
+Example usage generating randoms with 24 byte length and default encoding:
 
-    java -jar dice.jar 32
+    java -jar dice.jar 24
 
-More features:
+More examples:
     
     java -jar dice.jar 16 --count 100
     java -jar dice.jar 16 --encoding "base64"
@@ -45,6 +47,16 @@ This should run on any Windows, Mac or Linux machine,
 
  [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
 
+## Tl;dr: How should I use it?
+
+Depends. Either you want manually create tokens or nounces, then I'll recommend base32 or base36 if it needs to be url safe and base64 if not. 16 byte usually suffice for globally unique, very hard to guess randoms.
+
+    java -jar dice.jar 16 -e "base36"
+
+Or you want to create static salts, or randoms to harcode, then just use:
+
+    java -jar dice.jar 16 -e "java"
+
 ## Demo
 
 ## Command Line Interface
@@ -52,9 +64,8 @@ This should run on any Windows, Mac or Linux machine,
     -c,--count <number>      How many randoms should be generated. Automatically chosen if this argument is omitted.
     -d,--debug               Prints additional info for debugging.
     -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
-                             alpha-numeric, ascii, binary, octal, dec, base16, BASE16, base32, base36, base64,
-                             base64-url, ascii85, c, c#, java, go, kotlin, node, num, php, python3, swift, utf8,
-                             uuencode
+                             binary, octal, dec, base16, BASE16, base32, base36, base64,
+                             base64-url, base85, c, c#, java, go, kotlin, node, php, python3, swift, utf8
     -h,--help                Shows this page.
     -o,--offline             Skips request to Random.org to seed random generator (use when offline).
     -s,--seed <string>       Uses the utf-8 byte representation of given parameter to seed the internal random
@@ -81,7 +92,7 @@ This should run on any Windows, Mac or Linux machine,
 | base85      | `&S1<%3m[`           | 80.0 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
 | utf8         | `d�J:�`             | 100.0 % | false | UTF-8 is a compromise character encoding that can be as compact as ASCII (if the file is just plain English text) but can also contain any unicode characters (with some increase in file size). |
 
-### Syntax for Programming Languages
+### Programming Languages
 
 | Name | Example |
 | :-------------: | ------------- |
