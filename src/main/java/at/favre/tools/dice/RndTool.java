@@ -59,8 +59,8 @@ public class RndTool {
                 System.err.println("ERROR " + seedResult.errorMsg);
                 System.err.println("Try using --offline to skip online seeding or --debug for more information.");
 
-                if (arguments.debug && seedResult.t != null) {
-                    seedResult.t.printStackTrace();
+                if (arguments.debug && seedResult.throwable != null) {
+                    seedResult.throwable.printStackTrace();
                 }
                 System.exit(500);
             }

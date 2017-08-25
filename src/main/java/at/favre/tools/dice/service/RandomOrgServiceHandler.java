@@ -89,14 +89,14 @@ public class RandomOrgServiceHandler {
         public final byte[] seed;
         public final RandomOrgBlobResponse response;
         public final long durationMs;
-        public final Throwable t;
+        public final Throwable throwable;
         public final String errorMsg;
 
         public Result(byte[] seed, RandomOrgBlobResponse response, long durationMs) {
             this.seed = seed;
             this.durationMs = durationMs;
             this.response = response;
-            this.t = null;
+            this.throwable = null;
             this.errorMsg = null;
         }
 
@@ -104,7 +104,7 @@ public class RandomOrgServiceHandler {
             this.durationMs = 0;
             this.response = null;
             this.seed = null;
-            this.t = t;
+            this.throwable = t;
             this.errorMsg = errorMsg;
         }
 
