@@ -11,6 +11,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +72,9 @@ public class RandomOrgServiceHandler {
                 return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
             }
 
+        } catch (UnknownHostException e) {
+            error = e;
+            errMsg = "Cannot resolve host. Is the device offline?";
         } catch (Exception e) {
             error = e;
             errMsg = "Error during http request: " + e.getMessage();

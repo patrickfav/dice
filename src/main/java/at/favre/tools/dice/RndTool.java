@@ -56,7 +56,7 @@ public class RndTool {
                 secureRandom.setSeed(seedResult.seed);
                 System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
             } else {
-                System.err.println("ERROR " + seedResult.errorMsg);
+                System.err.println(seedResult.errorMsg);
                 System.err.println("Try using --offline to skip online seeding or --debug for more information.");
 
                 if (arguments.debug && seedResult.throwable != null) {
