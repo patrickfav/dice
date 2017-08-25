@@ -10,7 +10,7 @@ public class CLIParserTest {
     @Test
     public void testSimpleDefaults() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("67"));
-        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, null, 67, Arg.DEFAULT_COUNT, false, false, false);
+        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, null, 67, null, false, false, false);
         assertEquals(expectedArg, parsedArg);
     }
 
@@ -24,7 +24,7 @@ public class CLIParserTest {
     @Test
     public void testSimpleSeed() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("128 -" + CLIParser.ARG_SEED + " ahdalsudzasldjhasdu"));
-        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, "ahdalsudzasldjhasdu", 128, Arg.DEFAULT_COUNT, false, false, false);
+        Arg expectedArg = new Arg(Arg.DEFAULT_ENCODING, "ahdalsudzasldjhasdu", 128, null, false, false, false);
         assertEquals(expectedArg, parsedArg);
     }
 

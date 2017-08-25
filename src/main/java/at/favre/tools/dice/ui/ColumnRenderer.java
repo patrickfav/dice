@@ -18,18 +18,19 @@ public class ColumnRenderer {
         this.targetWidth = targetWidth;
     }
 
+    public void renderAutoColumn(int targetCount, List<String> outputList, PrintStream outStream) {
+        final int columns = getColumnCount(getMaxLength(outputList));
+
+        final int fill = columns - (targetCount % columns);
+        render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream);
+    }
+
     public void render(List<String> outputList, PrintStream outStream) {
         if (!outputList.isEmpty()) {
-            final int maxLength = outputList.stream().max(Comparator.comparingInt(String::length)).get().length();
-            int columns = Math.max(1, targetWidth / maxLength);
-
-            while (maxLength * columns + columns > targetWidth) {
-                columns--;
-            }
-
+            final int maxLength = getMaxLength(outputList);
+            final int columns = getColumnCount(maxLength);
             int columnCounter = columns;
             for (String randomString : outputList) {
-
                 if (columns == 1) {
                     outStream.print(randomString);
                 } else {
@@ -46,5 +47,18 @@ public class ColumnRenderer {
                 }
             }
         }
+    }
+
+    private int getMaxLength(List<String> outputList) {
+        return outputList.stream().max(Comparator.comparingInt(String::length)).get().length();
+    }
+
+    private int getColumnCount(int maxLength) {
+        int columns = Math.max(1, targetWidth / maxLength);
+
+        while (maxLength * columns + columns > targetWidth) {
+            columns--;
+        }
+        return Math.max(1, columns);
     }
 }

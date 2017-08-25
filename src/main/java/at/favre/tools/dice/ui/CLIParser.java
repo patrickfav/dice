@@ -37,7 +37,7 @@ public class CLIParser {
             if (commandLine.hasOption(ARG_COUNT)) {
                 argument.count = Integer.valueOf(commandLine.getOptionValue(ARG_COUNT));
             } else {
-                argument.count = Arg.DEFAULT_COUNT;
+                argument.count = null;
             }
 
             if (commandLine.hasOption(ARG_SEED)) {

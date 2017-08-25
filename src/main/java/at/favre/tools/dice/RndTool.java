@@ -84,7 +84,15 @@ public class RndTool {
 
     private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
         List<String> outputList = new ArrayList<>(arguments.length);
-        for (int i = 0; i < arguments.count; i++) {
+
+        boolean useAutoColumn = false;
+        if (arguments.count == null) {
+            arguments.count = Arg.DEFAULT_COUNT;
+            useAutoColumn = true;
+        }
+
+        int countGenerated = arguments.count + (useAutoColumn ? 20 : 0);
+        for (int i = 0; i < countGenerated; i++) {
             byte[] rnd = new byte[arguments.length];
             secureRandom.nextBytes(rnd);
             String randomEncodedString = encoder.encode(rnd);
@@ -99,7 +107,12 @@ public class RndTool {
             outputList.add(randomEncodedString);
         }
 
-        new ColumnRenderer().render(outputList, System.out);
+        if (useAutoColumn) {
+            new ColumnRenderer().renderAutoColumn(arguments.count, outputList, System.out);
+        } else {
+            new ColumnRenderer().render(outputList, System.out);
+        }
+
         System.out.println();
     }
 
