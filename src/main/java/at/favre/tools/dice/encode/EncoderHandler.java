@@ -33,8 +33,8 @@ public class EncoderHandler {
             new PhpEncoder(),
             new Python3Encoder(),
             new SwiftEncoder(),
-            new Utf8Encoder(),
-            new UUEncoder()
+            new Utf8Encoder()
+            /* new UUEncoder() -- omit because generated multi line output*/
     ));
 
     public List<Encoder> load() {
@@ -63,7 +63,7 @@ public class EncoderHandler {
         return null;
     }
 
-    public String returnRegistryInfo() {
+    public String getFullSupportedEncodingList() {
         final byte[] exampleBytes = new byte[]{0x00, 0x23, (byte) 0xA9, (byte) 0x85, 0x56, 0x3D, 0x52, (byte) 0xA0};
         StringBuilder sb = new StringBuilder();
 
@@ -83,4 +83,74 @@ public class EncoderHandler {
         }
         return sb.toString();
     }
+
+    public String getSupportedEncodingList() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Encoder encoder : ENCODERS) {
+            sb.append(encoder.names()[0]).append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        return sb.toString();
+    }
+
+    public String getByteEncoderMarkdownTable() {
+        final byte[] exampleBytes = new byte[]{(byte) 0xD0, 0x3A, 0x4A, (byte) 0xEE, 0x64, 0x11};
+
+        StringBuilder sb = new StringBuilder();
+
+        //Header
+        sb.append("| ").append("Name").append(" | ");
+        sb.append("Example").append(" | ");
+        sb.append("Efficiency").append(" | ");
+        sb.append("Padding").append(" | ");
+        sb.append("Description").append(" |").append("\n");
+
+        //Header divider
+        sb.append("| ").append("-------------").append(" | ");
+        sb.append("-------------").append(" | ");
+        sb.append("-------------:").append(" | ");
+        sb.append(":-------------:").append(" | ");
+        sb.append("-------------").append(" |").append("\n");
+
+        //Body divider
+        for (Encoder encoder : ENCODERS) {
+            if (encoder instanceof AByteEncoder) {
+                AByteEncoder aByteEncoder = (AByteEncoder) encoder;
+
+                sb.append("| ").append(String.format("%-12s", aByteEncoder.names()[0])).append(" | ");
+                sb.append(String.format("%-20s", "`" + aByteEncoder.encode(exampleBytes) + "`")).append(" | ");
+                sb.append(aByteEncoder.spaceEfficiency() * 100).append(" %").append(" | ");
+                sb.append(aByteEncoder.mayNeedPadding()).append(" | ");
+                sb.append(aByteEncoder.getDescription()).append(" |").append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String getLanguageEncoderMarkdownTable() {
+        final byte[] exampleBytes = new byte[]{(byte) 0xD0, 0x3A, 0x4A, (byte) 0xEE, 0x64, 0x11};
+
+        StringBuilder sb = new StringBuilder();
+
+        //Header
+        sb.append("| ").append("Name").append(" | ");
+        sb.append("Example").append(" | ").append("\n");
+
+        //Header divider
+        sb.append("| ").append(":-------------:").append(" | ");
+        sb.append("-------------").append(" |").append("\n");
+
+        //Body divider
+        for (Encoder encoder : ENCODERS) {
+            if (encoder instanceof AProgrammingLanguagesEncoder) {
+                AProgrammingLanguagesEncoder progEncoder = (AProgrammingLanguagesEncoder) encoder;
+
+                sb.append("| ").append(String.format("%-12s", progEncoder.names()[0])).append(" | ");
+                sb.append("`").append(progEncoder.encode(exampleBytes)).append("`").append(" | ").append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
 }

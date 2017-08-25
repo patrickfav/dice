@@ -17,7 +17,7 @@ public class Base85Encoder extends AByteEncoder {
 
     @Override
     public String[] names() {
-        return new String[]{"ascii85", "base85"};
+        return new String[]{"base85", "ascii85"};
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Base85Encoder extends AByteEncoder {
 
     @Override
     public double spaceEfficiency() {
-        return 0.85;
+        return 0.8;
     }
 
     @Override

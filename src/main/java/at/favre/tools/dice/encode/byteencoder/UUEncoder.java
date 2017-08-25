@@ -25,7 +25,7 @@ public class UUEncoder extends AByteEncoder {
 
     @Override
     public double spaceEfficiency() {
-        return 1;
+        return 0.6;
     }
 
     @Override

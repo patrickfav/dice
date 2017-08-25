@@ -38,7 +38,7 @@ public class RndTool {
 
         if (encoder == null) {
             System.err.println("Given encoder '" + arguments.encoding + "' is not available.");
-            System.err.println("\nAvailable encoders:\n\n" + loader.returnRegistryInfo());
+            System.err.println("\nAvailable encoders:\n\n" + loader.getFullSupportedEncodingList());
             System.exit(2);
         }
 

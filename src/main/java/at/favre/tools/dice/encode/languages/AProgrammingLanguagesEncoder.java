@@ -2,7 +2,7 @@ package at.favre.tools.dice.encode.languages;
 
 import at.favre.tools.dice.encode.AEncoder;
 
-abstract class AProgrammingLanguagesEncoder extends AEncoder {
+public abstract class AProgrammingLanguagesEncoder extends AEncoder {
     String encodeInternal(byte[] array, String prefix, String postfix, String sep, ByteEncoder byteEncoder) {
         StringBuilder sb = new StringBuilder(prefix);
         for (byte anArray : array) {

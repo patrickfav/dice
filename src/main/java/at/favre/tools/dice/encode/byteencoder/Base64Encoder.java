@@ -29,7 +29,7 @@ public class Base64Encoder extends AByteEncoder {
 
     @Override
     public double spaceEfficiency() {
-        return 0.70;
+        return 0.75;
     }
 
     @Override

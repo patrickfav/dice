@@ -33,7 +33,31 @@ public class EncoderHandlerTest {
 
     @Test
     public void testDescription() {
-        String description = new EncoderHandler().returnRegistryInfo();
+        String description = new EncoderHandler().getFullSupportedEncodingList();
+        assertNotNull(description);
+        assertTrue(description.length() > 100);
+        System.out.println(description);
+    }
+
+    @Test
+    public void testEncoderTable() {
+        String description = new EncoderHandler().getByteEncoderMarkdownTable();
+        assertNotNull(description);
+        assertTrue(description.length() > 100);
+        System.out.println(description);
+    }
+
+    @Test
+    public void testSupportedEncodings() {
+        String description = new EncoderHandler().getSupportedEncodingList();
+        assertNotNull(description);
+        assertTrue(description.length() > 100);
+        System.out.println(description);
+    }
+
+    @Test
+    public void testProgrammingEncoderTable() {
+        String description = new EncoderHandler().getLanguageEncoderMarkdownTable();
         assertNotNull(description);
         assertTrue(description.length() > 100);
         System.out.println(description);

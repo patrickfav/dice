@@ -24,7 +24,7 @@ public class Base32Encoder extends AByteEncoder {
 
     @Override
     public double spaceEfficiency() {
-        return 0.6;
+        return 0.625;
     }
 
     @Override
