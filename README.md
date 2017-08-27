@@ -1,5 +1,3 @@
-**WORK IN PROGRESS**
-
 # Dice
 
 A simple tool that generates random text encoded byte arrays from the best random source from your machine* and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.

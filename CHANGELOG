@@ -4,6 +4,7 @@
 * add go encoder
 * add better auto count mode, filling columns
 * add better encoding description
+* remove alphabet encoder
 
 ## v0.4.0
 * add entropy warning for seed
