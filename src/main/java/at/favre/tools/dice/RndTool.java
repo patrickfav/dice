@@ -20,6 +20,9 @@ import java.util.Locale;
 
 public class RndTool {
 
+    private static final int MAX_RND_LENGTH = 64 * 1024;
+    private static final int MAX_COUNT = 5000;
+
     public static void main(String[] args) {
         Arg arguments = CLIParser.parse(args);
 
@@ -39,13 +42,24 @@ public class RndTool {
         if (encoder == null) {
             System.err.println("Given encoder '" + arguments.encoding + "' is not available.");
             System.err.println("\nAvailable encoders:\n\n" + loader.getFullSupportedEncodingList());
-            System.exit(2);
+            System.exit(400);
+        }
+
+        if (arguments.length > MAX_RND_LENGTH) {
+            System.err.println("This tool only allows randoms of maximal length " + MAX_RND_LENGTH + " byte");
+            System.exit(401);
+        }
+
+        if (arguments.count > MAX_COUNT) {
+            System.err.println("This tool only allows a maximal count of " + MAX_COUNT);
+            System.exit(402);
         }
 
         SecureRandom secureRandom = new SecureRandom();
         if (arguments.urlencode) {
             System.out.println("Url encode output.");
         }
+
         if (arguments.seed != null) {
             System.out.println("Use provided seed " + printWithEntropy(arguments.seed.getBytes(StandardCharsets.UTF_8)) + ".");
             secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
