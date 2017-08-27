@@ -28,7 +28,6 @@ public class EncoderHandler {
             new Python3Encoder(),
             new SwiftEncoder(),
             new Utf8Encoder()
-            /* new UUEncoder() -- omit because generated multi line output*/
     ));
 
     public List<Encoder> load() {
