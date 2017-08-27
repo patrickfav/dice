@@ -14,7 +14,12 @@ public class Base64Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return new Base64(1, null, urlSafe).encodeAsString(array).replace("=", "");
+        return encodePadded(array).replace("=", "");
+    }
+
+    @Override
+    public String encodePadded(byte[] array) {
+        return new Base64(1, null, urlSafe).encodeAsString(array);
     }
 
     @Override

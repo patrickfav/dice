@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import static org.junit.Assert.assertNotNull;
+
 public abstract class AEncoderTest {
     private byte[] randomBytes8;
     private byte[] randomBytes16;
@@ -44,8 +46,19 @@ public abstract class AEncoderTest {
 
     private void testByteArray(byte[] bytes) {
         String encoded = encoder.encode(bytes);
+        String encodedPadded = encoder.encodePadded(bytes);
+
+        assertNotNull(encoded);
+        assertNotNull(encodedPadded);
+
         System.out.println(encoded);
+
+        if (!encoded.equals(encodedPadded)) {
+            System.out.println(encodedPadded);
+        }
+
         check(bytes, encoded);
+        check(bytes, encodedPadded);
     }
 
     abstract void check(byte[] original, String encode);

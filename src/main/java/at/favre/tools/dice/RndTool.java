@@ -109,7 +109,8 @@ public class RndTool {
         for (int i = 0; i < countGenerated; i++) {
             byte[] rnd = new byte[arguments.length];
             secureRandom.nextBytes(rnd);
-            String randomEncodedString = encoder.encode(rnd);
+
+            String randomEncodedString = arguments.padding ? encoder.encodePadded(rnd) : encoder.encode(rnd);
 
             if (arguments.urlencode) {
                 try {

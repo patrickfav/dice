@@ -12,6 +12,7 @@ public class CLIParser {
     static final String ARG_SEED = "s";
     static final String ARG_ONLINE = "o";
     static final String ARG_URLENCODE = "u";
+    static final String ARG_PADDING = "p";
     static final String ARG_DEBUG = "d";
 
     public static Arg parse(String[] args) {
@@ -53,6 +54,7 @@ public class CLIParser {
             argument.debug = commandLine.hasOption(ARG_DEBUG);
             argument.offline = commandLine.hasOption(ARG_ONLINE);
             argument.urlencode = commandLine.hasOption(ARG_URLENCODE);
+            argument.padding = commandLine.hasOption(ARG_PADDING);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -82,6 +84,7 @@ public class CLIParser {
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
         Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();
         Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
+        Option paddingOpt = Option.builder(ARG_PADDING).longOpt("padding").hasArg(false).desc("If this flag is set, byte-to-text output will be padded to full byte if needed.").build();
 
         Option help = Option.builder("h").longOpt("help").desc("Shows this page.").build();
         Option version = Option.builder("v").longOpt("version").desc("Prints application version.").build();
@@ -91,7 +94,7 @@ public class CLIParser {
         options.addOptionGroup(mainArgs);
         options.addOption(count).addOption(encodeing)
                 .addOption(seed).addOption(onlineOpt)
-                .addOption(urlencodeOpt)
+                .addOption(urlencodeOpt).addOption(paddingOpt)
                 .addOption(debugOpt).addOption(help)
                 .addOption(version);
 

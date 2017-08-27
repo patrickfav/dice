@@ -4,7 +4,24 @@ package at.favre.tools.dice.encode;
  * Interface for encoding byte arrays to string
  */
 public interface Encoder {
+
+    /**
+     * Applies the internal text-to-byte encoding and returns the result string.
+     * This will not pad in encodings if the output does not match the input byte array (null bytes)
+     *
+     * @param array to encode
+     * @return encoded byte array
+     */
     String encode(byte[] array);
+
+    /**
+     * Applies the internal text-to-byte encoding and adds padding if necessary
+     *
+     * @param array to encode
+     * @return encoded and padded byte array
+     */
+    String encodePadded(byte[] array);
+
 
     /**
      * The names or alias for a user select the encoder

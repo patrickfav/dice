@@ -18,6 +18,11 @@ public abstract class AProgrammingLanguagesEncoder extends AEncoder {
     }
 
     @Override
+    public String encodePadded(byte[] array) {
+        return encode(array);
+    }
+
+    @Override
     public String getDescription() {
         return "Syntax for initializing an array of type byte in " + getProgrammingLanguageName() + ".";
     }

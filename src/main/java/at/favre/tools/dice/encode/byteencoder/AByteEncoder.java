@@ -4,6 +4,11 @@ import at.favre.tools.dice.encode.Encoder;
 
 public abstract class AByteEncoder implements Encoder {
     @Override
+    public String encodePadded(byte[] array) {
+        return encode(array);
+    }
+
+    @Override
     public String getDescription() {
         return "<TODO>";
     }

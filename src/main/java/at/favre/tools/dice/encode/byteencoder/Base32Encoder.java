@@ -9,7 +9,12 @@ public class Base32Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return new Base32((byte) '=').encodeToString(array).replace("=", "");
+        return encodePadded(array).replace("=", "");
+    }
+
+    @Override
+    public String encodePadded(byte[] array) {
+        return new Base32((byte) '=').encodeAsString(array);
     }
 
     @Override

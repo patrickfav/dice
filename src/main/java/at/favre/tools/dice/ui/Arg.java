@@ -14,11 +14,12 @@ public class Arg {
     public boolean debug = false;
     public boolean offline = false;
     public boolean urlencode = false;
+    public boolean padding = false;
 
     public Arg() {
     }
 
-    public Arg(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug) {
+    public Arg(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding) {
         this.encoding = encoding;
         this.seed = seed;
         this.length = length;
@@ -26,6 +27,7 @@ public class Arg {
         this.offline = offline;
         this.urlencode = urlencode;
         this.debug = debug;
+        this.padding = padding;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class Arg {
         if (debug != arg.debug) return false;
         if (offline != arg.offline) return false;
         if (urlencode != arg.urlencode) return false;
+        if (padding != arg.padding) return false;
         if (encoding != null ? !encoding.equals(arg.encoding) : arg.encoding != null) return false;
         if (seed != null ? !seed.equals(arg.seed) : arg.seed != null) return false;
         return count != null ? count.equals(arg.count) : arg.count == null;
@@ -53,6 +56,7 @@ public class Arg {
         result = 31 * result + (debug ? 1 : 0);
         result = 31 * result + (offline ? 1 : 0);
         result = 31 * result + (urlencode ? 1 : 0);
+        result = 31 * result + (padding ? 1 : 0);
         return result;
     }
 
@@ -66,6 +70,7 @@ public class Arg {
                 ", debug=" + debug +
                 ", offline=" + offline +
                 ", urlencode=" + urlencode +
+                ", padding=" + padding +
                 '}';
     }
 }

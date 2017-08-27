@@ -13,6 +13,15 @@ public class Base10Encoder extends AByteEncoder {
     }
 
     @Override
+    public String encodePadded(byte[] array) {
+        return String.format("%" + String.valueOf((int) Math.pow(2, array.length * 8)).length() + "s", encode(array)).replace(' ', '0');
+    }
+
+    public String encod(byte[] array) {
+        return new BigInteger(1, array).toString(10);
+    }
+
+    @Override
     public String[] names() {
         return new String[]{"dec", "decimal", "base10"};
     }
