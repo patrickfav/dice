@@ -13,6 +13,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,44 +46,58 @@ public class RndTool {
             System.exit(400);
         }
 
-        if (arguments.length > MAX_RND_LENGTH) {
-            System.err.println("This tool only allows randoms of maximal length " + MAX_RND_LENGTH + " byte");
+        if (arguments.length > MAX_RND_LENGTH || arguments.length <= 0) {
+            System.err.println("The random length must be between 1 and " + MAX_RND_LENGTH + " byte");
             System.exit(401);
         }
 
-        if (arguments.count > MAX_COUNT) {
-            System.err.println("This tool only allows a maximal count of " + MAX_COUNT);
+        if (arguments.count != null && (arguments.count > MAX_COUNT || arguments.count <= 0)) {
+            System.err.println("Count parameter must be between 1 and " + MAX_COUNT);
             System.exit(402);
         }
 
-        SecureRandom secureRandom = new SecureRandom();
-        if (arguments.urlencode) {
-            System.out.println("Url encode output.");
-        }
+        try {
+            SecureRandom secureRandom = RndToolRandomHandler.createSecureRandom();
 
-        if (arguments.seed != null) {
-            System.out.println("Use provided seed " + printWithEntropy(arguments.seed.getBytes(StandardCharsets.UTF_8)) + ".");
-            secureRandom.setSeed(arguments.seed.getBytes(StandardCharsets.UTF_8));
-        } else if (!arguments.offline) {
-            System.out.print("Fetching from random.org. ");
-            RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug).getRandom();
-            if (!seedResult.isError()) {
-                secureRandom.setSeed(seedResult.seed);
-                System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
-            } else {
-                System.err.println(seedResult.errorMsg);
-                System.err.println("Try using --offline to skip online seeding or --debug for more information.");
-
-                if (arguments.debug && seedResult.throwable != null) {
-                    seedResult.throwable.printStackTrace();
-                }
-                System.exit(500);
+            if (arguments.debug) {
+                System.out.println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")");
             }
+
+            if (arguments.urlencode) {
+                System.out.println("Url encode output.");
+            }
+
+            if (arguments.seed != null) {
+                System.out.println("Use provided seed " + printWithEntropy(arguments.seed.getBytes(StandardCharsets.UTF_8)) + ".");
+                RndToolRandomHandler.seed(secureRandom, arguments.seed.getBytes(StandardCharsets.UTF_8));
+            } else if (!arguments.offline) {
+                System.out.print("Fetching from random.org. ");
+                RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug).getRandom();
+                if (!seedResult.isError()) {
+                    RndToolRandomHandler.seed(secureRandom, seedResult.seed);
+                    System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
+                } else {
+                    System.err.println(seedResult.errorMsg);
+                    System.err.println("Try using --offline to skip online seeding or --debug for more information.");
+
+                    if (arguments.debug && seedResult.throwable != null) {
+                        seedResult.throwable.printStackTrace();
+                    }
+                    System.exit(500);
+                }
+            }
+            System.out.println();
+            printRandoms(arguments, encoder, secureRandom);
+
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Could not get strong secure random instance. Is a current JRE 8 installed?");
+            if (arguments.debug) {
+                e.printStackTrace();
+            }
+
+            System.exit(501);
         }
 
-        System.out.println();
-
-        printRandoms(arguments, encoder, secureRandom);
         return true;
     }
 
