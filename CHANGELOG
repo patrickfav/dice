@@ -2,7 +2,7 @@
 
 ## v0.5.0
 * add padding mode
-* add go encoder
+* add go, rust, ruby and perl encoder
 * add better auto count mode, filling columns
 * add better encoding description
 * remove alphabet encoder

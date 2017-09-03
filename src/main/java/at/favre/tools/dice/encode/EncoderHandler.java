@@ -24,8 +24,11 @@ public class EncoderHandler {
             new GoByteArrayEncoder(),
             new KotlinByteArrayEncoder(),
             new NodeJsEncoder(),
+            new PerlEncoder(),
             new PhpEncoder(),
             new Python3Encoder(),
+            new RubyEncoder(),
+            new RustEncoder(),
             new SwiftEncoder(),
             new Utf8Encoder()
     ));
