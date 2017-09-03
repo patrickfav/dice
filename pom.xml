@@ -232,6 +232,12 @@
             <artifactId>logging-interceptor</artifactId>
             <version>3.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>1.5</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>

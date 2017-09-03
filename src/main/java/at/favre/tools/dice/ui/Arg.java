@@ -1,76 +1,81 @@
 package at.favre.tools.dice.ui;
 
+import com.google.auto.value.AutoValue;
+import com.sun.istack.internal.Nullable;
 
-public class Arg {
+@AutoValue
+public abstract class Arg {
     static final int DEFAULT_LENGTH = 16;
     public static final int DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public String encoding;
-    public String seed;
-    public int length;
-    public Integer count;
-
-    public boolean debug = false;
-    public boolean offline = false;
-    public boolean urlencode = false;
-    public boolean padding = false;
-
-    public Arg() {
+    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot) {
+        return builder()
+                .encoding(encoding)
+                .seed(seed)
+                .length(length)
+                .count(count)
+                .offline(offline)
+                .urlencode(urlencode)
+                .debug(debug)
+                .padding(padding)
+                .robot(robot)
+                .build();
     }
 
-    public Arg(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding) {
-        this.encoding = encoding;
-        this.seed = seed;
-        this.length = length;
-        this.count = count;
-        this.offline = offline;
-        this.urlencode = urlencode;
-        this.debug = debug;
-        this.padding = padding;
+    public abstract String encoding();
+
+    @Nullable
+    public abstract String seed();
+
+    public abstract int length();
+
+    @Nullable
+    public abstract Integer count();
+
+    public abstract boolean debug();
+
+    public abstract boolean offline();
+
+    public abstract boolean urlencode();
+
+    public abstract boolean padding();
+
+    public abstract boolean robot();
+
+    public abstract Builder toBuilder();
+
+    public static Builder builder() {
+        return new AutoValue_Arg.Builder()
+                .encoding(DEFAULT_ENCODING)
+                .length(DEFAULT_LENGTH)
+                .debug(false)
+                .offline(false)
+                .urlencode(false)
+                .padding(false)
+                .robot(false);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder encoding(String value);
 
-        Arg arg = (Arg) o;
+        public abstract Builder seed(String value);
 
-        if (length != arg.length) return false;
-        if (debug != arg.debug) return false;
-        if (offline != arg.offline) return false;
-        if (urlencode != arg.urlencode) return false;
-        if (padding != arg.padding) return false;
-        if (encoding != null ? !encoding.equals(arg.encoding) : arg.encoding != null) return false;
-        if (seed != null ? !seed.equals(arg.seed) : arg.seed != null) return false;
-        return count != null ? count.equals(arg.count) : arg.count == null;
-    }
+        public abstract Builder length(int value);
 
-    @Override
-    public int hashCode() {
-        int result = encoding != null ? encoding.hashCode() : 0;
-        result = 31 * result + (seed != null ? seed.hashCode() : 0);
-        result = 31 * result + length;
-        result = 31 * result + (count != null ? count.hashCode() : 0);
-        result = 31 * result + (debug ? 1 : 0);
-        result = 31 * result + (offline ? 1 : 0);
-        result = 31 * result + (urlencode ? 1 : 0);
-        result = 31 * result + (padding ? 1 : 0);
-        return result;
-    }
+        public abstract Builder count(Integer value);
 
-    @Override
-    public String toString() {
-        return "Arg{" +
-                "encoding='" + encoding + '\'' +
-                ", seed='" + seed + '\'' +
-                ", length=" + length +
-                ", count=" + count +
-                ", debug=" + debug +
-                ", offline=" + offline +
-                ", urlencode=" + urlencode +
-                ", padding=" + padding +
-                '}';
+        public abstract Builder debug(boolean value);
+
+        public abstract Builder offline(boolean value);
+
+        public abstract Builder urlencode(boolean value);
+
+        public abstract Builder padding(boolean value);
+
+        public abstract Builder robot(boolean value);
+
+        public abstract Arg build();
     }
 }

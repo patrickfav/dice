@@ -37,6 +37,6 @@ public class RndToolRandomHandler {
     public static void seed(SecureRandom secureRandom, byte[] externalSeed) throws NoSuchAlgorithmException {
         SecureRandom tempSecureRandom = createSecureRandom();
         tempSecureRandom.setSeed(externalSeed);
-        secureRandom.setSeed(tempSecureRandom.generateSeed(16));
+        secureRandom.setSeed(tempSecureRandom.generateSeed(32));
     }
 }

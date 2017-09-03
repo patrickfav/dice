@@ -38,20 +38,20 @@ public class RndTool {
         EncoderHandler loader = new EncoderHandler();
         loader.load();
 
-        Encoder encoder = loader.findByName(arguments.encoding);
+        Encoder encoder = loader.findByName(arguments.encoding());
 
         if (encoder == null) {
-            System.err.println("Given encoder '" + arguments.encoding + "' is not available.");
+            System.err.println("Given encoder '" + arguments.encoding() + "' is not available.");
             System.err.println("\nAvailable encoders:\n\n" + loader.getFullSupportedEncodingList());
             System.exit(400);
         }
 
-        if (arguments.length > MAX_RND_LENGTH || arguments.length <= 0) {
+        if (arguments.length() > MAX_RND_LENGTH || arguments.length() <= 0) {
             System.err.println("The random length must be between 1 and " + MAX_RND_LENGTH + " byte");
             System.exit(401);
         }
 
-        if (arguments.count != null && (arguments.count > MAX_COUNT || arguments.count <= 0)) {
+        if (arguments.count() != null && (arguments.count() > MAX_COUNT || arguments.count() <= 0)) {
             System.err.println("Count parameter must be between 1 and " + MAX_COUNT);
             System.exit(402);
         }
@@ -59,20 +59,20 @@ public class RndTool {
         try {
             SecureRandom secureRandom = RndToolRandomHandler.createSecureRandom();
 
-            if (arguments.debug) {
+            if (arguments.debug()) {
                 System.out.println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")");
             }
 
-            if (arguments.urlencode) {
+            if (arguments.urlencode()) {
                 System.out.println("Url encode output.");
             }
 
-            if (arguments.seed != null) {
-                System.out.println("Use provided seed " + printWithEntropy(arguments.seed.getBytes(StandardCharsets.UTF_8)) + ".");
-                RndToolRandomHandler.seed(secureRandom, arguments.seed.getBytes(StandardCharsets.UTF_8));
-            } else if (!arguments.offline) {
+            if (arguments.seed() != null) {
+                System.out.println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".");
+                RndToolRandomHandler.seed(secureRandom, arguments.seed().getBytes(StandardCharsets.UTF_8));
+            } else if (!arguments.offline()) {
                 System.out.print("Fetching from random.org. ");
-                RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug).getRandom();
+                RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
                 if (!seedResult.isError()) {
                     RndToolRandomHandler.seed(secureRandom, seedResult.seed);
                     System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
@@ -80,7 +80,7 @@ public class RndTool {
                     System.err.println(seedResult.errorMsg);
                     System.err.println("Try using --offline to skip online seeding or --debug for more information.");
 
-                    if (arguments.debug && seedResult.throwable != null) {
+                    if (arguments.debug() && seedResult.throwable != null) {
                         seedResult.throwable.printStackTrace();
                     }
                     System.exit(500);
@@ -91,7 +91,7 @@ public class RndTool {
 
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Could not get strong secure random instance. Is a current JRE 8 installed?");
-            if (arguments.debug) {
+            if (arguments.debug()) {
                 e.printStackTrace();
             }
 
@@ -112,22 +112,22 @@ public class RndTool {
     }
 
     private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
-        List<String> outputList = new ArrayList<>(arguments.length);
+        List<String> outputList = new ArrayList<>(arguments.length());
 
         boolean useAutoColumn = false;
-        if (arguments.count == null) {
-            arguments.count = Arg.DEFAULT_COUNT;
+        if (arguments.count() == null) {
+            arguments = arguments.toBuilder().count(Arg.DEFAULT_COUNT).build();
             useAutoColumn = true;
         }
 
-        int countGenerated = arguments.count + (useAutoColumn ? 20 : 0);
+        int countGenerated = arguments.count() + (useAutoColumn ? 20 : 0);
         for (int i = 0; i < countGenerated; i++) {
-            byte[] rnd = new byte[arguments.length];
+            byte[] rnd = new byte[arguments.length()];
             secureRandom.nextBytes(rnd);
 
-            String randomEncodedString = arguments.padding ? encoder.encodePadded(rnd) : encoder.encode(rnd);
+            String randomEncodedString = arguments.padding() ? encoder.encodePadded(rnd) : encoder.encode(rnd);
 
-            if (arguments.urlencode) {
+            if (arguments.urlencode()) {
                 try {
                     randomEncodedString = new URLCodec().encode(randomEncodedString);
                 } catch (EncoderException e) {
@@ -138,7 +138,7 @@ public class RndTool {
         }
 
         if (useAutoColumn) {
-            new ColumnRenderer().renderAutoColumn(arguments.count, outputList, System.out);
+            new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
         } else {
             new ColumnRenderer().render(outputList, System.out);
         }

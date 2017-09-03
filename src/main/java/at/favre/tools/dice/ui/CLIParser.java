@@ -14,16 +14,17 @@ public class CLIParser {
     static final String ARG_URLENCODE = "u";
     static final String ARG_PADDING = "p";
     static final String ARG_DEBUG = "d";
+    static final String ARG_ROBOT = "r";
 
     public static Arg parse(String[] args) {
         Options options = setupOptions();
         CommandLineParser parser = new DefaultParser();
-        Arg argument = new Arg();
+        Arg.Builder argument = Arg.builder();
 
         try {
 
             CommandLine commandLine = parser.parse(options, args);
-            argument.length = parseLength(commandLine.getArgList());
+            argument.length(parseLength(commandLine.getArgList()));
 
             if (commandLine.hasOption("h") || commandLine.hasOption("help")) {
                 printHelp(options);
@@ -36,35 +37,35 @@ public class CLIParser {
             }
 
             if (commandLine.hasOption(ARG_COUNT)) {
-                argument.count = Integer.valueOf(commandLine.getOptionValue(ARG_COUNT));
+                argument.count(Integer.valueOf(commandLine.getOptionValue(ARG_COUNT)));
             } else {
-                argument.count = null;
+                argument.count(null);
             }
 
             if (commandLine.hasOption(ARG_SEED)) {
-                argument.seed = commandLine.getOptionValue(ARG_SEED);
+                argument.seed(commandLine.getOptionValue(ARG_SEED));
             }
 
             if (commandLine.hasOption(ARG_ENCODING)) {
-                argument.encoding = commandLine.getOptionValue(ARG_ENCODING);
+                argument.encoding(commandLine.getOptionValue(ARG_ENCODING));
             } else {
-                argument.encoding = Arg.DEFAULT_ENCODING;
+                argument.encoding(Arg.DEFAULT_ENCODING);
             }
 
-            argument.debug = commandLine.hasOption(ARG_DEBUG);
-            argument.offline = commandLine.hasOption(ARG_ONLINE);
-            argument.urlencode = commandLine.hasOption(ARG_URLENCODE);
-            argument.padding = commandLine.hasOption(ARG_PADDING);
+            argument.debug(commandLine.hasOption(ARG_DEBUG));
+            argument.offline(commandLine.hasOption(ARG_ONLINE));
+            argument.urlencode(commandLine.hasOption(ARG_URLENCODE));
+            argument.padding(commandLine.hasOption(ARG_PADDING));
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
 
             CLIParser.printHelp(options);
 
-            argument = null;
+            return null;
         }
 
-        return argument;
+        return argument.build();
     }
 
     private static Integer parseLength(List<String> args) {
@@ -85,6 +86,7 @@ public class CLIParser {
         Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();
         Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
         Option paddingOpt = Option.builder(ARG_PADDING).longOpt("padding").hasArg(false).desc("If this flag is set, byte-to-text output will be padded to full byte if needed.").build();
+        Option robotOpt = Option.builder(ARG_ROBOT).longOpt("robot").hasArg(false).desc("If this flag is set, output will be more friendly for scripting (ie. no verbose text, only the randoms 1 per line)").build();
 
         Option help = Option.builder("h").longOpt("help").desc("Shows this page.").build();
         Option version = Option.builder("v").longOpt("version").desc("Prints application version.").build();
@@ -96,6 +98,7 @@ public class CLIParser {
                 .addOption(seed).addOption(onlineOpt)
                 .addOption(urlencodeOpt).addOption(paddingOpt)
                 .addOption(debugOpt).addOption(help)
+                .addOption(robotOpt)
                 .addOption(version);
 
         return options;
