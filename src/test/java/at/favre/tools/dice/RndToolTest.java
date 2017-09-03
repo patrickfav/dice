@@ -7,6 +7,10 @@ public class RndToolTest {
     @Test
     public void execute() throws Exception {
         RndTool.execute(Arg.create("java", null, 12, 10, true, false, false, false, false));
+        RndTool.execute(Arg.create("base36", null, 4, null, true, false, false, false, false));
+        RndTool.execute(Arg.create("base64", "verybaadseed", 87, null, true, false, false, false, false));
+        RndTool.execute(Arg.create("base85", null, 15, null, true, true, false, false, false));
+        RndTool.execute(Arg.create("base32", null, 7, null, true, false, false, true, false));
     }
 
 }
