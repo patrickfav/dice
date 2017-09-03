@@ -1,7 +1,7 @@
 package at.favre.tools.dice.ui;
 
 import com.google.auto.value.AutoValue;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @AutoValue
 public abstract class Arg {
