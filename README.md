@@ -62,10 +62,13 @@ Or you want to create static salts, or randoms to harcode, then just use:
     -c,--count <number>      How many randoms should be generated. Automatically chosen if this argument is omitted.
     -d,--debug               Prints additional info for debugging.
     -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
-                             binary, octal, dec, base16, BASE16, base32, base36, base64,
-                             base64-url, base85, c, c#, java, go, kotlin, node, php, python3, swift, utf8
+                             binary, octal, dec, base16, BASE16, base32, base36, base64, base64-url, base85, c, c#,
+                             java, go, kotlin, node, perl, php, python3, ruby, rust, swift, utf8
     -h,--help                Shows this page.
     -o,--offline             Skips request to Random.org to seed random generator (use when offline).
+    -p,--padding             If this flag is set, byte-to-text output will be padded to full byte if needed.
+    -r,--robot               If this flag is set, output will be more friendly for scripting (ie. no verbose text, only
+                             the randoms 1 per line)
     -s,--seed <string>       Uses the utf-8 byte representation of given parameter to seed the internal random
                              generator. Warns if entropy is low.
     -u,--urlencode           Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the

@@ -25,6 +25,10 @@ public class ColumnRenderer {
         render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream);
     }
 
+    public void renderSingleColumn(List<String> outputList, PrintStream outStream) {
+        outputList.forEach(s -> outStream.print(s + "\n"));
+    }
+
     public void render(List<String> outputList, PrintStream outStream) {
         if (!outputList.isEmpty()) {
             final int maxLength = getMaxLength(outputList);

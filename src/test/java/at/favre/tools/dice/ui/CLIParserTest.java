@@ -52,7 +52,7 @@ public class CLIParserTest {
     @Test
     public void testRobot() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("64 " + "-" + CLIParser.ARG_ROBOT));
-        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 64, null, false, false, false, false, false);
+        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 64, null, false, false, false, false, true);
         assertEquals(expectedArg, parsedArg);
     }
 

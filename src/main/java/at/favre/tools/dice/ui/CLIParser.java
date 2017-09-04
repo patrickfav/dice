@@ -32,7 +32,7 @@ public class CLIParser {
             }
 
             if (commandLine.hasOption("v") || commandLine.hasOption("version")) {
-                System.out.println("Version: " + RndTool.jarVersion());
+                System.out.println(getVersion());
                 return null;
             }
 
@@ -56,6 +56,7 @@ public class CLIParser {
             argument.offline(commandLine.hasOption(ARG_ONLINE));
             argument.urlencode(commandLine.hasOption(ARG_URLENCODE));
             argument.padding(commandLine.hasOption(ARG_PADDING));
+            argument.robot(commandLine.hasOption(ARG_ROBOT));
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -109,6 +110,10 @@ public class CLIParser {
         help.setWidth(120);
         help.setLeftPadding(4);
         help.setDescPadding(3);
-        help.printHelp("<length> | --help", "Version:" + RndTool.jarVersion(), options, " ", false);
+        help.printHelp("<byte-length> | --help", "Version: " + RndTool.jarVersion(), options, "More details: https://github.com/patrickfav/dice", false);
+    }
+
+    private static String getVersion() {
+        return "Version: " + RndTool.jarVersion() + "\nCopyright 2017 Patrick Favre-Bulle (https://github.com/patrickfav/dice)";
     }
 }

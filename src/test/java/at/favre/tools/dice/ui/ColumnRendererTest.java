@@ -53,15 +53,28 @@ public class ColumnRendererTest {
     }
 
     @Test
-    public void renderMany() throws Exception {
+    public void renderSingleColumn() throws Exception {
         final int maxWordLength = 16;
-        final int count = 13;
+        final int count = 32;
         final int targetWidth = 80;
 
         for (int i = 1; i < maxWordLength; i += 2) {
             List<String> elements = generateRnd(i, count + 20);
-            testRender(count, targetWidth, elements, false);
+            testRender(count, targetWidth, elements, true);
         }
+    }
+
+    @Test
+    public void renderMany() throws Exception {
+        final int count = 13;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        List<String> elements = generateRnd(4, count);
+        new ColumnRenderer().renderSingleColumn(elements, new PrintStream(baos));
+        String out = baos.toString("UTF-8");
+        assertNotNull(out);
+        assertTrue(out.length() > 10);
+        System.out.println(out);
+        System.out.println();
     }
 
     private void testRender(int count, int targetWidth, List<String> elements, boolean auto) throws UnsupportedEncodingException {

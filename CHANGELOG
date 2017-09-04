@@ -1,5 +1,8 @@
 # Releases
 
+## v0.6.0
+* robot mode
+
 ## v0.5.0
 * add padding mode
 * add go, rust, ruby and perl encoder

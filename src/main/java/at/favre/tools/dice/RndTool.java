@@ -60,22 +60,22 @@ public class RndTool {
             SecureRandom secureRandom = RndToolRandomHandler.createSecureRandom();
 
             if (arguments.debug()) {
-                System.out.println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")");
+                println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")", arguments);
             }
 
             if (arguments.urlencode()) {
-                System.out.println("Url encode output.");
+                println("Url encode output.", arguments);
             }
 
             if (arguments.seed() != null) {
-                System.out.println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".");
+                println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".", arguments);
                 RndToolRandomHandler.seed(secureRandom, arguments.seed().getBytes(StandardCharsets.UTF_8));
             } else if (!arguments.offline()) {
-                System.out.print("Fetching from random.org. ");
+                print("Fetching from random.org. ", arguments);
                 RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
                 if (!seedResult.isError()) {
                     RndToolRandomHandler.seed(secureRandom, seedResult.seed);
-                    System.out.println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms");
+                    println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
                 } else {
                     System.err.println(seedResult.errorMsg);
                     System.err.println("Try using --offline to skip online seeding or --debug for more information.");
@@ -86,7 +86,7 @@ public class RndTool {
                     System.exit(500);
                 }
             }
-            System.out.println();
+            println("", arguments);
             printRandoms(arguments, encoder, secureRandom);
 
         } catch (NoSuchAlgorithmException e) {
@@ -99,6 +99,18 @@ public class RndTool {
         }
 
         return true;
+    }
+
+    private static void print(String msg, Arg arg) {
+        if (!arg.robot()) {
+            System.out.print(msg);
+        }
+    }
+
+    private static void println(String msg, Arg arg) {
+        if (!arg.robot()) {
+            System.out.println(msg);
+        }
     }
 
     private static String printWithEntropy(byte[] seed) {
@@ -137,13 +149,15 @@ public class RndTool {
             outputList.add(randomEncodedString);
         }
 
-        if (useAutoColumn) {
+        if (arguments.robot()) {
+            new ColumnRenderer().renderSingleColumn(outputList, System.out);
+        } else if (useAutoColumn) {
             new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
         } else {
             new ColumnRenderer().render(outputList, System.out);
         }
 
-        System.out.println();
+        println("", arguments);
     }
 
     public static String jarVersion() {
