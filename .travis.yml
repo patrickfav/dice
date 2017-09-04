@@ -18,7 +18,7 @@ before_script:
   - sudo apt-get install libc6:i386 libstdc++6:i386
 
 script:
-  - mvn clean install -X -Djarsigner.skip=false checksum:artifacts
+  - mvn clean install -X -Djarsigner.skip=false
 
 after_success:
   - mvn test jacoco:report coveralls:report
