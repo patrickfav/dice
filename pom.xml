@@ -6,7 +6,7 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dice</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -146,7 +146,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skip>true</skip>
+                    <skip>false</skip> <!-- set this to true if fail because of missing credentials -->
                     <keystore>keystore.jks</keystore>
                     <alias>pfopensource</alias>
                     <storepass>${env.OPENSOURCE_PROJECTS_KS_PW}</storepass>

@@ -1,6 +1,6 @@
 # Dice
 
-A simple tool that generates random text encoded byte arrays from the best random source from your machine* and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.
+A simple tool that generates random text encoded byte arrays from the best random source from your machine* optionally externally seeded by a true random generator and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
@@ -109,6 +109,46 @@ Or you want to create static salts, or randoms to harcode, then just use:
 | ruby         | `[0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]` |
 | rust         | `[u8; 6] = [0xd0, 0x3a, 0x4a, 0xee, 0x64, 0x11];` |
 | swift        | `[UInt8] = [0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]` |
+
+## Signed Jar
+
+The provided JARs in the Github release page are signed with my private key:
+
+    CN=Patrick Favre-Bulle, OU=Private, O=PF Github Open Source, L=Vienna, ST=Vienna, C=AT
+    Validity: Thu Sep 07 16:40:57 SGT 2017 to: Fri Feb 10 16:40:57 SGT 2034
+    SHA1: 06:DE:F2:C5:F7:BC:0C:11:ED:35:E2:0F:B1:9F:78:99:0F:BE:43:C4
+    SHA256: 2B:65:33:B0:1C:0D:2A:69:4E:2D:53:8F:29:D5:6C:D6:87:AF:06:42:1F:1A:EE:B3:3C:E0:6D:0B:65:A1:AA:88
+
+Use the jarsigner tool (found in your `$JAVA_HOME/bin` folder) folder to verify.
+
+## Security Considerations
+
+The fundamental part in the security concept is the strength of the used
+random generator. This implementation uses the `SecureRandom` class with
+its `getStrongInstance()` constructor. Internally `SecureRandom` choses
+among providers available at runtime [INSERT LINK TO PROVIDERS](). The best
+of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems)
+since the OS has better access to various random sources.
+
+However to strengthen this (ie. if an attacker can access your machine and
+guess a lot of the local entropy sources) a external random is used to further
+seed the random generator. This will add to the randomness and will not
+replace it.
+
+Using an external random might open a new attack vector if, for example,
+an attacker might read the seed send over the network. There are 2
+measures against this:
+
+* The connections is encrypted with TLS (ie. HTTPS) and the random
+is singed by the creator which will be verified by a local pinned certificate.
+* The seed will not be used directly; first a new `SecureRandom` will be
+created, seed with the external seed, then the `generateSeed()` method will
+be called to create a seed for the production `SecureRandom`. This makes
+it very hard for an attacker to guess the actual used seed.
+
+[Here is a discussion on this on crypto stackexchange]()
+
+
 ## Build
 
 Use maven (3.1+) to create a jar including all dependencies
