@@ -6,7 +6,7 @@ A simple tool that generates random text encoded byte arrays from the best rando
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
 [![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master)
 
-<sup>*as promised by the contract of Java's `SecureRandom`</sup>
+<sup>* depending on the used provider</sup>
 
 Main features:
 
@@ -125,8 +125,9 @@ Use the jarsigner tool (found in your `$JAVA_HOME/bin` folder) folder to verify.
 
 The fundamental part in the security concept is the strength of the used
 random generator. This implementation uses the `SecureRandom` class with
-its `getStrongInstance()` constructor. Internally `SecureRandom` choses
-among providers available at runtime [INSERT LINK TO PROVIDERS](). The best
+its `getStrongInstance()` constructor to get [the best cryptographic random generator
+ available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses
+among [providers available at runtime](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/). The best
 of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems)
 since the OS has better access to various random sources.
 
@@ -146,7 +147,11 @@ created, seed with the external seed, then the `generateSeed()` method will
 be called to create a seed for the production `SecureRandom`. This makes
 it very hard for an attacker to guess the actual used seed.
 
-[Here is a discussion on this on crypto stackexchange]()
+Further Readings:
+
+* [Discussion on seeding random generators](https://crypto.stackexchange.com/questions/51218/practical-way-to-generate-random-numbers-from-prng-which-are-indistinguishable-f)
+* [Discussion about the SHA1 PRNG provider](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom)
+* [The Right Way to use Secure Random](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/)
 
 
 ## Build
