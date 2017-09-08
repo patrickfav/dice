@@ -127,7 +127,7 @@ The fundamental part in the security concept is the strength of the used
 random generator. This implementation uses the `SecureRandom` class with
 its `getStrongInstance()` constructor to get [the best cryptographic random generator
  available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses
-among [providers available at runtime](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/). The best
+among [providers available at runtime](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp). The best
 of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems)
 since the OS has better access to various random sources.
 
