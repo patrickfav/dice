@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ColumnRenderer {
     private static final int MAX_WIDTH = 80;
+    private static final int LINE_BREAK_EVERY_LINES = 24;
     private static final char SEPARATOR = ' ';
 
     private final int targetWidth;
@@ -34,6 +35,7 @@ public class ColumnRenderer {
             final int maxLength = getMaxLength(outputList);
             final int columns = getColumnCount(maxLength);
             int columnCounter = columns;
+            int lineCount = 0;
 
             for (int i = 0; i < outputList.size(); i++) {
                 String randomString = outputList.get(i);
@@ -48,6 +50,12 @@ public class ColumnRenderer {
                 if (columnCounter == 0 && i + 1 != outputList.size()) {
                     columnCounter = columns;
                     outStream.print("\n");
+                    lineCount++;
+
+                    if (lineCount % LINE_BREAK_EVERY_LINES == 0) {
+                        outStream.print("\n");
+                    }
+
                 } else {
                     outStream.print(SEPARATOR);
                 }

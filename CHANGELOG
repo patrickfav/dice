@@ -1,5 +1,10 @@
 # Releases
 
+## v1.0.0
+* use HMAC DRBG
+* use multiple entropy sources
+* add line break every X lines of output
+
 ## v0.6.0
 * robot mode
 * signed jar

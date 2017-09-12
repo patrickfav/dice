@@ -3,6 +3,7 @@ package at.favre.tools.dice;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
+import at.favre.tools.dice.rnd.*;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
@@ -13,8 +14,6 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +22,7 @@ public class RndTool {
 
     private static final int MAX_RND_LENGTH = 64 * 1024;
     private static final int MAX_COUNT = 5000;
+    private static final byte[] RND_TOOL_PERSONALIZATION = new byte[]{(byte) 0xE9, 0x36, (byte) 0x9C, 0x6B, (byte) 0xC4, 0x29, 0x53, 0x3D, (byte) 0xCA, 0x46, 0x24, 0x03, 0x72, 0x5C, 0x5F, (byte) 0xCF, (byte) 0xB8, 0x1C, (byte) 0xF2, 0x36};
 
     public static void main(String[] args) {
         Arg arguments = CLIParser.parse(args);
@@ -39,6 +39,8 @@ public class RndTool {
         loader.load();
 
         Encoder encoder = loader.findByName(arguments.encoding());
+        EntropyPool entropyPool = new DefaultEntropyPool();
+        entropyPool.add(new SecureRandomEntropySource());
 
         if (encoder == null) {
             System.err.println("Given encoder '" + arguments.encoding() + "' is not available.");
@@ -57,11 +59,10 @@ public class RndTool {
         }
 
         try {
-            SecureRandom secureRandom = RndToolRandomHandler.createSecureRandom();
 
-            if (arguments.debug()) {
+            /*if (arguments.debug()) {
                 println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")", arguments);
-            }
+            }*/
 
             if (arguments.urlencode()) {
                 println("Url encode output.", arguments);
@@ -69,12 +70,14 @@ public class RndTool {
 
             if (arguments.seed() != null) {
                 println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".", arguments);
-                RndToolRandomHandler.seed(secureRandom, arguments.seed().getBytes(StandardCharsets.UTF_8));
-            } else if (!arguments.offline()) {
+                entropyPool.add(new ExternalSeedEntropySource(arguments.seed()));
+            }
+
+            if (!arguments.offline()) {
                 print("Fetching from random.org. ", arguments);
                 RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
                 if (!seedResult.isError()) {
-                    RndToolRandomHandler.seed(secureRandom, seedResult.seed);
+                    entropyPool.add(new ExternalSeedEntropySource(seedResult.seed));
                     println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
                 } else {
                     System.err.println(seedResult.errorMsg);
@@ -87,11 +90,19 @@ public class RndTool {
                 }
             }
             println("", arguments);
-            printRandoms(arguments, encoder, secureRandom);
+            printRandoms(arguments, encoder, new HmacDrbg((HmacDrbg.EntropySource) entropyPool, RND_TOOL_PERSONALIZATION));
 
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Could not get strong secure random instance. Is a current JRE 8 installed?");
+        } catch (Exception e) {
+            System.err.print("Could not create random bits.");
+
+            if (e.getMessage() != null) {
+                System.err.print(" " + e.getMessage());
+            }
+
+            System.err.println();
+
             if (arguments.debug()) {
+                System.err.println();
                 e.printStackTrace();
             }
 
@@ -123,7 +134,7 @@ public class RndTool {
         return sb.toString();
     }
 
-    private static void printRandoms(Arg arguments, Encoder encoder, SecureRandom secureRandom) {
+    private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg) {
         List<String> outputList = new ArrayList<>(arguments.length());
 
         boolean useAutoColumn = false;
@@ -134,8 +145,7 @@ public class RndTool {
 
         int countGenerated = arguments.count() + (useAutoColumn ? 20 : 0);
         for (int i = 0; i < countGenerated; i++) {
-            byte[] rnd = new byte[arguments.length()];
-            secureRandom.nextBytes(rnd);
+            byte[] rnd = drbg.nextBytes(arguments.length());
 
             String randomEncodedString = arguments.padding() ? encoder.encodePadded(rnd) : encoder.encode(rnd);
 

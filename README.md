@@ -1,6 +1,6 @@
 # Dice
 
-A simple tool that generates random text encoded byte arrays from the best random source from your machine* optionally externally seeded by a true random generator and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages.
+A pseudo random bit generator that generates text encoded byte arrays with entropy from the best random source from your machine* optionally externally seeded by a true random generator and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages. This implementation uses the HMAC Deterministic random bit generator schema as defined in NIST SP800-90A.
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
@@ -13,6 +13,7 @@ Main features:
  * Supports all common byte encodings and more (hex, base32, base36, base64, base85, etc.)
  * Automatic secure seeding of random generator with [random.org](https://www.random.org/)
  * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swifth, go,...)
+ * NIST SP800-90A HMAC_DRBG (better than standard Java 8 PRNG)
  * Entropy warnings if seed is weak
  * Additional output configuration like "www-form-urlencoding" and padding of output
 
@@ -117,24 +118,42 @@ The provided JARs in the Github release page are signed with my private key:
     CN=Patrick Favre-Bulle, OU=Private, O=PF Github Open Source, L=Vienna, ST=Vienna, C=AT
     Validity: Thu Sep 07 16:40:57 SGT 2017 to: Fri Feb 10 16:40:57 SGT 2034
     SHA1: 06:DE:F2:C5:F7:BC:0C:11:ED:35:E2:0F:B1:9F:78:99:0F:BE:43:C4
-    SHA256: 2B:65:33:B0:1C:0D:2A:69:4E:2D:53:8F:29:D5:6C:D6:87:AF:06:42:1F:1A:EE:B3:3C:E0:6D:0B:65:A1:AA:88
+    SHA256: 06:DE:F2:C5:F7:BC:0C:11:ED:35:E2:0F:B1:9F:78:99:0F:BE:43:C4
+                SHA256: 2B:65:33:B0:1C:0D:2A:69:4E:2D:53:8F:29:D5:6C:D6:87:AF:06:42:1F:1A:EE:B3:3C:E0:6D:0B:65:A1:AA:88
 
 Use the jarsigner tool (found in your `$JAVA_HOME/bin` folder) folder to verify.
 
 ## Security Considerations
 
-The fundamental part in the security concept is the strength of the used
-random generator. This implementation uses the `SecureRandom` class with
-its `getStrongInstance()` constructor to get [the best cryptographic random generator
- available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses
-among [providers available at runtime](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp). The best
-of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems)
-since the OS has better access to various random sources.
+The tool has two phases: Gathering entropy and generating random bits.
 
-However to strengthen this (ie. if an attacker can access your machine and
-guess a lot of the local entropy sources) a external random is used to further
-seed the random generator. This will add to the randomness and will not
-replace it.
+### Entropy Sources
+
+This implementation uses multiple entropy sources to seed it's random
+bit generator. All these sources are combined and a weak source will not
+weaken the overall output. This ensures that even if one source fails
+the output is still cryptographically strong. Below is a detailed
+description of the used sources:
+
+#### Strong SecureRandom Provider
+
+This implementation uses the `SecureRandom` class with
+its `getStrongInstance()` constructor to get [the best cryptographic random generator available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses among [providers available at runtime](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp). The best of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems) since the OS has better access to various random sources.
+
+**Further reading:**
+
+* [The Right Way to use Secure Random](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/)
+* [Discussion on seeding random generators](https://crypto.stackexchange.com/questions/51218/practical-way-to-generate-random-numbers-from-prng-which-are-indistinguishable-f)
+
+#### Hardware and Runtime Fingerprinting
+
+In case the chosen `SecureRandom` does not have access to the OS entropy pool, this entropy source reads from various public manager specific data for this
+machine (e.g. all MAC addresses of network adapter, process id, cpu usage, etc.) to guarantee
+unique values for this machine and call.
+
+#### External Random Service Seeding with random.org
+
+Per default the tool tries to fetch a seed from an external random (true) source.
 
 Using an external random might open a new attack vector if, for example,
 an attacker might read the seed send over the network. There are 2
@@ -142,16 +161,26 @@ measures against this:
 
 * The connections is encrypted with TLS (ie. HTTPS) and the random
 is singed by the creator which will be verified by a local pinned certificate.
-* The seed will not be used directly; first a new `SecureRandom` will be
-created, seed with the external seed, then the `generateSeed()` method will
-be called to create a seed for the production `SecureRandom`. This makes
-it very hard for an attacker to guess the actual used seed.
+* The seed is only a part of the entropy source and the knowledge of it does not
+make it possible to guess the random bits.
 
-Further Readings:
+#### Local seeding
 
-* [Discussion on seeding random generators](https://crypto.stackexchange.com/questions/51218/practical-way-to-generate-random-numbers-from-prng-which-are-indistinguishable-f)
-* [Discussion about the SHA1 PRNG provider](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom)
-* [The Right Way to use Secure Random](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/)
+The caller may provide a string that additionally seeds the random bit generator
+
+### Deterministic Random Bit Generation
+
+As cryptographic pseudo-random generator (PRNG), the [NIST SP 800-90A](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) recommendation `HMAC-DRBG` is used in an implementation derived from [google/rappor](https://github.com/google/rappor) project. HMAC-DRBG seems to be a [better choice than the also recommended HASH-DRBG approach](https://crypto.stackexchange.com/questions/1393/is-hmac-drbg-or-hash-drbg-stronger). [Java 9](http://openjdk.java.net/jeps/273) is expected to have it's own provider for it. There [is no known issue with Java's current SHA1-PRNG](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom) implementation, but it is less studied thant the NIST recommendation.
+
+This implementation uses HMAC-SHA256 internally and reseeds itself after
+4 KiB of random data generation which is well below the maximum NIST
+recommendation.
+
+**Further Readings:**
+
+* [Formal Verficiation of the HMAC-DRBG Pseudo Random Number Generator](https://www.cs.cmu.edu/~kqy/resources/thesis.pdf)
+* [Security Analysis of DRBG Using HMAC in NIST SP 800-90](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
+
 
 
 ## Build
@@ -164,9 +193,7 @@ Use maven (3.1+) to create a jar including all dependencies
 
 * Java 8
 * Maven
-* apache-commons-codec
-* apache-commons-cli
-* Retrofit2
+* apache-commons-codec, apache-commons-cli, Retrofit 2
 * Proguard
 * Launch4j
 
