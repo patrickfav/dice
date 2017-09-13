@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Also known as: HMAC_DRBG.
  * See http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf for thorough specification.
  * <p>
- * Reseeding is not supported. Instead, construct a new DRBG when reseeding is required.
+ * Reseeding is supported.
  * See http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf Section 8.6.8.
  */
 public final class HmacDrbg implements DeterministicRandomBitGenerator {
@@ -32,7 +32,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * <p>
      * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #7.
      */
-    public static final int MAX_PERSONALIZATION_STRING_LENGTH_BYTES = 160 / 8;
+    private static final int MAX_PERSONALIZATION_STRING_LENGTH_BYTES = 160 / 8;
 
     /**
      * The constructor's entropyInput should contain this many high quality random bytes.
@@ -182,8 +182,8 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * Returns the next length pseudo-random bytes.
      */
     @Override
-    public byte[] nextBytes(int length) {
-        byte result[] = new byte[length];
+    public byte[] nextBytes(int lengthBytes) {
+        byte result[] = new byte[lengthBytes];
         nextBytes(result);
         return result;
     }

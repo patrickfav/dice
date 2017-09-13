@@ -1,16 +1,22 @@
 package at.favre.tools.dice.rnd;
 
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * Uses a strong instance of secure random to generate seeds. This will use the OS entropy pool
- * on most JVMs.
+ * Used for weak external entropy source like a user input. This will be combined with a strong
+ * {@link SecureRandom} instance which itself seeds with OS entropy pool, therefore mixing the
+ * weaker source with a stronger, unpredictable one.
  */
-public class SecureRandomEntropySource implements EntropySource {
+public class ExternalWeakSeedEntropySource implements EntropySource {
     private final SecureRandom secureRandom;
 
-    public SecureRandomEntropySource() {
+    public ExternalWeakSeedEntropySource(String seed) {
+        this(seed.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public ExternalWeakSeedEntropySource(byte[] seed) {
         try {
             this.secureRandom = SecureRandom.getInstanceStrong();
             /*
@@ -21,8 +27,9 @@ public class SecureRandomEntropySource implements EntropySource {
              * https://crypto.stackexchange.com/a/51222/44838
              */
             secureRandom.nextBytes(new byte[4]);
+            secureRandom.setSeed(seed);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("could not get strong secure random instace", e);
+            throw new IllegalStateException("could not get strong secure random instance", e);
         }
     }
 

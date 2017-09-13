@@ -10,6 +10,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
+/**
+ * Reads static and dynamic data from the machine like MAC addresses and cpu usage to pin the
+ * call to this machine. This itself is not a very strong entropy source by itself, although it will
+ * make it harder for an attacker to guess all of these data.
+ */
 public final class FingerprintEntropySource implements EntropySource {
     private static final byte[] SALT = new byte[]{(byte) 0xDE, 0x56, (byte) 0xA9, (byte) 0xDB, 0x23, 0x52, (byte) 0x98, (byte) 0xF0, 0x5F, 0x26, 0x0D, 0x36, 0x19, 0x4C, 0x55, (byte) 0xA8};
 

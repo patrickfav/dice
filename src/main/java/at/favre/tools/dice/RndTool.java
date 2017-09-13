@@ -39,7 +39,7 @@ public class RndTool {
         loader.load();
 
         Encoder encoder = loader.findByName(arguments.encoding());
-        EntropyPool entropyPool = new DefaultEntropyPool();
+        EntropyPool entropyPool = new HKDFEntropyPool();
         entropyPool.add(new SecureRandomEntropySource());
 
         if (encoder == null) {
@@ -70,14 +70,14 @@ public class RndTool {
 
             if (arguments.seed() != null) {
                 println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".", arguments);
-                entropyPool.add(new ExternalSeedEntropySource(arguments.seed()));
+                entropyPool.add(new ExternalWeakSeedEntropySource(arguments.seed()));
             }
 
             if (!arguments.offline()) {
                 print("Fetching from random.org. ", arguments);
                 RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
                 if (!seedResult.isError()) {
-                    entropyPool.add(new ExternalSeedEntropySource(seedResult.seed));
+                    entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
                     println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
                 } else {
                     System.err.println(seedResult.errorMsg);

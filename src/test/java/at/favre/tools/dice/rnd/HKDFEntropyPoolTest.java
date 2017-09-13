@@ -10,14 +10,14 @@ import java.util.Set;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DefaultEntropyPoolTest {
+public class HKDFEntropyPoolTest {
 
     private EntropyPool entropyPool;
 
     @Before
     public void setup() {
-        entropyPool = new DefaultEntropyPool();
-        entropyPool.add(new ExternalSeedEntropySource("7192837aadasdlkj"));
+        entropyPool = new HKDFEntropyPool();
+        entropyPool.add(new ExternalStrongSeedEntropySource("7192837aadasdlkj"));
         entropyPool.add(new SecureRandomEntropySource());
         entropyPool.add(new FingerprintEntropySource());
     }
