@@ -90,7 +90,10 @@ public class RndTool {
                 }
             }
             println("", arguments);
-            printRandoms(arguments, encoder, new HmacDrbg((HmacDrbg.EntropySource) entropyPool, RND_TOOL_PERSONALIZATION));
+            printRandoms(arguments, encoder, new HmacDrbg(
+                    (ExpandableEntropySource) entropyPool,
+                    new NounceEntropySource(),
+                    new PersonalizationSource()));
 
         } catch (Exception e) {
             System.err.print("Could not create random bits.");

@@ -19,14 +19,14 @@ public class HKDFEntropyPoolTest {
         entropyPool = new HKDFEntropyPool();
         entropyPool.add(new ExternalStrongSeedEntropySource("7192837aadasdlkj"));
         entropyPool.add(new SecureRandomEntropySource());
-        entropyPool.add(new FingerprintEntropySource());
+        entropyPool.add(new PersonalizationSource());
     }
 
     @Test
     public void generateSeed() throws Exception {
         Set<byte[]> pastSeeds = new HashSet<>();
         for (int i = 8; i < 64; i += 8) {
-            byte[] seed = entropyPool.generateSeed(i);
+            byte[] seed = entropyPool.generateEntropy(i);
             assertTrue(seed.length == i);
             assertFalse(pastSeeds.contains(seed));
             pastSeeds.add(seed);

@@ -18,7 +18,7 @@ public class HmacDrbgTest {
 
     @Before
     public void setUp() throws Exception {
-        hmacDrbg = new HmacDrbg(length -> new SecureRandom().generateSeed(length), null);
+        hmacDrbg = new HmacDrbg(length -> new SecureRandom().generateSeed(length), length -> new SecureRandom().generateSeed(length), length -> new SecureRandom().generateSeed(length));
     }
 
     @Test

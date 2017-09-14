@@ -2,6 +2,7 @@ package at.favre.tools.dice.encode;
 
 import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -12,12 +13,14 @@ import java.util.zip.GZIPOutputStream;
 public class CompressionTest {
 
     @Test
+    @Ignore
     public void testRandomData() throws Exception {
         testAllByteEncoder(gen(1024));
         testAllByteEncoder(gen(1024 * 128));
     }
 
     @Test
+    @Ignore
     public void testImage1() throws Exception {
         testAllByteEncoder(TEST_IMAGE_BASE64);
     }

@@ -171,7 +171,7 @@ The caller may provide a string that additionally seeds the random bit generator
 
 As cryptographic pseudo-random generator (PRNG), the [NIST SP 800-90A](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) recommendation `HMAC-DRBG` is used in an implementation derived from [google/rappor](https://github.com/google/rappor) project. HMAC-DRBG seems to be a [better choice than the also recommended HASH-DRBG approach](https://crypto.stackexchange.com/questions/1393/is-hmac-drbg-or-hash-drbg-stronger). [Java 9](http://openjdk.java.net/jeps/273) is expected to have it's own provider for it. There [is no known issue with Java's current SHA1-PRNG](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom) implementation, but it is less studied thant the NIST recommendation.
 
-This implementation uses HMAC-SHA256 internally and reseeds itself after
+This implementation uses HMAC-SHA512 internally and reseeds itself after
 4 KiB of random data generation which is well below the maximum NIST
 recommendation.
 

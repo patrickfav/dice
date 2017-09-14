@@ -1,5 +1,7 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.tools.dice.RndTool;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -14,11 +16,13 @@ import java.util.Enumeration;
  * Reads static and dynamic data from the machine like MAC addresses and cpu usage to pin the
  * call to this machine. This itself is not a very strong entropy source by itself, although it will
  * make it harder for an attacker to guess all of these data.
+ * <p>
+ * This is used as personalization of a DRBG as described in NIST SP800-90A
+ * <p>
+ * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf
  */
-public final class FingerprintEntropySource implements EntropySource {
+public final class PersonalizationSource implements ExpandableEntropySource {
     private static final byte[] SALT = new byte[]{(byte) 0xDE, 0x56, (byte) 0xA9, (byte) 0xDB, 0x23, 0x52, (byte) 0x98, (byte) 0xF0, 0x5F, 0x26, 0x0D, 0x36, 0x19, 0x4C, 0x55, (byte) 0xA8};
-
-    private final static int INTERNAL_SEED_LENGTH = 32;
 
     private byte[] concatMacAddresses() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -57,16 +61,28 @@ public final class FingerprintEntropySource implements EntropySource {
         return bos.toByteArray();
     }
 
+    private byte[] appVersionData() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        String version = RndTool.class.getPackage().getImplementationVersion();
+        if (version != null) {
+            bos.write(version.getBytes(StandardCharsets.UTF_8));
+        }
+
+        return bos.toByteArray();
+
+    }
+
     @Override
-    public byte[] generateEntropy() {
+    public byte[] generateEntropy(int lengthByte) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bos.write(concatMacAddresses());
             bos.write(runtimeData());
             bos.write(osData());
-            return HKDF.hkdf(bos.toByteArray(), SALT, SALT, INTERNAL_SEED_LENGTH);
+            bos.write(appVersionData());
+            return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
         } catch (Exception e) {
-            throw new IllegalStateException("could not generate seed", e);
+            throw new IllegalStateException("could not personalization seed", e);
         }
     }
 }

@@ -10,7 +10,7 @@ public interface DeterministicRandomBitGenerator {
      * Get the next pseudo random data
      *
      * @param lengthBytes output length in byte
-     * @return the random data
+     * @return new byte array with the random data
      */
     byte[] nextBytes(int lengthBytes);
 

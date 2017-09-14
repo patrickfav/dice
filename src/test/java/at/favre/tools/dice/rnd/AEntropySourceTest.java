@@ -1,31 +1,32 @@
 package at.favre.tools.dice.rnd;
 
 import at.favre.tools.dice.util.ByteUtils;
-import at.favre.tools.dice.util.Entropy;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AEntropySourceTest {
-    abstract EntropySource getEntropySource();
+    abstract ExpandableEntropySource getExpandableEntropySource();
 
     @Test
-    public void generateEntropyTest() throws Exception {
-        EntropySource entropySource = getEntropySource();
-        byte[] entropy = entropySource.generateEntropy();
+    public void generateExpandableEntropyTest() throws Exception {
+        ExpandableEntropySource entropySource = getExpandableEntropySource();
+        if (entropySource == null) {
+            return;
+        }
 
-        assertNotNull(entropy);
-        assertTrue(entropy.length >= 16);
+        Set<byte[]> pastSeeds = new HashSet<>();
+        for (int i = 8; i < 64; i += 8) {
+            byte[] seed = entropySource.generateEntropy(i);
+            assertTrue(seed.length == i);
+            assertFalse(pastSeeds.contains(seed));
+            pastSeeds.add(seed);
 
-        byte[] entropy2 = entropySource.generateEntropy();
-        assertFalse(Arrays.equals(entropy, entropy2));
-
-        assertTrue(new Entropy<>(ByteUtils.toList(entropy)).entropy() > 3);
-        assertTrue(new Entropy<>(ByteUtils.toList(entropy2)).entropy() > 3);
-
-        System.out.println(ByteUtils.bytesToHex(entropy));
-        System.out.println(ByteUtils.bytesToHex(entropy2));
+            System.out.println(ByteUtils.bytesToHex(seed));
+        }
     }
 }
