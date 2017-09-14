@@ -33,12 +33,6 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     private static final String HMAC_MODE = "HmacSHA512";
 
-    /**
-     * Personalization strings should not exceed this many bytes in length.
-     * <p>
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #7.
-     */
-    private static final int MAX_PERSONALIZATION_STRING_LENGTH_BYTES = SECURITY_STRENGTH_BIT / 2 / 8;
 
     /**
      * The constructor's entropyInput should contain this many high quality random bytes.
@@ -52,6 +46,13 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf
      */
     private static final int NOUNCE_INPUT_SIZE_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
+
+    /**
+     * Personalization strings should not exceed this many bytes in length.
+     * <p>
+     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #7.
+     */
+    private static final int PERSONALIZATION_STRING_LENGTH_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
 
     /**
      * The maximum number of bytes that can be generated from this DRBG with a single seed.
@@ -99,7 +100,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         return ByteUtils.concatAll(
                 entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES),
                 nounceSource.generateEntropy(NOUNCE_INPUT_SIZE_BYTES),
-                personalizationSource.generateEntropy(MAX_PERSONALIZATION_STRING_LENGTH_BYTES));
+                personalizationSource.generateEntropy(PERSONALIZATION_STRING_LENGTH_BYTES));
     }
 
     /**

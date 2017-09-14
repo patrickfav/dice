@@ -20,8 +20,8 @@ import java.util.Locale;
 
 public class RndTool {
 
-    private static final int MAX_RND_LENGTH = 64 * 1024;
-    private static final int MAX_COUNT = 5000;
+    private static final int MAX_RND_LENGTH = 640;
+    private static final int MAX_COUNT = 1024;
     private static final byte[] RND_TOOL_PERSONALIZATION = new byte[]{(byte) 0xE9, 0x36, (byte) 0x9C, 0x6B, (byte) 0xC4, 0x29, 0x53, 0x3D, (byte) 0xCA, 0x46, 0x24, 0x03, 0x72, 0x5C, 0x5F, (byte) 0xCF, (byte) 0xB8, 0x1C, (byte) 0xF2, 0x36};
 
     public static void main(String[] args) {
