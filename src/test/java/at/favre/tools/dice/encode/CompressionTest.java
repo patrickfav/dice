@@ -1,9 +1,7 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
-import at.favre.tools.dice.encode.byteencoder.Utf8Encoder;
+import at.favre.tools.dice.encode.byteencoder.*;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -13,7 +11,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
-@Ignore
+//@Ignore
 public class CompressionTest {
 
     @Test
@@ -33,12 +31,7 @@ public class CompressionTest {
     public void testLogData() throws Exception {
         File logFile1 = new File(getClass().getClassLoader().getResource("example_log1.txt").toURI().getPath());
         String logContent1 = new String(Files.readAllBytes(logFile1.toPath()), "UTF-8");
-
-        File logFile2 = new File(getClass().getClassLoader().getResource("example_log2.txt").toURI().getPath());
-        String logContent2 = new String(Files.readAllBytes(logFile2.toPath()), "UTF-8");
-
         testAllByteEncoder(logContent1.getBytes(StandardCharsets.UTF_8));
-        testAllByteEncoder(logContent2.getBytes(StandardCharsets.UTF_8));
     }
 
     private void testAllByteEncoder(byte[] data) throws Exception {
@@ -51,7 +44,11 @@ public class CompressionTest {
 
         List<Result> resultList = new ArrayList<>();
         handler.load().forEach(encoder -> {
-            if (encoder instanceof AByteEncoder && !(encoder instanceof Utf8Encoder)) {
+            if (encoder instanceof AByteEncoder &&
+                    !(encoder instanceof Utf8Encoder) &&
+                    !(encoder instanceof Base64Encoder.UrlSafe) &&
+                    !(encoder instanceof Base58Encoder.BitcoinStyle) &&
+                    !(encoder instanceof Base16Encoder.Base16UpperCaseEncoder)) {
                 resultList.add(testCompression(data, encoder));
             }
         });
@@ -60,14 +57,16 @@ public class CompressionTest {
 
         printTable(resultList);
 
-        System.out.println("\nBest 2 results for encoded:");
+        System.out.println("\nBest 3 results for encoded:");
         printResult(resultList.get(0));
         printResult(resultList.get(1));
+        printResult(resultList.get(2));
 
         resultList.sort(Comparator.comparingInt(o -> o.encodedCompressedSizeBytes));
-        System.out.println("\nBest 2 results for encoded & compressed:");
+        System.out.println("\nBest 3 results for encoded & compressed:");
         printResult(resultList.get(0));
         printResult(resultList.get(1));
+        printResult(resultList.get(2));
     }
 
     private Result testCompression(byte[] raw, Encoder encoder) {

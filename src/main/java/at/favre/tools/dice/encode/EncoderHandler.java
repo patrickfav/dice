@@ -15,6 +15,7 @@ public class EncoderHandler {
             new Base16Encoder.Base16UpperCaseEncoder(),
             new Base32Encoder(),
             new Base36Encoder(),
+            new Base58Encoder.BitcoinStyle(),
             new Base64Encoder.Default(),
             new Base64Encoder.UrlSafe(),
             new Base85Encoder(),

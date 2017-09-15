@@ -4,6 +4,7 @@
 * use HMAC DRBG
 * use multiple entropy sources
 * add line break every X lines of output
+* add Base58
 
 ## v0.6.0
 * robot mode

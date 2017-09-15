@@ -89,6 +89,7 @@ Or you want to create static salts, or randoms to harcode, then just use:
 | BASE16       | `1164EE4A3AD0`       | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Uppercase (A-F) letters are used for digits greater than 9. |
 | base32       | `CFSO4SR22A`         | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. |
 | base36       | `6s1zpnwsw`          | 65.0 % | true | Base36 translating into a radix-36 (aka Hexatrigesimal) representation. |
+| base58       | `9fPQkMRh`           | 73.0 % | true | Base58 is similar to Base64 but has been modified to avoid both non-alphanumeric characters and letters which might look ambiguous when printed. This version uses the alphabet common for Bitcoin protocol. |
 | base64       | `EWTuSjrQ`           | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
 | base64-url   | `EWTuSjrQ`           | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation.. Uses url safe mode |
 | base85      | `&S1<%3m[`           | 80.0 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
@@ -177,6 +178,7 @@ recommendation.
 
 **Further Readings:**
 
+* [Bruce Schneider: Proof that HMAC-DRBG has No Back Doors](https://www.schneier.com/blog/archives/2017/08/proof_that_hmac.html)
 * [Formal Verficiation of the HMAC-DRBG Pseudo Random Number Generator](https://www.cs.cmu.edu/~kqy/resources/thesis.pdf)
 * [Security Analysis of DRBG Using HMAC in NIST SP 800-90](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
 
