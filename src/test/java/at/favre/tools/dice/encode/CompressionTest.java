@@ -2,6 +2,7 @@ package at.favre.tools.dice.encode;
 
 import at.favre.tools.dice.encode.byteencoder.*;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +12,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
-//@Ignore
+@Ignore
 public class CompressionTest {
 
     @Test

@@ -70,7 +70,7 @@ public class Base64Encoder extends AByteEncoder {
 
         @Override
         public String getDescription() {
-            return super.getDescription() + ". Uses url safe mode";
+            return super.getDescription() + " Uses url safe mode";
         }
 
         @Override
