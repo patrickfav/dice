@@ -15,15 +15,16 @@ public class NounceEntropySource implements ExpandableEntropySource {
     private long sequenceCounter;
 
     public NounceEntropySource() {
-        sequenceCounter = ManagementFactory.getRuntimeMXBean().getUptime();
+        sequenceCounter = ManagementFactory.getRuntimeMXBean().getStartTime();
     }
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
-        final long nanoTime = System.nanoTime();
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 2);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 4);
         buffer.putLong(++sequenceCounter);
-        buffer.putLong(nanoTime);
+        buffer.putLong(System.nanoTime());
+        buffer.putLong(System.currentTimeMillis());
+        buffer.putLong(ManagementFactory.getRuntimeMXBean().getUptime());
         return HKDF.hkdf(buffer.array(), SALT, SALT, lengthByte);
     }
 }
