@@ -44,7 +44,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * HMAC_DRBG requires nonce to be at least 1/2 security_strength bits long.
      * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf
      */
-    private static final int NOUNCE_INPUT_SIZE_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
+    private static final int NONCE_INPUT_SIZE_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
 
     /**
      * Personalization strings should not exceed this many bytes in length.
@@ -70,12 +70,12 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     private static final byte[] BYTE_ARRAY_1 = {1};
 
     private final ExpandableEntropySource entropySource;
-    private final ExpandableEntropySource nounceSource;
+    private final ExpandableEntropySource nonceSource;
     private final ExpandableEntropySource personalizationSource;
 
-    public HmacDrbg(ExpandableEntropySource entropyInput, ExpandableEntropySource nounceSource, ExpandableEntropySource personalizationSource) {
+    public HmacDrbg(ExpandableEntropySource entropyInput, ExpandableEntropySource nonceSource, ExpandableEntropySource personalizationSource) {
         this.entropySource = entropyInput;
-        this.nounceSource = nounceSource;
+        this.nonceSource = nonceSource;
         this.personalizationSource = personalizationSource;
 
         // HMAC_DRBG Instantiate Process
@@ -98,7 +98,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // nonce are acquired at the same time from the same source.
         return ByteUtils.concatAll(
                 entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES),
-                nounceSource.generateEntropy(NOUNCE_INPUT_SIZE_BYTES),
+                nonceSource.generateEntropy(NONCE_INPUT_SIZE_BYTES),
                 personalizationSource.generateEntropy(PERSONALIZATION_STRING_LENGTH_BYTES));
     }
 
@@ -208,7 +208,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * Request reseeding of this HMAC_DRBG
      */
     public void requestReseed() {
-        hmacDrbgReseed(entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES), nounceSource.generateEntropy(NOUNCE_INPUT_SIZE_BYTES));
+        hmacDrbgReseed(entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES), nonceSource.generateEntropy(NONCE_INPUT_SIZE_BYTES));
     }
 
     /**

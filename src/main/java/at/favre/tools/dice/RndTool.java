@@ -92,7 +92,7 @@ public class RndTool {
             println("", arguments);
             printRandoms(arguments, encoder, new HmacDrbg(
                     (ExpandableEntropySource) entropyPool,
-                    new NounceEntropySource(),
+                    new NonceEntropySource(),
                     new PersonalizationSource()));
 
         } catch (Exception e) {

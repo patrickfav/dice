@@ -46,9 +46,9 @@ This should run on any Windows, Mac or Linux machine,
 
  [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
 
-## Tl;dr: How should I use it?
+## Tl;dr How should I use it?
 
-Depends. Either you want manually create tokens or nounces, then I'll recommend base32 or base36 if it needs to be url safe and base64 if not. 16 byte usually suffice for globally unique, very hard to guess randoms.
+Depends. Either you want manually create tokens or nonces, then I'll recommend base32 or base36 if it needs to be url safe and base64 if not. 16 byte usually suffice for globally unique, very hard to guess randoms.
 
     java -jar dice.jar 16 -e "base36"
 
@@ -123,50 +123,7 @@ The provided JARs in the Github release page are signed with my private key:
 
 Use the jarsigner tool (found in your `$JAVA_HOME/bin` folder) folder to verify.
 
-## Security Considerations
-
-The tool has two phases: Gathering entropy and generating random bits.
-
-### Entropy Sources
-
-This implementation uses multiple entropy sources to seed it's random
-bit generator. All these sources are combined and a weak source will not
-weaken the overall output. This ensures that even if one source fails
-the output is still cryptographically strong. Below is a detailed
-description of the used sources:
-
-#### Strong SecureRandom Provider
-
-This implementation uses the `SecureRandom` class with
-its `getStrongInstance()` constructor to get [the best cryptographic random generator available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses among [providers available at runtime](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp). The best of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems) since the OS has better access to various random sources.
-
-**Further reading:**
-
-* [The Right Way to use Secure Random](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/)
-* [Discussion on seeding random generators](https://crypto.stackexchange.com/questions/51218/practical-way-to-generate-random-numbers-from-prng-which-are-indistinguishable-f)
-
-#### Hardware and Runtime Fingerprinting
-
-In case the chosen `SecureRandom` does not have access to the OS entropy pool, this entropy source reads from various public manager specific data for this
-machine (e.g. all MAC addresses of network adapter, process id, cpu usage, etc.) to guarantee
-unique values for this machine and call.
-
-#### External Random Service Seeding with random.org
-
-Per default the tool tries to fetch a seed from an external (true) random source.
-
-Using an external random might open a new attack vector if, for example,
-an attacker might read the seed send over the network. There are 2
-measures against this:
-
-* The connections is encrypted with TLS (ie. HTTPS) and the random
-is singed by the creator which will be verified by a local pinned certificate.
-* The seed is only a part of the entropy source and the knowledge of it does not
-make it possible to guess the random bits.
-
-#### Local seeding
-
-The caller may provide a string that additionally seeds the random bit generator
+## Security Description
 
 ### Deterministic Random Bit Generation
 
@@ -182,6 +139,76 @@ recommendation.
 * [Formal Verficiation of the HMAC-DRBG Pseudo Random Number Generator](https://www.cs.cmu.edu/~kqy/resources/thesis.pdf)
 * [Security Analysis of DRBG Using HMAC in NIST SP 800-90](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
 
+#### DRBG Seeding & Input Sources
+
+A DRGB needs to be seeded by strong entropy sources so it can safely
+be expanded to create unpredictable pseudo random output. SP 800-90A defines
+different types of input for the DRGB. This implementation uses the following
+types:
+
+##### Entropy Input
+
+This implementation uses multiple entropy sources to seed it's random
+bit generator. All these sources are combined and a weak source will not
+weaken the overall output. This ensures that even if one source fails
+the output is still cryptographically strong. Below is a detailed
+description of the used sources:
+
+###### Strong Secure Random Seed
+
+This is the main entropy source. This implementation uses the `SecureRandom` class with
+its `getStrongInstance()` constructor to get [the best cryptographic random generator available](https://www.synopsys.com/blogs/software-security/proper-use-of-javas-securerandom/). Internally `SecureRandom` chooses among [providers available at runtime](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp). The best of those access the OS own entropy pools (e.g. `/dev/random` in *nix systems) since the OS has better access to various random sources.
+
+**Further reading:**
+
+* [The Right Way to use Secure Random](https://tersesystems.com/2015/12/17/the-right-way-to-use-securerandom/)
+* [Discussion on seeding random generators](https://crypto.stackexchange.com/questions/51218/practical-way-to-generate-random-numbers-from-prng-which-are-indistinguishable-f)
+
+###### External Random Service Seeding with random.org
+
+Per default the tool tries to fetch a seed from an external (true) random source.
+
+Using an external random might open a new attack vector if, for example,
+an attacker might read the seed send over the network. There are 2
+measures against this:
+
+* The connections is encrypted with TLS (ie. HTTPS) and the random
+is singed by the creator which will be verified by a local pinned certificate.
+* The seed is only a part of the entropy source and the knowledge of it does not
+make it possible to guess the random bits.
+
+HKDF is used to expand the external seed to the desired length.
+
+###### Local seeding
+
+The caller may provide a string that additionally seeds the random bit generator. A seed provided by the user is seen as weak seed and will always
+be combined with the internal state of a strong `SecureRandom` instance.
+
+#### Nonce Input
+
+The nonce is composed of:
+
+* Monotonically increasing sequence number with a starting value of current JVM startup time
+* System nano second time (which has arbitrary starting point)
+* JVM uptime in milliseconds
+* Current elapsed milliseconds since January 1, 1970 UTC.
+
+The four 8 byte values will be hashed with HKDF.
+
+#### Personalization String
+
+The goal of a personalization string is to gather as much information about
+e.g. runtime, machine identifiers and static identifiers to make the call as
+unique as possible for this particular machine/runtime/version/etc.
+
+For this the following data will be gathered:
+
+* MAC address of all network adapters
+* Runtime & OS information (e.g. uptime, current cpu usage, processor count, classpath)
+* SCM information (e.g. commit hash, committer, etc.)
+* Tool version name
+
+The resulting data will be hashed with HKDF.
 
 ## Build
 
@@ -199,6 +226,7 @@ Use maven (3.1+) to create a jar including all dependencies
 
 # Credits
 
+* HMAC_DRBG implementation derived from [google/rappor](https://github.com/google/rappor)
 * Icon made by [Maxim Basinski](https://www.flaticon.com/authors/maxim-basinski) from www.flaticon.com
 
 # License
