@@ -11,6 +11,7 @@ import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.Properties;
 
 /**
  * Reads static and dynamic data from the machine like MAC addresses and cpu usage to pin the
@@ -69,7 +70,20 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         }
 
         return bos.toByteArray();
+    }
 
+    private byte[] scmData() throws IOException {
+        Properties properties = new Properties();
+        properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bos.write(String.valueOf(properties.get("git.commit.id")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.commit.user.email")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.commit.time")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.build.time")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.branch")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.build.host")).getBytes(StandardCharsets.UTF_8));
+        bos.write(String.valueOf(properties.get("git.dirty")).getBytes(StandardCharsets.UTF_8));
+        return bos.toByteArray();
     }
 
     @Override
@@ -80,6 +94,7 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(runtimeData());
             bos.write(osData());
             bos.write(appVersionData());
+            bos.write(scmData());
             return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);
