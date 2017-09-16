@@ -4,7 +4,6 @@ import at.favre.tools.dice.util.ByteUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
@@ -157,6 +156,27 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     }
 
     /**
+     * HMAC_DRBG Reseed Process
+     * <p>
+     * Let HMAC_DRBG_Update be the function specified in Section
+     * 10.1.2.2. The following process or its equivalent shall be used
+     * as the reseed algorithm for this DRBG mechanism (see step 6 of
+     * the reseed process in Section 9.2):
+     *
+     * @param entropyInput   The string of bits obtained from the randomness source
+     * @param additionalData The additional input string received from the consuming application. Note that the length of the additional_input string may be zero or null
+     */
+    private void hmacDrbgReseed(byte[] entropyInput, byte[] additionalData) {
+
+        //1. seed_material = entropy_input || additional_input.
+        byte[] seedMaterial = ByteUtils.concatAll(entropyInput, emptyIfNull(additionalData));
+        //2. (Key, V) = HMAC_DRBG_Update (seed_material, Key, V)
+        hmacDrbgUpdate(seedMaterial);
+        //3. reseed_counter = 1.
+        bytesGenerated = 0;
+    }
+
+    /**
      * HMAC_DRBG Generate Process
      * <p>
      * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf 10.1.2.5
@@ -185,14 +205,10 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     }
 
     /**
-     * Generates entropy byte-string suitable for use as the constructor's entropyInput.
-     * <p>
-     * Uses SecureRandom to generate entropy.
+     * Request reseeding of this HMAC_DRBG
      */
-    public static byte[] generateEntropyInput() {
-        byte result[] = new byte[ENTROPY_INPUT_SIZE_BYTES];
-        new SecureRandom().nextBytes(result);
-        return result;
+    public void requestReseed() {
+        hmacDrbgReseed(entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES), nounceSource.generateEntropy(NOUNCE_INPUT_SIZE_BYTES));
     }
 
     /**
@@ -222,8 +238,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         }
 
         if (bytesGenerated + count > MAX_BYTES_PER_SEED) {
-            hmacDrbgUpdate(generateSeedMaterial());
-            bytesGenerated = 0;
+            requestReseed();
         }
 
         try {
