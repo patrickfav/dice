@@ -22,11 +22,6 @@ public abstract class Base58Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 0.73;
-    }
-
-    @Override
     public boolean urlSafe() {
         return true;
     }
@@ -34,6 +29,11 @@ public abstract class Base58Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return true;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 5.85798;
     }
 
     /**

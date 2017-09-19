@@ -23,11 +23,6 @@ public class Utf8Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 1;
-    }
-
-    @Override
     public boolean urlSafe() {
         return false;
     }
@@ -35,5 +30,10 @@ public class Utf8Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return false;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 8;
     }
 }

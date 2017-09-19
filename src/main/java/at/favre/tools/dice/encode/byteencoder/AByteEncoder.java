@@ -13,9 +13,13 @@ public abstract class AByteEncoder implements Encoder {
         return "<TODO>";
     }
 
-    public abstract double spaceEfficiency();
+    public double spaceEfficiency() {
+        return bitPerByte() / 8.0;
+    }
 
     public abstract boolean urlSafe();
 
     public abstract boolean mayNeedPadding();
+
+    public abstract double bitPerByte();
 }

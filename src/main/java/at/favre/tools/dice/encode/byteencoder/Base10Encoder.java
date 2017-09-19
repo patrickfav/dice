@@ -32,11 +32,6 @@ public class Base10Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 0.33;
-    }
-
-    @Override
     public boolean urlSafe() {
         return true;
     }
@@ -44,5 +39,10 @@ public class Base10Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return false;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 3.32193;
     }
 }

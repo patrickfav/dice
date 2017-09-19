@@ -33,11 +33,6 @@ public class Base64Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 0.75;
-    }
-
-    @Override
     public boolean urlSafe() {
         return false;
     }
@@ -45,6 +40,11 @@ public class Base64Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return true;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 6;
     }
 
     public static class Default extends Base64Encoder {

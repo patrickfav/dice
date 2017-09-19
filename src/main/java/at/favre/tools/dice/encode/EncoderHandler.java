@@ -71,8 +71,9 @@ public class EncoderHandler {
             }
             sb.delete(sb.length() - 2, sb.length()).append("]").append("\n");
             sb.append("\t").append(encoder.getDescription()).append("\n");
+
             if (encoder instanceof AByteEncoder) {
-                sb.append("\tSpace Efficiency: ").append(((AByteEncoder) encoder).spaceEfficiency() * 100).append("%");
+                sb.append("\tSpace Efficiency: ").append(String.format(Locale.US, "%.1f", ((AByteEncoder) encoder).spaceEfficiency() * 100)).append("%");
                 sb.append("; Url-Safe: ").append(((AByteEncoder) encoder).urlSafe());
                 sb.append("; Needs padding: ").append(((AByteEncoder) encoder).mayNeedPadding()).append("\n");
             }
@@ -117,7 +118,7 @@ public class EncoderHandler {
 
                 sb.append("| ").append(String.format("%-12s", aByteEncoder.names()[0])).append(" | ");
                 sb.append(String.format("%-20s", "`" + aByteEncoder.encode(exampleBytes) + "`")).append(" | ");
-                sb.append(aByteEncoder.spaceEfficiency() * 100).append(" %").append(" | ");
+                sb.append(String.format(Locale.US, "%.1f", aByteEncoder.spaceEfficiency() * 100)).append(" %").append(" | ");
                 sb.append(aByteEncoder.mayNeedPadding()).append(" | ");
                 sb.append(aByteEncoder.getDescription()).append(" |").append("\n");
             }

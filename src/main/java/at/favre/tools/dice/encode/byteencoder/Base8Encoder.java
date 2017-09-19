@@ -23,11 +23,6 @@ public class Base8Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 0.25;
-    }
-
-    @Override
     public boolean urlSafe() {
         return true;
     }
@@ -35,5 +30,10 @@ public class Base8Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return false;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 3;
     }
 }

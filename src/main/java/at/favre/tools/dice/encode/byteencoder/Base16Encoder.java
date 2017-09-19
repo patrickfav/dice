@@ -24,11 +24,6 @@ public abstract class Base16Encoder extends AByteEncoder {
     }
 
     @Override
-    public double spaceEfficiency() {
-        return 0.5;
-    }
-
-    @Override
     public boolean urlSafe() {
         return true;
     }
@@ -36,6 +31,11 @@ public abstract class Base16Encoder extends AByteEncoder {
     @Override
     public boolean mayNeedPadding() {
         return false;
+    }
+
+    @Override
+    public double bitPerByte() {
+        return 4;
     }
 
     public static class Base16LowerCaseEncoder extends Base16Encoder {
