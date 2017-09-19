@@ -1,16 +1,9 @@
 package at.favre.tools.dice.encode.byteencoder;
 
-import java.math.BigInteger;
-
 /**
  * Encodes in to octal e.g. <code>171143734066371107705</code>
  */
-public class Base8Encoder extends AByteEncoder {
-
-    @Override
-    public String encode(byte[] array) {
-        return new BigInteger(1, array).toString(8);
-    }
+public class Base8Encoder extends AByteRadixEncoder {
 
     @Override
     public String[] names() {
@@ -29,11 +22,16 @@ public class Base8Encoder extends AByteEncoder {
 
     @Override
     public boolean mayNeedPadding() {
-        return false;
+        return true;
     }
 
     @Override
     public double bitPerByte() {
         return 3;
+    }
+
+    @Override
+    int getRadix() {
+        return 8;
     }
 }

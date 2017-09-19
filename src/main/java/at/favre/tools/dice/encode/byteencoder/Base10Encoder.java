@@ -1,24 +1,13 @@
 package at.favre.tools.dice.encode.byteencoder;
 
-import java.math.BigInteger;
-
 /**
  * Encodes every byte as a decimal
  */
-public class Base10Encoder extends AByteEncoder {
+public class Base10Encoder extends AByteRadixEncoder {
 
     @Override
-    public String encode(byte[] array) {
-        return new BigInteger(1, array).toString(10);
-    }
-
-    @Override
-    public String encodePadded(byte[] array) {
-        return String.format("%" + String.valueOf((int) Math.pow(2, array.length * 8)).length() + "s", encode(array)).replace(' ', '0');
-    }
-
-    public String encod(byte[] array) {
-        return new BigInteger(1, array).toString(10);
+    int getRadix() {
+        return 10;
     }
 
     @Override
@@ -38,7 +27,7 @@ public class Base10Encoder extends AByteEncoder {
 
     @Override
     public boolean mayNeedPadding() {
-        return false;
+        return true;
     }
 
     @Override

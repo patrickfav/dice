@@ -1,15 +1,13 @@
 package at.favre.tools.dice.encode.byteencoder;
 
-import java.math.BigInteger;
-
 /**
  * Encodes in to base36 like used by tinyurl e.g. <code>5k9wsvhu60h35c7otmmktlah</code>
  */
-public class Base36Encoder extends AByteEncoder {
+public class Base36Encoder extends AByteRadixEncoder {
 
     @Override
-    public String encode(byte[] array) {
-        return new BigInteger(1, array).toString(36);
+    int getRadix() {
+        return 36;
     }
 
     @Override

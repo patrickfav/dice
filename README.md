@@ -83,8 +83,8 @@ Or you want to create static salts, or randoms to harcode, then just use:
 | Name | Example | Efficiency | Padding | Description |
 | ------------- | ------------- | -------------: | :-------------: | ------------- |
 | binary       | `11010000 00111010 01001010 11101110 01100100 00010001` | 12.5 % | false | A simple binary representation with '0' and '1' divided into 8 bit groups. |
-| octal        | `426235622435320`    | 37.5 % | false | The octal numeral system, is the base-8 number system, and uses the digits 0 to 7. |
-| dec          | `19125192243920`     | 41.5 % | false | Decimal positive sign-magnitude representation representation in big-endian byte-order. |
+| octal        | `426235622435320`    | 37.5 % | true | The octal numeral system, is the base-8 number system, and uses the digits 0 to 7. |
+| dec          | `19125192243920`     | 41.5 % | true | Decimal positive sign-magnitude representation representation in big-endian byte-order. |
 | base16       | `1164ee4a3ad0`       | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Lowercase (a-f) letters are used for digits greater than 9. |
 | BASE16       | `1164EE4A3AD0`       | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Uppercase (A-F) letters are used for digits greater than 9. |
 | base32       | `CFSO4SR22A`         | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. |
