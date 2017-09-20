@@ -2,6 +2,8 @@ package at.favre.tools.dice.util;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class ByteUtilsTest {
@@ -42,5 +44,14 @@ public class ByteUtilsTest {
 
         assertArrayEquals(b1, ByteUtils.copy(b1));
         assertNotSame(b1, ByteUtils.copy(b1));
+    }
+
+    @Test
+    public void appendCrc32Checksum() throws Exception {
+        byte[] b1 = ByteUtils.unsecureRandomBytes(32);
+
+        byte[] b1PlusCrc32 = ByteUtils.appendCrc32(b1);
+        assertTrue(b1.length + 4 == b1PlusCrc32.length);
+        assertFalse(Arrays.equals(b1, b1PlusCrc32));
     }
 }

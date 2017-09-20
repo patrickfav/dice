@@ -5,6 +5,7 @@
 * use multiple entropy sources
 * add line break every X lines of output
 * add Base58
+* add crc32 check feature
 
 ## v0.6.0
 * robot mode

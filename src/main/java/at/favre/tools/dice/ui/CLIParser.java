@@ -15,6 +15,7 @@ public class CLIParser {
     static final String ARG_PADDING = "p";
     static final String ARG_DEBUG = "d";
     static final String ARG_ROBOT = "r";
+    static final String ARG_CRC32 = "crc32";
 
     public static Arg parse(String[] args) {
         Options options = setupOptions();
@@ -57,6 +58,7 @@ public class CLIParser {
             argument.urlencode(commandLine.hasOption(ARG_URLENCODE));
             argument.padding(commandLine.hasOption(ARG_PADDING));
             argument.robot(commandLine.hasOption(ARG_ROBOT));
+            argument.crc32(commandLine.hasOption(ARG_CRC32));
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -88,6 +90,7 @@ public class CLIParser {
         Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
         Option paddingOpt = Option.builder(ARG_PADDING).longOpt("padding").hasArg(false).desc("If this flag is set, byte-to-text output will be padded to full byte if needed.").build();
         Option robotOpt = Option.builder(ARG_ROBOT).longOpt("robot").hasArg(false).desc("If this flag is set, output will be more friendly for scripting (ie. no verbose text, only the randoms 1 per line)").build();
+        Option checksumOpt = Option.builder().longOpt(ARG_CRC32).hasArg(false).desc("If this flag is set, 4 bytes of CRC32 checksum will be appended to every random value. If you need to check the integrity of the data.").build();
 
         Option help = Option.builder("h").longOpt("help").desc("Shows this page.").build();
         Option version = Option.builder("v").longOpt("version").desc("Prints application version.").build();
@@ -99,7 +102,7 @@ public class CLIParser {
                 .addOption(seed).addOption(onlineOpt)
                 .addOption(urlencodeOpt).addOption(paddingOpt)
                 .addOption(debugOpt).addOption(help)
-                .addOption(robotOpt)
+                .addOption(robotOpt).addOption(checksumOpt)
                 .addOption(version);
 
         return options;

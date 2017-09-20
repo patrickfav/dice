@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.zip.CRC32;
 
 /**
  * Created by PatrickF on 01.06.2017.
@@ -90,5 +91,21 @@ public class ByteUtils {
             list.add(b);
         }
         return list;
+    }
+
+    /**
+     * Will append 4 bytes of CRC32 checksum after the original byte array,
+     * making it 4 bytes longer
+     *
+     * @param original
+     * @return original || crc32
+     */
+    public static byte[] appendCrc32(byte[] original) {
+        CRC32 crc32 = new CRC32();
+        crc32.update(original);
+        byte[] checksum = ByteBuffer.allocate(Long.BYTES).putLong(crc32.getValue()).array();
+        byte[] checksum32 = new byte[4];
+        System.arraycopy(checksum, 4, checksum32, 0, checksum32.length);
+        return concatAll(original, checksum32);
     }
 }

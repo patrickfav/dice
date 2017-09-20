@@ -150,6 +150,10 @@ public class RndTool {
         for (int i = 0; i < countGenerated; i++) {
             byte[] rnd = drbg.nextBytes(arguments.length());
 
+            if (arguments.crc32()) {
+                rnd = ByteUtils.appendCrc32(rnd);
+            }
+
             String randomEncodedString = arguments.padding() ? encoder.encodePadded(rnd) : encoder.encode(rnd);
 
             if (arguments.urlencode()) {

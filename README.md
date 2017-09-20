@@ -61,10 +61,12 @@ Or you want to create static salts, or randoms to harcode, then just use:
 ## Command Line Interface
 
     -c,--count <number>      How many randoms should be generated. Automatically chosen if this argument is omitted.
+       --crc32               If this flag is set, 4 bytes of CRC32 checksum will be appended to every random value. If
+                             you need to check the integrity of the data.
     -d,--debug               Prints additional info for debugging.
     -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
-                             binary, octal, dec, base16, BASE16, base32, base36, base64, base64-url, base85, c, c#,
-                             java, go, kotlin, node, perl, php, python3, ruby, rust, swift, utf8
+                             binary, octal, dec, base16, BASE16, base32, base36, base58, base64, base64-url, base85,
+                             base122, c, c#, java, go, kotlin, node, perl, php, python3, ruby, rust, swift, utf8
     -h,--help                Shows this page.
     -o,--offline             Skips request to Random.org to seed random generator (use when offline).
     -p,--padding             If this flag is set, byte-to-text output will be padded to full byte if needed.

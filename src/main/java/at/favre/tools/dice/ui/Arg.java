@@ -9,7 +9,7 @@ public abstract class Arg {
     public static final int DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot) {
+    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32) {
         return builder()
                 .encoding(encoding)
                 .seed(seed)
@@ -20,6 +20,7 @@ public abstract class Arg {
                 .debug(debug)
                 .padding(padding)
                 .robot(robot)
+                .crc32(crc32)
                 .build();
     }
 
@@ -43,6 +44,8 @@ public abstract class Arg {
 
     public abstract boolean robot();
 
+    public abstract boolean crc32();
+
     public abstract Builder toBuilder();
 
     public static Builder builder() {
@@ -53,7 +56,8 @@ public abstract class Arg {
                 .offline(false)
                 .urlencode(false)
                 .padding(false)
-                .robot(false);
+                .robot(false)
+                .crc32(false);
     }
 
     @AutoValue.Builder
@@ -75,6 +79,8 @@ public abstract class Arg {
         public abstract Builder padding(boolean value);
 
         public abstract Builder robot(boolean value);
+
+        public abstract Builder crc32(boolean value);
 
         public abstract Arg build();
     }
