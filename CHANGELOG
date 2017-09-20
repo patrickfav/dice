@@ -4,7 +4,7 @@
 * use HMAC DRBG
 * use multiple entropy sources
 * add line break every X lines of output
-* add Base58
+* add Base58 and Base26
 * add crc32 check feature
 
 ## v0.6.0

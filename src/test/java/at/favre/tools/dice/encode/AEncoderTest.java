@@ -31,6 +31,7 @@ public abstract class AEncoderTest {
 
     @Test
     public void encode() throws Exception {
+        testByteArray(new byte[]{0});
         testByteArray(new byte[]{1});
         testByteArray(new byte[]{1, 2});
         testByteArray(new byte[]{1, 2, 3});

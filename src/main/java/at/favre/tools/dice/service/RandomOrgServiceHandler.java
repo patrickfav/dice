@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  */
 public class RandomOrgServiceHandler {
-    final static int ENTROPY_SEED_LENGTH_BIT = 128;
+    final static int ENTROPY_SEED_LENGTH_BIT = 192;
     private final boolean debug;
     private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
 
@@ -67,6 +67,14 @@ public class RandomOrgServiceHandler {
 
                 if (!SecurityUtil.base64EncodedSha512(API_KEY).equals(orgBlobResponse.result.random.hashedApiKey)) {
                     throw new IllegalArgumentException("used api key does not match");
+                }
+
+                if (orgBlobResponse.result.bitsLeft <= ENTROPY_SEED_LENGTH_BIT / 8) {
+                    throw new IllegalArgumentException("api token ran out of entropy quota");
+                }
+
+                if (orgBlobResponse.result.requestsLeft <= 1 / 8) {
+                    throw new IllegalArgumentException("api token ran out of request quota");
                 }
 
                 return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);

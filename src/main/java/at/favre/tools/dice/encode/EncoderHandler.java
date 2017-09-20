@@ -2,6 +2,7 @@ package at.favre.tools.dice.encode;
 
 import at.favre.tools.dice.encode.byteencoder.*;
 import at.favre.tools.dice.encode.languages.*;
+import at.favre.tools.dice.util.ByteUtils;
 
 import java.util.*;
 
@@ -13,6 +14,7 @@ public class EncoderHandler {
             new Base10Encoder(),
             new Base16Encoder.Base16LowerCaseEncoder(),
             new Base16Encoder.Base16UpperCaseEncoder(),
+            new Base26Encoder(),
             new Base32Encoder(),
             new Base36Encoder(),
             new Base58Encoder.BitcoinStyle(),
@@ -33,6 +35,7 @@ public class EncoderHandler {
             new SwiftEncoder(),
             new Utf8Encoder()
     ));
+    private final byte[] exampleBytes = ByteUtils.unsecureRandomBytes(7);
 
     public List<Encoder> load() {
         Set<String> modes = new HashSet<>();
@@ -61,7 +64,6 @@ public class EncoderHandler {
     }
 
     public String getFullSupportedEncodingList() {
-        final byte[] exampleBytes = new byte[]{0x00, 0x23, (byte) 0xA9, (byte) 0x85, 0x56, 0x3D, 0x52, (byte) 0xA0};
         StringBuilder sb = new StringBuilder();
 
         for (Encoder encoder : ENCODERS) {
@@ -93,8 +95,6 @@ public class EncoderHandler {
     }
 
     public String getByteEncoderMarkdownTable() {
-        final byte[] exampleBytes = new byte[]{(byte) 0xD0, 0x3A, 0x4A, (byte) 0xEE, 0x64, 0x11};
-
         StringBuilder sb = new StringBuilder();
 
         //Header
@@ -127,8 +127,6 @@ public class EncoderHandler {
     }
 
     public String getLanguageEncoderMarkdownTable() {
-        final byte[] exampleBytes = new byte[]{(byte) 0xD0, 0x3A, 0x4A, (byte) 0xEE, 0x64, 0x11};
-
         StringBuilder sb = new StringBuilder();
 
         //Header
