@@ -2,7 +2,6 @@ package at.favre.tools.dice;
 
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
-import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
 import at.favre.tools.dice.rnd.*;
 import at.favre.tools.dice.service.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.Arg;
@@ -15,6 +14,7 @@ import org.apache.commons.codec.net.URLCodec;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +35,8 @@ public class RndTool {
     }
 
     static boolean execute(Arg arguments) {
+        long start = System.currentTimeMillis();
+
         EncoderHandler loader = new EncoderHandler();
         loader.load();
 
@@ -93,7 +95,7 @@ public class RndTool {
             printRandoms(arguments, encoder, new HmacDrbg(
                     (ExpandableEntropySource) entropyPool,
                     new NonceEntropySource(),
-                    new PersonalizationSource()));
+                    new PersonalizationSource()), start);
 
         } catch (Exception e) {
             System.err.print("Could not create random bits.");
@@ -129,7 +131,7 @@ public class RndTool {
 
     private static String printWithEntropy(byte[] seed) {
         StringBuilder sb = new StringBuilder();
-        sb.append(new Base36Encoder().encode(seed));
+        sb.append("[").append(seed.length).append(" byte]");
         double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
         if (entropy < 3) {
             sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");
@@ -137,7 +139,7 @@ public class RndTool {
         return sb.toString();
     }
 
-    private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg) {
+    private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, long startTime) {
         List<String> outputList = new ArrayList<>(arguments.length());
 
         boolean useAutoColumn = false;
@@ -166,15 +168,16 @@ public class RndTool {
             outputList.add(randomEncodedString);
         }
 
+        int actualCount;
         if (arguments.robot()) {
-            new ColumnRenderer().renderSingleColumn(outputList, System.out);
+            actualCount = new ColumnRenderer().renderSingleColumn(outputList, System.out);
         } else if (useAutoColumn) {
-            new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
+            actualCount = new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
         } else {
-            new ColumnRenderer().render(outputList, System.out);
+            actualCount = new ColumnRenderer().render(outputList, System.out);
         }
 
-        println("", arguments);
+        print("\n\n[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
     }
 
     public static String jarVersion() {

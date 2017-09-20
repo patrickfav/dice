@@ -19,18 +19,27 @@ public class ColumnRenderer {
         this.targetWidth = targetWidth;
     }
 
-    public void renderAutoColumn(int targetCount, List<String> outputList, PrintStream outStream) {
+    /**
+     * Will take a list and a target count and tries to create even columns
+     *
+     * @param targetCount approximate count you want to render (may be filled by the auto algorithm)
+     * @param outputList  the list containing more elements than targetCount
+     * @param outStream   to write the output to
+     * @return the actual used count
+     */
+    public int renderAutoColumn(int targetCount, List<String> outputList, PrintStream outStream) {
         final int columns = getColumnCount(getMaxLength(outputList));
 
         final int fill = columns - (targetCount % columns);
-        render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream);
+        return render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream);
     }
 
-    public void renderSingleColumn(List<String> outputList, PrintStream outStream) {
+    public int renderSingleColumn(List<String> outputList, PrintStream outStream) {
         outputList.forEach(s -> outStream.print(s + "\n"));
+        return outputList.size();
     }
 
-    public void render(List<String> outputList, PrintStream outStream) {
+    public int render(List<String> outputList, PrintStream outStream) {
         if (!outputList.isEmpty()) {
             final int maxLength = getMaxLength(outputList);
             final int columns = getColumnCount(maxLength);
@@ -61,7 +70,7 @@ public class ColumnRenderer {
                 }
             }
         }
-
+        return outputList.size();
     }
 
     private int getMaxLength(List<String> outputList) {
