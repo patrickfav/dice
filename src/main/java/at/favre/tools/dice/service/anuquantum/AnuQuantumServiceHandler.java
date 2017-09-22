@@ -9,6 +9,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.net.UnknownHostException;
 
+/**
+ * ANU Quantum Random Numbers Server
+ * Quantum true random number generator from Australian university
+ * <p>
+ * See https://qrng.anu.edu.au/
+ */
 public class AnuQuantumServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BYTE = 24;
 
@@ -36,7 +42,7 @@ public class AnuQuantumServiceHandler extends AServiceHandler {
             Response<AnuQuantomResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
                 byte[] rawResponse = ByteUtils.hexToBytes(response.body().data.get(0));
-                return new Result<>(rawResponse, response.body(), System.currentTimeMillis() - startTime);
+                return new Result<>(getName(), rawResponse, response.body(), System.currentTimeMillis() - startTime);
             }
         } catch (UnknownHostException e) {
             error = e;
@@ -46,6 +52,11 @@ public class AnuQuantumServiceHandler extends AServiceHandler {
             errMsg = "Error during http request: " + e.getMessage();
         }
 
-        return new Result<>(error, errMsg);
+        return new Result<>(getName(), error, errMsg);
+    }
+
+    @Override
+    public String getName() {
+        return "ANU Quantum";
     }
 }

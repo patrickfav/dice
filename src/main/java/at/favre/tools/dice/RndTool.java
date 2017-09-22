@@ -3,8 +3,7 @@ package at.favre.tools.dice;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
-import at.favre.tools.dice.service.AServiceHandler;
-import at.favre.tools.dice.service.anuquantum.AnuQuantomResponse;
+import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
@@ -14,14 +13,19 @@ import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
 import at.favre.tools.dice.util.ByteUtils;
 import at.favre.tools.dice.util.Entropy;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RndTool {
 
@@ -76,21 +80,21 @@ public class RndTool {
             }
 
             if (arguments.seed() != null) {
-                println("Use provided seed " + printWithEntropy(arguments.seed().getBytes(StandardCharsets.UTF_8)) + ".", arguments);
+                byte[] seed = arguments.seed().getBytes(StandardCharsets.UTF_8);
+                println("Use provided seed: " + seed.length + " bytes." + getOptionalEntropyWarning(seed), arguments);
                 entropyPool.add(new ExternalWeakSeedEntropySource(arguments.seed()));
             }
 
             if (!arguments.offline()) {
-                fetchFromRandomOrg(arguments, entropyPool);
-                fetchFromHotbits(arguments, entropyPool);
-                fetchFromQuantum(arguments, entropyPool);
-            }
-            println("", arguments);
-            printRandoms(arguments, encoder, new HmacDrbg(
-                    entropyPool,
-                    new NonceEntropySource(),
-                    new PersonalizationSource()), start);
+                final List<ServiceHandler<?>> handlers = new ArrayList<>();
+                handlers.add(new RandomOrgServiceHandler(arguments.debug()));
+                handlers.add(new HotbitsServiceHandler(arguments.debug()));
+                handlers.add(new AnuQuantumServiceHandler(arguments.debug()));
 
+                fetch(handlers, arguments, entropyPool, encoder, start);
+            } else {
+                requestFinished(arguments, encoder, entropyPool, start);
+            }
         } catch (Exception e) {
             System.err.print("Could not create random bits.");
 
@@ -111,31 +115,50 @@ public class RndTool {
         return true;
     }
 
-    private static void fetchFromQuantum(Arg arguments, EntropyPool entropyPool) {
-        print("Fetching from Anu Quantum. ", arguments);
-        AServiceHandler.Result<AnuQuantomResponse> seedResult = new AnuQuantumServiceHandler(arguments.debug()).getRandom();
+    private static void fetch(final List<ServiceHandler<?>> handlers, final Arg arguments, final EntropyPool entropyPool,
+                              final Encoder encoder, final long start) {
+        print("Fetch external seed: ", arguments);
+        final ExecutorService parallelExecutor = Executors.newFixedThreadPool(4);
+        Observable.fromIterable(handlers)
+                .flatMapSingle(handler -> handler.asObservable().subscribeOn(Schedulers.from(parallelExecutor)))
+                .doFinally(parallelExecutor::shutdown)
+                .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), System.err::println, () -> requestFinished(arguments, encoder, entropyPool, start));
+    }
 
-        if (!seedResult.isError()) {
-            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+    private static void requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) {
+        if (!arguments.offline()) {
+            println("\n", arguments);
+        }
+
+        printRandoms(arguments, encoder, new HmacDrbg(
+                entropyPool,
+                new NonceEntropySource(),
+                new PersonalizationSource()), start);
+    }
+
+    private static ServiceHandler.Result<?> updateSeed(ServiceHandler.Result<?> result, Arg arguments, EntropyPool entropyPool) throws IOException {
+        if (!result.isError()) {
+            entropyPool.add(new ExternalStrongSeedEntropySource(result.seed));
+            print(result.serviceName + " [" + result.seed.length + "b/" + result.durationMs + "ms] " + getOptionalEntropyWarning(result.seed), arguments);
+            return result;
         } else {
-            System.err.println(seedResult.errorMsg);
+            System.err.println(result.errorMsg);
             System.err.println("Try using --offline to skip online seeding or --debug for more information.");
 
-            if (arguments.debug() && seedResult.throwable != null) {
-                seedResult.throwable.printStackTrace();
+            if (arguments.debug() && result.throwable != null) {
+                result.throwable.printStackTrace();
             }
-            System.exit(502);
+            throw new IOException("could not get random");
         }
     }
 
     private static void fetchFromHotbits(Arg arguments, EntropyPool entropyPool) {
         print("Fetching from Hotbits. ", arguments);
-        AServiceHandler.Result seedResult = new HotbitsServiceHandler(arguments.debug()).getRandom();
+        ServiceHandler.Result seedResult = new HotbitsServiceHandler(arguments.debug()).getRandom();
 
         if (!seedResult.isError()) {
             entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+            println("Got seed " + getOptionalEntropyWarning(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
         } else {
             System.err.println(seedResult.errorMsg);
             System.err.println("Try using --offline to skip online seeding or --debug for more information.");
@@ -149,10 +172,10 @@ public class RndTool {
 
     private static void fetchFromRandomOrg(Arg arguments, EntropyPool entropyPool) {
         print("Fetching from random.org. ", arguments);
-        AServiceHandler.Result<RandomOrgBlobResponse> seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
+        ServiceHandler.Result<RandomOrgBlobResponse> seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
         if (!seedResult.isError()) {
             entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+            println("Got seed " + getOptionalEntropyWarning(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
         } else {
             System.err.println(seedResult.errorMsg);
             System.err.println("Try using --offline to skip online seeding or --debug for more information.");
@@ -176,9 +199,8 @@ public class RndTool {
         }
     }
 
-    private static String printWithEntropy(byte[] seed) {
+    private static String getOptionalEntropyWarning(byte[] seed) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[").append(seed.length).append(" bytes]");
         double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
         if (entropy < 3) {
             sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");

@@ -7,7 +7,7 @@
 * add Base58 and Base26
 * add crc32 check feature
 * add random.org signature verification
-* add hotbits and anu quantum external true random source
+* add hotbits and anu quantum external true random source with parallel network calls
 
 ## v0.6.0
 * robot mode

@@ -1,6 +1,6 @@
 package at.favre.tools.dice.service.anuquantum;
 
-import at.favre.tools.dice.service.AServiceHandler;
+import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 public class AnuQuantumServiceHandlerTest {
     @Test
     public void getRandom() throws Exception {
-        AServiceHandler.Result<AnuQuantomResponse> response = new AnuQuantumServiceHandler(true).getRandom();
+        ServiceHandler.Result<AnuQuantomResponse> response = new AnuQuantumServiceHandler(true).getRandom();
 
         assertNotNull(response);
 

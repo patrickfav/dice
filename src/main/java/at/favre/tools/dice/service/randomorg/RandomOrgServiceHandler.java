@@ -14,6 +14,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import java.net.UnknownHostException;
 
 /**
+ * RANDOM.ORG offers true random numbers to anyone on the Internet.
+ * The randomness comes from atmospheric noise.
+ * <p>
+ * See https://www.random.org/
  */
 public class RandomOrgServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BIT = 192;
@@ -72,7 +76,7 @@ public class RandomOrgServiceHandler extends AServiceHandler {
                     throw new IllegalArgumentException("response signature could not be verified");
                 }
 
-                return new Result<>(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
+                return new Result<>(getName(), new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
             }
 
         } catch (UnknownHostException e) {
@@ -83,7 +87,12 @@ public class RandomOrgServiceHandler extends AServiceHandler {
             errMsg = "Error during http request: " + e.getMessage();
         }
 
-        return new Result<>(error, errMsg);
+        return new Result<>(getName(), error, errMsg);
+    }
+
+    @Override
+    public String getName() {
+        return "random.org";
     }
 
 

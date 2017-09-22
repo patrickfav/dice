@@ -1,13 +1,14 @@
 package at.favre.tools.dice.service;
 
 import at.favre.tools.dice.RndTool;
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AServiceHandler<T> {
+public abstract class AServiceHandler<T> implements ServiceHandler<T> {
     private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
     protected final boolean debug;
 
@@ -15,7 +16,10 @@ public abstract class AServiceHandler<T> {
         this.debug = debug;
     }
 
-    public abstract Result<T> getRandom();
+    @Override
+    public Single<Result<T>> asObservable() {
+        return Single.fromCallable(this::getRandom);
+    }
 
     protected Map<String, String> createHeaderMap() {
         Map<String, String> headers = new HashMap<>();
@@ -33,31 +37,4 @@ public abstract class AServiceHandler<T> {
         }
     }
 
-    public static class Result<T> {
-        public final byte[] seed;
-        public final T response;
-        public final long durationMs;
-        public final Throwable throwable;
-        public final String errorMsg;
-
-        public Result(byte[] seed, T response, long durationMs) {
-            this.seed = seed;
-            this.durationMs = durationMs;
-            this.response = response;
-            this.throwable = null;
-            this.errorMsg = null;
-        }
-
-        public Result(Throwable t, String errorMsg) {
-            this.durationMs = 0;
-            this.response = null;
-            this.seed = null;
-            this.throwable = t;
-            this.errorMsg = errorMsg;
-        }
-
-        public boolean isError() {
-            return seed == null;
-        }
-    }
 }
