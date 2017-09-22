@@ -1,12 +1,10 @@
-package at.favre.tools.dice.service;
+package at.favre.tools.dice.service.randomorg;
 
-import at.favre.tools.dice.RndTool;
-import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
-import at.favre.tools.dice.service.model.RandomOrgBlobResponse;
-import at.favre.tools.dice.util.RandomOrgUtil;
+import at.favre.tools.dice.service.AServiceHandler;
+import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobRequest;
+import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobResponse;
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.codec.binary.Base64;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -14,38 +12,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  */
-public class RandomOrgServiceHandler {
+public class RandomOrgServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BIT = 192;
-    private final boolean debug;
-    private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
-
-    public RandomOrgServiceHandler(boolean debug) {
-        this.debug = debug;
-    }
 
     /*
      * It will be possible to convert beta keys production keys before the beta ends on 31 December 2017.
      */
     private static final String API_KEY = "ae169728-dec5-4771-b2e8-cc1801aaad70";
 
-    public Result getRandom() {
+    public RandomOrgServiceHandler(boolean debug) {
+        super(debug);
+    }
+
+    public Result<RandomOrgBlobResponse> getRandom() {
         long startTime = System.currentTimeMillis();
 
-        OkHttpClient client;
+        OkHttpClient client = createClient();
         Exception error = null;
         String errMsg = null;
-        if (debug) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client = new OkHttpClient.Builder().addNetworkInterceptor(interceptor).addInterceptor(interceptor).build();
-        } else {
-            client = new OkHttpClient.Builder().build();
-        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.random.org/")
@@ -84,7 +71,7 @@ public class RandomOrgServiceHandler {
                     throw new IllegalArgumentException("response signature could not be verified");
                 }
 
-                return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
+                return new Result<>(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
             }
 
         } catch (UnknownHostException e) {
@@ -95,40 +82,8 @@ public class RandomOrgServiceHandler {
             errMsg = "Error during http request: " + e.getMessage();
         }
 
-        return new Result(error, errMsg);
+        return new Result<>(error, errMsg);
     }
 
-    private Map<String, String> createHeaderMap() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("User-Agent", USER_AGENT);
-        return headers;
-    }
 
-    public static class Result {
-        public final byte[] seed;
-        public final RandomOrgBlobResponse response;
-        public final long durationMs;
-        public final Throwable throwable;
-        public final String errorMsg;
-
-        public Result(byte[] seed, RandomOrgBlobResponse response, long durationMs) {
-            this.seed = seed;
-            this.durationMs = durationMs;
-            this.response = response;
-            this.throwable = null;
-            this.errorMsg = null;
-        }
-
-        public Result(Throwable t, String errorMsg) {
-            this.durationMs = 0;
-            this.response = null;
-            this.seed = null;
-            this.throwable = t;
-            this.errorMsg = errorMsg;
-        }
-
-        public boolean isError() {
-            return seed == null;
-        }
-    }
 }

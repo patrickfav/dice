@@ -1,6 +1,6 @@
-package at.favre.tools.dice.service;
+package at.favre.tools.dice.service.randomorg;
 
-import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
+import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobRequest;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.HeaderMap;

@@ -1,4 +1,4 @@
-package at.favre.tools.dice.util;
+package at.favre.tools.dice.service.randomorg;
 
 import org.apache.commons.codec.binary.Base64;
 

@@ -1,4 +1,4 @@
-package at.favre.tools.dice.service.model;
+package at.favre.tools.dice.service.randomorg.model;
 
 import java.util.Arrays;
 

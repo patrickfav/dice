@@ -1,20 +1,18 @@
-package at.favre.tools.dice.service;
+package at.favre.tools.dice.service.hotbits;
 
+import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
 import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
 
-import static at.favre.tools.dice.service.RandomOrgServiceHandler.ENTROPY_SEED_LENGTH_BIT;
+import static at.favre.tools.dice.service.hotbits.HotbitsServiceHandler.ENTROPY_SEED_LENGTH_BYTE;
 import static org.junit.Assert.*;
 
-/**
- * Created by PatrickF on 17.08.2017.
- */
-public class RandomOrgServiceHandlerTest {
+public class HotbitsServiceHandlerTest {
     @Test
     public void getRandom() throws Exception {
-        RandomOrgServiceHandler.Result response = new RandomOrgServiceHandler(true).getRandom();
+        RandomOrgServiceHandler.Result<Void> response = new HotbitsServiceHandler(true).getRandom();
 
         assertNotNull(response);
 
@@ -26,13 +24,9 @@ public class RandomOrgServiceHandlerTest {
             System.out.printf(response.errorMsg);
         } else {
             assertNotNull(response.seed);
-            assertNotNull(response.response);
+            assertNull(response.response);
             System.out.println(ByteUtils.bytesToHex(response.seed));
-            System.out.println(response.response.toString());
-
-            assertFalse(response.response.equals(1));
-            assertFalse(response.response.hashCode() == 0);
-            assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BIT / 8);
+            assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BYTE);
         }
     }
 

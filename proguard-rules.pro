@@ -53,8 +53,8 @@
 
 # keep all public classes in main package
 -keep public class at.favre.tools.dice.RndTool { public *; }
--keep class at.favre.tools.dice.service.model.** { *; }
--keep class at.favre.tools.dice.service.model.**$* { *; }
+-keep class at.favre.tools.dice.service.randomorg.model.** { *; }
+-keep class at.favre.tools.dice.service.randomorg.model.**$* { *; }
 -keep class at.favre.tools.dice.service.** { *; }
 
 

@@ -3,7 +3,10 @@ package at.favre.tools.dice;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
-import at.favre.tools.dice.service.RandomOrgServiceHandler;
+import at.favre.tools.dice.service.AServiceHandler;
+import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
+import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
+import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobResponse;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
@@ -76,24 +79,12 @@ public class RndTool {
             }
 
             if (!arguments.offline()) {
-                print("Fetching from random.org. ", arguments);
-                RandomOrgServiceHandler.Result seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
-                if (!seedResult.isError()) {
-                    entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-                    println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
-                } else {
-                    System.err.println(seedResult.errorMsg);
-                    System.err.println("Try using --offline to skip online seeding or --debug for more information.");
-
-                    if (arguments.debug() && seedResult.throwable != null) {
-                        seedResult.throwable.printStackTrace();
-                    }
-                    System.exit(500);
-                }
+                fetchFromRandomOrg(arguments, entropyPool);
+                fetchFromHotbits(arguments, entropyPool);
             }
             println("", arguments);
             printRandoms(arguments, encoder, new HmacDrbg(
-                    (ExpandableEntropySource) entropyPool,
+                    entropyPool,
                     new NonceEntropySource(),
                     new PersonalizationSource()), start);
 
@@ -115,6 +106,41 @@ public class RndTool {
         }
 
         return true;
+    }
+
+    private static void fetchFromHotbits(Arg arguments, EntropyPool entropyPool) {
+        print("Fetching from Hotbits. ", arguments);
+        AServiceHandler.Result seedResult = new HotbitsServiceHandler(arguments.debug()).getRandom();
+
+        if (!seedResult.isError()) {
+            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
+            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+        } else {
+            System.err.println(seedResult.errorMsg);
+            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
+
+            if (arguments.debug() && seedResult.throwable != null) {
+                seedResult.throwable.printStackTrace();
+            }
+            System.exit(503);
+        }
+    }
+
+    private static void fetchFromRandomOrg(Arg arguments, EntropyPool entropyPool) {
+        print("Fetching from random.org. ", arguments);
+        AServiceHandler.Result<RandomOrgBlobResponse> seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
+        if (!seedResult.isError()) {
+            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
+            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+        } else {
+            System.err.println(seedResult.errorMsg);
+            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
+
+            if (arguments.debug() && seedResult.throwable != null) {
+                seedResult.throwable.printStackTrace();
+            }
+            System.exit(504);
+        }
     }
 
     private static void print(String msg, Arg arg) {
