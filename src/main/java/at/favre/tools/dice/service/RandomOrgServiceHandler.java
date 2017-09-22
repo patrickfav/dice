@@ -4,16 +4,21 @@ import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.service.model.RandomOrgBlobRequest;
 import at.favre.tools.dice.service.model.RandomOrgBlobResponse;
 import at.favre.tools.dice.util.SecurityUtil;
+import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.codec.binary.Base64;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  */
@@ -40,13 +45,14 @@ public class RandomOrgServiceHandler {
         if (debug) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client = new OkHttpClient.Builder().addNetworkInterceptor(interceptor).build();
+            client = new OkHttpClient.Builder().addNetworkInterceptor(interceptor).addInterceptor(interceptor).build();
         } else {
             client = new OkHttpClient.Builder().build();
         }
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.random.org/")
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -56,10 +62,10 @@ public class RandomOrgServiceHandler {
         try {
             final RandomOrgBlobRequest randomOrgBlobRequest = new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(API_KEY, 1, ENTROPY_SEED_LENGTH_BIT));
 
-            Response<RandomOrgBlobResponse> response = service.getRandom(createHeaderMap(), randomOrgBlobRequest).execute();
-
+            Response<String> response = service.getRandom(createHeaderMap(), randomOrgBlobRequest).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
-                RandomOrgBlobResponse orgBlobResponse = response.body();
+                String rawResponse = response.body();
+                RandomOrgBlobResponse orgBlobResponse = new Gson().fromJson(rawResponse, RandomOrgBlobResponse.class);
 
                 if (orgBlobResponse.id != randomOrgBlobRequest.id) {
                     throw new IllegalArgumentException("json rpc id do not match");
@@ -75,6 +81,10 @@ public class RandomOrgServiceHandler {
 
                 if (orgBlobResponse.result.requestsLeft <= 1 / 8) {
                     throw new IllegalArgumentException("api token ran out of request quota");
+                }
+
+                if (!verifySignature(rawResponse, orgBlobResponse.result.signature)) {
+                    throw new IllegalArgumentException("response signature could not be verified");
                 }
 
                 return new Result(new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
@@ -95,6 +105,16 @@ public class RandomOrgServiceHandler {
         Map<String, String> headers = new HashMap<>();
         headers.put("User-Agent", USER_AGENT);
         return headers;
+    }
+
+    private boolean verifySignature(String rawResponse, String base64Sig) {
+        try {
+            Pattern p = Pattern.compile("\"random\"\\s*:\\s*(\\{.+?})\\s*,");
+            Matcher matcher = p.matcher(rawResponse);
+            return matcher.find() && SecurityUtil.verifyRSA(SecurityUtil.parsePublicKey(new Base64().decode(RandomOrgServiceHandler.RANDOM_ORG_PUB_KEY)), matcher.group(1).getBytes(StandardCharsets.UTF_8), base64Sig);
+        } catch (Exception e) {
+            throw new IllegalStateException("could not verify signature", e);
+        }
     }
 
     public static class Result {

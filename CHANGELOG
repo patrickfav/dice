@@ -6,6 +6,7 @@
 * add line break every X lines of output
 * add Base58 and Base26
 * add crc32 check feature
+* add random.org signature verification
 
 ## v0.6.0
 * robot mode

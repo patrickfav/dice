@@ -131,7 +131,7 @@ public class RndTool {
 
     private static String printWithEntropy(byte[] seed) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[").append(seed.length).append(" byte]");
+        sb.append("[").append(seed.length).append(" bytes]");
         double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
         if (entropy < 3) {
             sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");
