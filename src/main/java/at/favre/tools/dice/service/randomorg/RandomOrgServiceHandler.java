@@ -27,6 +27,7 @@ public class RandomOrgServiceHandler extends AServiceHandler {
         super(debug);
     }
 
+    @Override
     public Result<RandomOrgBlobResponse> getRandom() {
         long startTime = System.currentTimeMillis();
 

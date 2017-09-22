@@ -7,13 +7,15 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AServiceHandler {
+public abstract class AServiceHandler<T> {
     private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
     protected final boolean debug;
 
     protected AServiceHandler(boolean debug) {
         this.debug = debug;
     }
+
+    public abstract Result<T> getRandom();
 
     protected Map<String, String> createHeaderMap() {
         Map<String, String> headers = new HashMap<>();

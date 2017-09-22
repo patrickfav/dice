@@ -29,5 +29,4 @@ public class HotbitsServiceHandlerTest {
             assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BYTE);
         }
     }
-
 }

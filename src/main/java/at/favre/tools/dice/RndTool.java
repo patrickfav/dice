@@ -4,6 +4,8 @@ import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
 import at.favre.tools.dice.service.AServiceHandler;
+import at.favre.tools.dice.service.anuquantum.AnuQuantomResponse;
+import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
 import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobResponse;
@@ -81,6 +83,7 @@ public class RndTool {
             if (!arguments.offline()) {
                 fetchFromRandomOrg(arguments, entropyPool);
                 fetchFromHotbits(arguments, entropyPool);
+                fetchFromQuantum(arguments, entropyPool);
             }
             println("", arguments);
             printRandoms(arguments, encoder, new HmacDrbg(
@@ -106,6 +109,24 @@ public class RndTool {
         }
 
         return true;
+    }
+
+    private static void fetchFromQuantum(Arg arguments, EntropyPool entropyPool) {
+        print("Fetching from Anu Quantum. ", arguments);
+        AServiceHandler.Result<AnuQuantomResponse> seedResult = new AnuQuantumServiceHandler(arguments.debug()).getRandom();
+
+        if (!seedResult.isError()) {
+            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
+            println("Got seed " + printWithEntropy(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
+        } else {
+            System.err.println(seedResult.errorMsg);
+            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
+
+            if (arguments.debug() && seedResult.throwable != null) {
+                seedResult.throwable.printStackTrace();
+            }
+            System.exit(502);
+        }
     }
 
     private static void fetchFromHotbits(Arg arguments, EntropyPool entropyPool) {

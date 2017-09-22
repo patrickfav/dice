@@ -1,27 +1,23 @@
-package at.favre.tools.dice.service.hotbits;
+package at.favre.tools.dice.service.anuquantum;
 
 import at.favre.tools.dice.service.AServiceHandler;
+import at.favre.tools.dice.util.ByteUtils;
 import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.net.UnknownHostException;
 
-public class HotbitsServiceHandler extends AServiceHandler {
+public class AnuQuantumServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BYTE = 24;
 
-    /*
-     * Your HotBits API Key is:
-     */
-    private static final String API_KEY = "HB1QEJzoHjD5sLx3kKYIsnxP3rM";
-
-    public HotbitsServiceHandler(boolean debug) {
+    public AnuQuantumServiceHandler(boolean debug) {
         super(debug);
     }
 
     @Override
-    public Result<Void> getRandom() {
+    public Result<AnuQuantomResponse> getRandom() {
         long startTime = System.currentTimeMillis();
 
         OkHttpClient client = createClient();
@@ -29,17 +25,18 @@ public class HotbitsServiceHandler extends AServiceHandler {
         String errMsg = null;
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.fourmilab.ch/")
+                .baseUrl("https://qrng.anu.edu.au/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
 
-        HotbitsService service = retrofit.create(HotbitsService.class);
+        AnuQuantumService service = retrofit.create(AnuQuantumService.class);
 
         try {
-            Response<ResponseBody> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE, API_KEY).execute();
+            Response<AnuQuantomResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
-                byte[] rawResponse = response.body().bytes();
-                return new Result<>(rawResponse, null, System.currentTimeMillis() - startTime);
+                byte[] rawResponse = ByteUtils.hexToBytes(response.body().data.get(0));
+                return new Result<>(rawResponse, response.body(), System.currentTimeMillis() - startTime);
             }
         } catch (UnknownHostException e) {
             error = e;
