@@ -122,7 +122,10 @@ public class RndTool {
         Observable.fromIterable(handlers)
                 .flatMapSingle(handler -> handler.asObservable().subscribeOn(Schedulers.from(parallelExecutor)))
                 .doFinally(parallelExecutor::shutdown)
-                .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), System.err::println, () -> requestFinished(arguments, encoder, entropyPool, start));
+                .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), t -> {
+                    System.err.println("\n" + t.getMessage());
+                    System.exit(500);
+                }, () -> requestFinished(arguments, encoder, entropyPool, start));
     }
 
     private static void requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) {
@@ -139,16 +142,10 @@ public class RndTool {
     private static ServiceHandler.Result<?> updateSeed(ServiceHandler.Result<?> result, Arg arguments, EntropyPool entropyPool) throws IOException {
         if (!result.isError()) {
             entropyPool.add(new ExternalStrongSeedEntropySource(result.seed));
-            print(result.serviceName + " [" + result.seed.length + "b/" + result.durationMs + "ms] " + getOptionalEntropyWarning(result.seed), arguments);
+            print(result.serviceName + " [" + result.durationMs + "ms] " + getOptionalEntropyWarning(result.seed), arguments);
             return result;
         } else {
-            System.err.println(result.errorMsg);
-            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
-
-            if (arguments.debug() && result.throwable != null) {
-                result.throwable.printStackTrace();
-            }
-            throw new IOException("could not get random");
+            throw new IOException(result.serviceName + ": " + result.errorMsg + "\nTry using --offline to skip online seeding or --debug for more information.", result.throwable);
         }
     }
 

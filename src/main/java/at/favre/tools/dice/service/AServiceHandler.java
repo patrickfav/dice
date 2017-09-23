@@ -7,6 +7,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AServiceHandler<T> implements ServiceHandler<T> {
     private final static String USER_AGENT = "dice/" + RndTool.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
@@ -28,12 +29,19 @@ public abstract class AServiceHandler<T> implements ServiceHandler<T> {
     }
 
     protected OkHttpClient createClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS);
         if (debug) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            return new OkHttpClient.Builder().addNetworkInterceptor(interceptor).addInterceptor(interceptor).build();
+            return builder
+                    .addNetworkInterceptor(interceptor)
+                    .addInterceptor(interceptor)
+                    .build();
         } else {
-            return new OkHttpClient.Builder().build();
+            return builder.build();
         }
     }
 
