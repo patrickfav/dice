@@ -1,18 +1,13 @@
 package at.favre.tools.dice.encode.byteencoder;
 
-import at.favre.tools.dice.encode.Encoder;
+import at.favre.tools.dice.encode.AEncoder;
 
 import java.math.BigInteger;
 
-public abstract class AByteEncoder implements Encoder {
+public abstract class AByteEncoder extends AEncoder {
     @Override
     public String encodePadded(byte[] array) {
         return encode(array);
-    }
-
-    @Override
-    public String getDescription() {
-        return "<TODO>";
     }
 
     public double spaceEfficiency() {

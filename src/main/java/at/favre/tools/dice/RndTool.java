@@ -7,7 +7,6 @@ import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
-import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobResponse;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
@@ -18,6 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -28,10 +28,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RndTool {
-
     private static final int MAX_RND_LENGTH = 640;
-    private static final int MAX_COUNT = 1024;
-    private static final byte[] RND_TOOL_PERSONALIZATION = new byte[]{(byte) 0xE9, 0x36, (byte) 0x9C, 0x6B, (byte) 0xC4, 0x29, 0x53, 0x3D, (byte) 0xCA, 0x46, 0x24, 0x03, 0x72, 0x5C, 0x5F, (byte) 0xCF, (byte) 0xB8, 0x1C, (byte) 0xF2, 0x36};
+    private static final int MAX_COUNT = 4096;
 
     public static void main(String[] args) {
         Arg arguments = CLIParser.parse(args);
@@ -123,14 +121,15 @@ public class RndTool {
                 .flatMapSingle(handler -> handler.asObservable().subscribeOn(Schedulers.from(parallelExecutor)))
                 .doFinally(parallelExecutor::shutdown)
                 .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), t -> {
-                    System.err.println("\n" + t.getMessage());
+                    System.err.println(System.lineSeparator() + t.getMessage());
                     System.exit(500);
                 }, () -> requestFinished(arguments, encoder, entropyPool, start));
     }
 
-    private static void requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) {
+    private static void requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
+
         if (!arguments.offline()) {
-            println("\n", arguments);
+            println(System.lineSeparator(), arguments);
         }
 
         printRandoms(arguments, encoder, new HmacDrbg(
@@ -145,42 +144,7 @@ public class RndTool {
             print(result.serviceName + " [" + result.durationMs + "ms] " + getOptionalEntropyWarning(result.seed), arguments);
             return result;
         } else {
-            throw new IOException(result.serviceName + ": " + result.errorMsg + "\nTry using --offline to skip online seeding or --debug for more information.", result.throwable);
-        }
-    }
-
-    private static void fetchFromHotbits(Arg arguments, EntropyPool entropyPool) {
-        print("Fetching from Hotbits. ", arguments);
-        ServiceHandler.Result seedResult = new HotbitsServiceHandler(arguments.debug()).getRandom();
-
-        if (!seedResult.isError()) {
-            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-            println("Got seed " + getOptionalEntropyWarning(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
-        } else {
-            System.err.println(seedResult.errorMsg);
-            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
-
-            if (arguments.debug() && seedResult.throwable != null) {
-                seedResult.throwable.printStackTrace();
-            }
-            System.exit(503);
-        }
-    }
-
-    private static void fetchFromRandomOrg(Arg arguments, EntropyPool entropyPool) {
-        print("Fetching from random.org. ", arguments);
-        ServiceHandler.Result<RandomOrgBlobResponse> seedResult = new RandomOrgServiceHandler(arguments.debug()).getRandom();
-        if (!seedResult.isError()) {
-            entropyPool.add(new ExternalStrongSeedEntropySource(seedResult.seed));
-            println("Got seed " + getOptionalEntropyWarning(seedResult.seed) + " after " + seedResult.durationMs + "ms", arguments);
-        } else {
-            System.err.println(seedResult.errorMsg);
-            System.err.println("Try using --offline to skip online seeding or --debug for more information.");
-
-            if (arguments.debug() && seedResult.throwable != null) {
-                seedResult.throwable.printStackTrace();
-            }
-            System.exit(504);
+            throw new IOException(result.serviceName + ": " + result.errorMsg + System.lineSeparator() + "Try using --offline to skip online seeding or --debug for more information.", result.throwable);
         }
     }
 
@@ -205,14 +169,47 @@ public class RndTool {
         return sb.toString();
     }
 
-    private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, long startTime) {
-        List<String> outputList = new ArrayList<>(arguments.length());
-
+    private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, long startTime) throws IOException {
         boolean useAutoColumn = false;
         if (arguments.count() == null) {
-            arguments = arguments.toBuilder().count(Arg.DEFAULT_COUNT).build();
-            useAutoColumn = true;
+            if (arguments.outFile() == null) {
+                arguments = arguments.toBuilder().count(Arg.DEFAULT_COUNT).build();
+                useAutoColumn = true;
+            } else {
+                arguments = arguments.toBuilder().count(1).build();
+            }
         }
+
+        List<String> outputList = generateRandomList(arguments, encoder, drbg, useAutoColumn);
+
+        int actualCount = arguments.count();
+        if (arguments.outFile() == null) {
+            if (arguments.robot()) {
+                actualCount = new ColumnRenderer().renderSingleColumn(outputList, System.out);
+            } else if (useAutoColumn) {
+                actualCount = new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
+            } else {
+                actualCount = new ColumnRenderer().render(outputList, System.out);
+            }
+        } else {
+            if (!arguments.outFile().exists()) {
+                if (!arguments.outFile().mkdirs() || !arguments.outFile().createNewFile()) {
+                    throw new IOException("could not generate outfile " + arguments.outFile());
+                }
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(arguments.outFile())) {
+                for (String s : outputList) {
+                    fos.write(encoder.asBytes(s));
+                }
+            }
+        }
+
+        print(System.lineSeparator() + "[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+    }
+
+    private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {
+        List<String> outputList = new ArrayList<>(arguments.length());
 
         int countGenerated = arguments.count() + (useAutoColumn ? 20 : 0);
         for (int i = 0; i < countGenerated; i++) {
@@ -233,17 +230,7 @@ public class RndTool {
             }
             outputList.add(randomEncodedString);
         }
-
-        int actualCount;
-        if (arguments.robot()) {
-            actualCount = new ColumnRenderer().renderSingleColumn(outputList, System.out);
-        } else if (useAutoColumn) {
-            actualCount = new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
-        } else {
-            actualCount = new ColumnRenderer().render(outputList, System.out);
-        }
-
-        print("\n\n[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+        return outputList;
     }
 
     public static String jarVersion() {

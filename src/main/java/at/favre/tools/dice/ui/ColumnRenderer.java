@@ -35,7 +35,7 @@ public class ColumnRenderer {
     }
 
     public int renderSingleColumn(List<String> outputList, PrintStream outStream) {
-        outputList.forEach(s -> outStream.print(s + "\n"));
+        outputList.forEach(s -> outStream.print(s + System.lineSeparator()));
         return outputList.size();
     }
 

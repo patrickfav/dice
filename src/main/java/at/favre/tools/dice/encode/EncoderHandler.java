@@ -33,6 +33,7 @@ public class EncoderHandler {
             new RubyEncoder(),
             new RustEncoder(),
             new SwiftEncoder(),
+            new RawByteEncoder(),
             new Utf8Encoder()
     ));
     private final byte[] exampleBytes = ByteUtils.unsecureRandomBytes(7);

@@ -3,13 +3,15 @@ package at.favre.tools.dice.ui;
 import com.google.auto.value.AutoValue;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 @AutoValue
 public abstract class Arg {
     static final int DEFAULT_LENGTH = 16;
     public static final int DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32) {
+    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
         return builder()
                 .encoding(encoding)
                 .seed(seed)
@@ -21,6 +23,7 @@ public abstract class Arg {
                 .padding(padding)
                 .robot(robot)
                 .crc32(crc32)
+                .outFile(outFile)
                 .build();
     }
 
@@ -46,6 +49,9 @@ public abstract class Arg {
 
     public abstract boolean crc32();
 
+    @Nullable
+    public abstract File outFile();
+
     public abstract Builder toBuilder();
 
     public static Builder builder() {
@@ -57,7 +63,8 @@ public abstract class Arg {
                 .urlencode(false)
                 .padding(false)
                 .robot(false)
-                .crc32(false);
+                .crc32(false)
+                .outFile(null);
     }
 
     @AutoValue.Builder
@@ -81,6 +88,8 @@ public abstract class Arg {
         public abstract Builder robot(boolean value);
 
         public abstract Builder crc32(boolean value);
+
+        public abstract Builder outFile(File value);
 
         public abstract Arg build();
     }

@@ -2,8 +2,10 @@ package at.favre.tools.dice.ui;
 
 import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.encode.EncoderHandler;
+import at.favre.tools.dice.util.MiscUtil;
 import org.apache.commons.cli.*;
 
+import java.io.File;
 import java.util.List;
 
 public class CLIParser {
@@ -16,6 +18,7 @@ public class CLIParser {
     static final String ARG_DEBUG = "d";
     static final String ARG_ROBOT = "r";
     static final String ARG_CRC32 = "crc32";
+    static final String ARG_OUTFILE = "f";
 
     public static Arg parse(String[] args) {
         Options options = setupOptions();
@@ -51,6 +54,13 @@ public class CLIParser {
                 argument.encoding(commandLine.getOptionValue(ARG_ENCODING));
             } else {
                 argument.encoding(Arg.DEFAULT_ENCODING);
+            }
+
+            if (commandLine.hasOption(ARG_OUTFILE)) {
+                String fileString = commandLine.getOptionValue(ARG_OUTFILE);
+                if (fileString != null && MiscUtil.isValidPath(fileString)) {
+                    argument.outFile(new File(fileString));
+                }
             }
 
             argument.debug(commandLine.hasOption(ARG_DEBUG));
@@ -91,6 +101,7 @@ public class CLIParser {
         Option paddingOpt = Option.builder(ARG_PADDING).longOpt("padding").hasArg(false).desc("If this flag is set, byte-to-text output will be padded to full byte if needed.").build();
         Option robotOpt = Option.builder(ARG_ROBOT).longOpt("robot").hasArg(false).desc("If this flag is set, output will be more friendly for scripting (ie. no verbose text, only the randoms 1 per line)").build();
         Option checksumOpt = Option.builder().longOpt(ARG_CRC32).hasArg(false).desc("If this flag is set, 4 bytes of CRC32 checksum will be appended to every random value. If you need to check the integrity of the data.").build();
+        Option outFileOpt = Option.builder(ARG_OUTFILE).longOpt("file").argName("path").hasArg(true).desc("Prints the random data to given file instead of the command line. Will create the file if it does not exist or append the data if it does.").build();
 
         Option help = Option.builder("h").longOpt("help").desc("Shows this page.").build();
         Option version = Option.builder("v").longOpt("version").desc("Prints application version.").build();
@@ -103,7 +114,7 @@ public class CLIParser {
                 .addOption(urlencodeOpt).addOption(paddingOpt)
                 .addOption(debugOpt).addOption(help)
                 .addOption(robotOpt).addOption(checksumOpt)
-                .addOption(version);
+                .addOption(outFileOpt).addOption(version);
 
         return options;
     }
