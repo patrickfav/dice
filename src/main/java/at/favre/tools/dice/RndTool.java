@@ -192,13 +192,15 @@ public class RndTool {
                 actualCount = new ColumnRenderer().render(outputList, System.out);
             }
         } else {
-            if (!arguments.outFile().exists()) {
-                if (!arguments.outFile().mkdirs() || !arguments.outFile().createNewFile()) {
-                    throw new IOException("could not generate outfile " + arguments.outFile());
+            if (!arguments.outFile().getParentFile().exists()) {
+                if (!arguments.outFile().getParentFile().mkdirs()) {
+                    throw new IOException("could not generate dir structure for " + arguments.outFile());
                 }
             }
 
-            try (FileOutputStream fos = new FileOutputStream(arguments.outFile())) {
+            println("Writing data to " + arguments.outFile(), arguments);
+
+            try (FileOutputStream fos = new FileOutputStream(arguments.outFile(), true)) {
                 for (String s : outputList) {
                     fos.write(encoder.asBytes(s));
                 }

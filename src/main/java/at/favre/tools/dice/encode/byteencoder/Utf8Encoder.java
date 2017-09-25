@@ -14,7 +14,7 @@ public class Utf8Encoder extends AByteEncoder {
 
     @Override
     public String[] names() {
-        return new String[]{"utf8"};
+        return new String[]{"utf8", "utf-8"};
     }
 
     @Override
