@@ -65,8 +65,10 @@ Or you want to create static salts, or randoms to harcode, then just use:
                              you need to check the integrity of the data.
     -d,--debug               Prints additional info for debugging.
     -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
-                             binary, octal, dec, base16, BASE16, base32, base36, base58, base64, base64-url, base85,
-                             base122, c, c#, java, go, kotlin, node, perl, php, python3, ruby, rust, swift, utf8
+                             binary, octal, dec, base16, BASE16, base26, base32, base36, base58, base64, base64-url,
+                             base85, c, c#, java, go, kotlin, node, perl, php, python3, ruby, rust, swift, raw, utf8
+    -f,--file <path>         Prints the random data to given file instead of the command line. Will create the file if
+                             it does not exist or append the data if it does.
     -h,--help                Shows this page.
     -o,--offline             Skips request to Random.org to seed random generator (use when offline).
     -p,--padding             If this flag is set, byte-to-text output will be padded to full byte if needed.
@@ -78,25 +80,27 @@ Or you want to create static salts, or randoms to harcode, then just use:
                              output strings
     -v,--version             Prints application version.
 
+
 ## Supported Encodings
 
 ### Byte-to-Text Encodings
 
 | Name | Example | Efficiency | Padding | Description |
 | ------------- | ------------- | -------------: | :-------------: | ------------- |
-| binary       | `11111100 01100000 10101000 10100111 10000111 10101110 10111101` | 12.5 % | false | A simple binary representation with '0' and '1' divided into 8 bit groups. |
-| octal        | `2755350364752060374` | 37.5 % | true | The octal numeral system, is the base-8 number system, and uses the digits 0 to 7. |
-| dec          | `53390668254961916`  | 41.5 % | true | Decimal positive sign-magnitude representation representation in big-endian byte-order. |
-| base16       | `bdae87a7a860fc`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Lowercase (a-f) letters are used for digits greater than 9. |
-| BASE16       | `BDAE87A7A860FC`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Uppercase (A-F) letters are used for digits greater than 9. |
-| base26       | `OOFLHRAQSTMI`       | 58.8 % | true | Base26 uses the twenty-six letters A-Z. |
-| base32       | `XWXIPJ5IMD6A`       | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. |
-| base36       | `elpeue4stmk`        | 64.6 % | true | Base36 translating into a radix-36 (aka Hexatrigesimal) representation. |
-| base58       | `8BujKawLTm`         | 73.2 % | true | Base58 is similar to Base64 but has been modified to avoid both non-alphanumeric characters and letters which might look ambiguous when printed. This version uses the alphabet common for Bitcoin protocol. |
-| base64       | `va6Hp6hg/A`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
-| base64-url   | `va6Hp6hg_A`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. Uses url safe mode |
-| base85       | `]rm-gW*oN`          | 80.1 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
-| utf8         | `�����`�`            | 100.0 % | false | UTF-8 is a compromise character encoding that can be as compact as ASCII (if the file is just plain English text) but can also contain any unicode characters (with some increase in file size). |
+| binary       | `11101101 10101111 00011110 11111111 11111101 10010100 01001010` | 12.5 % | false | A simple binary representation with '0' and '1' divided into 8 bit groups. |
+| octal        | `1124517677707527755` | 37.5 % | true | The octal numeral system, is the base-8 number system, and uses the digits 0 to 7. |
+| dec          | `20992966904426477`  | 41.5 % | true | Decimal positive sign-magnitude representation representation in big-endian byte-order. |
+| base16       | `4a94fdff1eafed`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Lowercase (a-f) letters are used for digits greater than 9. |
+| BASE16       | `4A94FDFF1EAFED`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Uppercase (A-F) letters are used for digits greater than 9. |
+| base26       | `FSSLZZFNQZQZ`       | 58.8 % | true | Base26 uses the twenty-six letters A-Z. |
+| base32       | `JKKP37Y6V7WQ`       | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. |
+| base36       | `5qpdvuwjvu5`        | 64.6 % | true | Base36 translating into a radix-36 (aka Hexatrigesimal) representation. |
+| base58       | `3pvkeHJmHN`         | 73.2 % | true | Base58 is similar to Base64 but has been modified to avoid both non-alphanumeric characters and letters which might look ambiguous when printed. This version uses the alphabet common for Bitcoin protocol. |
+| base64       | `SpT9/x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
+| base64-url   | `SpT9_x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. Uses url safe mode |
+| base85       | `8sK;S*j=r`          | 80.1 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
+| raw          | `Jýÿ¯í`            | 100.0 % | false | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. |
+| utf8         | `J�����`            | 100.0 % | false | Prints the byte array interpreted as UTF-8 encoded text. Only for testing purpose. |
 
 
 ### Programming Languages
