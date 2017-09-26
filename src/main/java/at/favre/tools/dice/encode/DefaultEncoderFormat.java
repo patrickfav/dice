@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
  * Default encoder format
  */
 public class DefaultEncoderFormat implements EncoderFormat {
+    private static final int DEFAULT_WIDTH = 96;
 
     private final String sepCmdLine;
     private final String sepFile;
@@ -15,12 +16,13 @@ public class DefaultEncoderFormat implements EncoderFormat {
     private final String paragraphCmdLine;
     private final String paragraphFile;
     private final Charset charset;
+    private final int printWidth;
 
     public DefaultEncoderFormat() {
-        this(" ", " ", System.lineSeparator(), System.lineSeparator(), System.lineSeparator(), "", StandardCharsets.UTF_8);
+        this(" ", " ", System.lineSeparator(), System.lineSeparator(), System.lineSeparator(), "", StandardCharsets.UTF_8, DEFAULT_WIDTH);
     }
 
-    public DefaultEncoderFormat(String sepCmdLine, String sepFile, String newLineCmdLine, String newLineFile, String paragraphCmdLine, String paragraphFile, Charset charset) {
+    public DefaultEncoderFormat(String sepCmdLine, String sepFile, String newLineCmdLine, String newLineFile, String paragraphCmdLine, String paragraphFile, Charset charset, int printWidth) {
         this.sepCmdLine = sepCmdLine;
         this.sepFile = sepFile;
         this.newLineCmdLine = newLineCmdLine;
@@ -28,6 +30,7 @@ public class DefaultEncoderFormat implements EncoderFormat {
         this.paragraphCmdLine = paragraphCmdLine;
         this.paragraphFile = paragraphFile;
         this.charset = charset;
+        this.printWidth = printWidth;
     }
 
     @Override
@@ -58,6 +61,11 @@ public class DefaultEncoderFormat implements EncoderFormat {
     @Override
     public String paragraphFile() {
         return paragraphFile;
+    }
+
+    @Override
+    public int printWidth() {
+        return printWidth;
     }
 
     @Override

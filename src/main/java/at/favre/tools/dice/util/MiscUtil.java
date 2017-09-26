@@ -3,7 +3,7 @@ package at.favre.tools.dice.util;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 
-public class MiscUtil {
+public final class MiscUtil {
     /**
      * <pre>
      * Checks if a string is a valid path.

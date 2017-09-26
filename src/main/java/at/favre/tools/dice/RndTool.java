@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,9 +31,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RndTool {
+public final class RndTool {
     private static final int MAX_RND_LENGTH = 800;
     private static final int MAX_COUNT = 4096;
+
+    private RndTool() {
+    }
 
     public static void main(String[] args) {
         Arg arguments = CLIParser.parse(args);
@@ -82,10 +86,6 @@ public class RndTool {
             /*if (arguments.debug()) {
                 println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")", arguments);
             }*/
-
-            if (arguments.urlencode()) {
-                println("Url encode output.", arguments);
-            }
 
             if (arguments.seed() != null) {
                 byte[] seed = arguments.seed().getBytes(StandardCharsets.UTF_8);
@@ -137,6 +137,7 @@ public class RndTool {
         final ExecutorService parallelExecutor = Executors.newFixedThreadPool(4);
         Observable.fromIterable(handlers)
                 .flatMapSingle(handler -> handler.asObservable().subscribeOn(Schedulers.from(parallelExecutor)))
+                .doFinally(() -> println("", arguments))
                 .doFinally(parallelExecutor::shutdown)
                 .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), t -> {
                     System.err.println(System.lineSeparator() + t.getMessage());
@@ -145,13 +146,10 @@ public class RndTool {
     }
 
     private static boolean requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
-
-        if (!arguments.offline()) {
-            println(System.lineSeparator(), arguments);
-        }
+        println("", arguments);
 
         if (arguments.outFile() != null) {
-            println("Writing data to " + arguments.outFile(), arguments);
+            print("Writing data to " + arguments.outFile(), arguments);
         }
 
         printRandoms(arguments, encoder, new HmacDrbg(
@@ -219,7 +217,7 @@ public class RndTool {
             }
         }
 
-        print(System.lineSeparator() + "[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+        print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
     }
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
@@ -229,7 +227,7 @@ public class RndTool {
     private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {
         List<String> outputList = new ArrayList<>(arguments.length());
 
-        int countGenerated = arguments.count() + (useAutoColumn ? 20 : 0);
+        int countGenerated = arguments.count() + (useAutoColumn ? (int) Math.ceil((double) encoder.getEncoderFormat().printWidth() / (double) arguments.length()) + 5 : 0);
         for (int i = 0; i < countGenerated; i++) {
             byte[] rnd = drbg.nextBytes(arguments.length());
 
@@ -257,5 +255,10 @@ public class RndTool {
             version = "debug";
         }
         return version;
+    }
+
+    private static String getFriendlyFormattedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        return sdf.format(new Date());
     }
 }

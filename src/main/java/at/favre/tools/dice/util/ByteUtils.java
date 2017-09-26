@@ -10,8 +10,11 @@ import java.util.zip.CRC32;
 /**
  * Created by PatrickF on 01.06.2017.
  */
-public class ByteUtils {
+public final class ByteUtils {
     private final static char[] HEX_REF_TABLE = "0123456789ABCDEF".toCharArray();
+
+    private ByteUtils() {
+    }
 
     public static String byteToHex(byte aByte) {
         return bytesToHex(new byte[]{aByte});

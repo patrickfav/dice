@@ -1,6 +1,6 @@
 # Dice
 
-A pseudo random bit generator that generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding): normal byte encodings like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
+A pseudo random bit generator which generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding) like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
@@ -50,11 +50,13 @@ This should run on any Windows, Mac or Linux machine.
 
 ## Use Cases
 
-### Creating Nonces, Tokens or Identifiers
+### Creating Nonces, Tokens, Identifiers or Passwords
 
 I'll recommend base32, base36 or base58 because these encodings are typically url-safe. 16 byte usually suffice for globally unique, infeasible to brute force number.
 
     java -jar dice.jar 16 -e "base36"
+
+If you require fixed char-sized output either use `hex` encoding or other encodings with supporting padding like `base32` or `base64`.
 
 ### Creating static byte arrays for your application
 

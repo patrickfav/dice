@@ -35,11 +35,10 @@ public class ColumnRendererTest {
         elements.add("dasd");
         elements.add("cac");
 
-        int targetWidth = 40;
-        new ColumnRenderer(encoderFormat, targetWidth).render(elements, System.out, false);
+        new ColumnRenderer(encoderFormat).render(elements, System.out, false);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), false);
+        new ColumnRenderer(encoderFormat).render(elements, new PrintStream(baos), false);
 
         String out = baos.toString("UTF-8");
         assertNotNull(out);
@@ -50,11 +49,10 @@ public class ColumnRendererTest {
     public void renderAutoFill() throws Exception {
         final int maxWordLength = 16;
         final int count = 32;
-        final int targetWidth = 80;
 
         for (int i = 1; i < maxWordLength; i += 2) {
             List<String> elements = generateRnd(i, count + 20);
-            testRender(encoderFormat, count, targetWidth, elements, true, false);
+            testRender(encoderFormat, count, elements, true, false);
         }
     }
 
@@ -62,11 +60,10 @@ public class ColumnRendererTest {
     public void renderSingleColumn() throws Exception {
         final int maxWordLength = 16;
         final int count = 32;
-        final int targetWidth = 80;
 
         for (int i = 1; i < maxWordLength; i += 2) {
             List<String> elements = generateRnd(i, count + 20);
-            testRender(encoderFormat, count, targetWidth, elements, true, false);
+            testRender(encoderFormat, count, elements, true, false);
         }
     }
 
@@ -83,13 +80,13 @@ public class ColumnRendererTest {
         System.out.println();
     }
 
-    private void testRender(EncoderFormat encoderFormat, int count, int targetWidth, List<String> elements, boolean auto, boolean isFile) throws UnsupportedEncodingException {
+    private void testRender(EncoderFormat encoderFormat, int count, List<String> elements, boolean auto, boolean isFile) throws UnsupportedEncodingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         if (auto) {
-            new ColumnRenderer(encoderFormat, targetWidth).renderAutoColumn(count, elements, new PrintStream(baos), isFile);
+            new ColumnRenderer(encoderFormat).renderAutoColumn(count, elements, new PrintStream(baos), isFile);
         } else {
-            new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), isFile);
+            new ColumnRenderer(encoderFormat).render(elements, new PrintStream(baos), isFile);
         }
 
         String out = baos.toString("UTF-8");
@@ -115,8 +112,8 @@ public class ColumnRendererTest {
         int count = 9;
         for (Encoder encoder : new EncoderHandler().load()) {
             List<String> rnds = generateRnd(encoder, 6, count);
-            testRender(encoder.getEncoderFormat(), count, 60, rnds, false, true);
-            testRender(encoder.getEncoderFormat(), count, 60, rnds, false, false);
+            testRender(encoder.getEncoderFormat(), count, rnds, false, true);
+            testRender(encoder.getEncoderFormat(), count, rnds, false, false);
         }
     }
 
@@ -127,5 +124,4 @@ public class ColumnRendererTest {
         }
         return out;
     }
-
 }

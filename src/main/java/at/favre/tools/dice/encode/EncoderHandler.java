@@ -6,7 +6,7 @@ import at.favre.tools.dice.util.ByteUtils;
 
 import java.util.*;
 
-public class EncoderHandler {
+public final class EncoderHandler {
 
     private static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
             new Base2Encoder(),

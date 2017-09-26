@@ -48,8 +48,6 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         bos.write(runtimeMXBean.getVmVersion().getBytes(StandardCharsets.UTF_8));
         bos.write(runtimeMXBean.getClassPath().getBytes(StandardCharsets.UTF_8));
         bos.write(ByteBuffer.allocate(Long.BYTES).putLong(runtimeMXBean.getStartTime()).array());
-        bos.write(ByteBuffer.allocate(Long.BYTES).putLong(runtimeMXBean.getUptime()).array());
-
         return bos.toByteArray();
     }
 

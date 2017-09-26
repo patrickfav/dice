@@ -12,16 +12,10 @@ public class ColumnRenderer {
     private static final int MAX_WIDTH = 80;
     private static final int LINE_BREAK_EVERY_LINES = 24;
 
-    private final int targetWidth;
     private final EncoderFormat encoderFormat;
 
     public ColumnRenderer(EncoderFormat encoderFormat) {
-        this(encoderFormat, MAX_WIDTH);
-    }
-
-    public ColumnRenderer(EncoderFormat encoderFormat, int targetWidth) {
         this.encoderFormat = encoderFormat;
-        this.targetWidth = targetWidth;
     }
 
     /**
@@ -100,9 +94,9 @@ public class ColumnRenderer {
     }
 
     private int getColumnCount(int maxLength) {
-        int columns = Math.max(1, targetWidth / maxLength);
+        int columns = Math.max(1, encoderFormat.printWidth() / maxLength);
 
-        while (maxLength * columns + columns > targetWidth) {
+        while (maxLength * columns + columns > encoderFormat.printWidth()) {
             columns--;
         }
         return Math.max(1, columns);

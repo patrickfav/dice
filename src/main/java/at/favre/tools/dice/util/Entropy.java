@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author Gilad Mishne
  */
-public class Entropy<T> {
+public final class Entropy<T> {
     private final Map<T, Integer> map = new HashMap<>();
     private int total = 0;
 

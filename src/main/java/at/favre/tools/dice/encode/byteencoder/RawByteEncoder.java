@@ -43,6 +43,6 @@ public class RawByteEncoder extends AByteEncoder {
 
     @Override
     public EncoderFormat getEncoderFormat() {
-        return new DefaultEncoderFormat(" ", "", System.lineSeparator(), "", System.lineSeparator(), "", StandardCharsets.ISO_8859_1);
+        return new DefaultEncoderFormat(" ", "", System.lineSeparator(), "", System.lineSeparator(), "", StandardCharsets.ISO_8859_1, Integer.MAX_VALUE);
     }
 }

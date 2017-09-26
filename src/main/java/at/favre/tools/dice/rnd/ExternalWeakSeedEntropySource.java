@@ -9,7 +9,7 @@ import java.security.SecureRandom;
  * {@link SecureRandom} instance which itself seeds with OS entropy pool, therefore mixing the
  * weaker source with a stronger, unpredictable one.
  */
-public class ExternalWeakSeedEntropySource implements ExpandableEntropySource {
+public final class ExternalWeakSeedEntropySource implements ExpandableEntropySource {
     private final SecureRandom secureRandom;
 
     public ExternalWeakSeedEntropySource(String seed) {

@@ -53,6 +53,13 @@ public interface EncoderFormat {
     String paragraphFile();
 
     /**
+     * When printing, when the printing should have a line break after x amount of chars
+     *
+     * @return count of chars until line break (usually around 80 on command line)
+     */
+    int printWidth();
+
+    /**
      * Given a string returned by one of the encode methods, this will return the raw byte array.
      * The used encoding is implementation detail.
      *

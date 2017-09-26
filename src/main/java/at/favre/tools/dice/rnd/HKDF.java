@@ -52,8 +52,11 @@ import java.util.Arrays;
  * <p>
  * See: https://github.com/mozilla-services/sync-crypto/blob/master/src/main/java/org/mozilla/android/sync/crypto/HKDF.java
  */
-public class HKDF {
+public final class HKDF {
     private static final int BLOCKSIZE = 256 / 8;
+
+    private HKDF() {
+    }
 
     /**
      * Step 1 of RFC 5869
