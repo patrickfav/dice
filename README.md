@@ -1,6 +1,6 @@
 # Dice
 
-A pseudo random bit generator that generates text encoded byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and encodes them in various formats: normal byte encodings like hex or base64 and for many programming languages. This implementation uses the HMAC Deterministic random bit generator schema as defined in NIST SP800-90A.
+A pseudo random bit generator that generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding): normal byte encodings like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
@@ -10,14 +10,15 @@ A pseudo random bit generator that generates text encoded byte arrays with entro
 
 Main features:
 
- * Supports all common byte encodings and more (hex, base32, base36, base64, base85, etc.)
- * Optional automatic secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
+ * Supports all common byte encodings and more (hex, [base32](https://en.wikipedia.org/wiki/Base32), [base36](https://en.wikipedia.org/wiki/Base36), base64, [base85](https://en.wikipedia.org/wiki/Ascii85#RFC_1924_version), etc.)
+ * Optional secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
  * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swifth, go,...)
- * NIST SP800-90A HMAC_DRBG (better than standard Java 8 PRNG)
+ * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf)
+ * Output to command line or file with automatic column formatting
  * Entropy warnings if seed is weak
- * Additional output configuration like "www-form-urlencoding" and padding of output
+ * Additional output configuration like " [www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended crc32 checksum
 
-Example usage generating randoms with 24 byte length and default encoding:
+Example usage generating randoms with 24 _byte-length_ (not char length) and default encoding:
 
     java -jar dice.jar 24
 
@@ -25,12 +26,13 @@ More examples:
     
     java -jar dice.jar 16 --count 100
     java -jar dice.jar 16 --encoding "base64"
-    java -jar dice.jar 32 --encoding "base85" --urlencode
     java -jar dice.jar 16 --encoding "kotlin"
+    java -jar dice.jar 24 --file "./rnd-outputfile.txt"
     java -jar dice.jar 16 --seed "myBadRandomSeed"
     java -jar dice.jar 16 --offline
+    java -jar dice.jar 32 --encoding "base85" --urlencode --padding --crc32
 
-This should run on any Windows, Mac or Linux machine,
+This should run on any Windows, Mac or Linux machine.
 
 ### Requirements
 
@@ -142,22 +144,22 @@ All tags and commits by me are signed with git with my private key:
 
 ## Deterministic Random Bit Generation
 
-As cryptographic pseudo-random generator (PRNG), the [NIST SP 800-90A](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) recommendation `HMAC-DRBG` is used in an implementation derived from [google/rappor](https://github.com/google/rappor) project. HMAC-DRBG seems to be a [better choice than the also recommended HASH-DRBG approach](https://crypto.stackexchange.com/questions/1393/is-hmac-drbg-or-hash-drbg-stronger). [Java 9](http://openjdk.java.net/jeps/273) is expected to have it's own provider for it. There [is no known issue with Java's current SHA1-PRNG](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom) implementation, but it is less studied thant the NIST recommendation.
+As [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator), the [NIST SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) recommendation `HMAC-DRBG` is used in an implementation derived from the [google/rappor](https://github.com/google/rappor) project. HMAC-DRBG seems to be a [better choice than the also recommended HASH-DRBG approach](https://crypto.stackexchange.com/questions/1393/is-hmac-drbg-or-hash-drbg-stronger). [Java 9](http://openjdk.java.net/jeps/273) is expected to have it's own provider for it. There [is no known issue with Java's current SHA1-PRNG](https://security.stackexchange.com/questions/47871/how-securely-random-is-oracles-java-security-securerandom) implementation, but it is less studied thant the NIST recommendation.
 
 This implementation uses HMAC-SHA512 internally and reseeds itself after
-32 KiB of random data generation which is well below the maximum NIST
+64 KiB of random data generation which is well below the maximum NIST
 recommendation.
 
-**Further Readings:**
+_References:_
 
 * [Bruce Schneider: Proof that HMAC-DRBG has No Back Doors](https://www.schneier.com/blog/archives/2017/08/proof_that_hmac.html)
 * [Formal Verficiation of the HMAC-DRBG Pseudo Random Number Generator](https://www.cs.cmu.edu/~kqy/resources/thesis.pdf)
-* [Security Analysis of DRBG Using HMAC in NIST SP 800-90](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
+* [Security Analysis of DRBG Using HMAC in NIST SP800-90Ar1](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
 
 ### DRBG Seeding & Input Sources
 
 A DRGB needs to be seeded by strong entropy sources so it can safely
-be expanded to create unpredictable pseudo random output. SP 800-90A defines
+be expanded to create unpredictable pseudo random output. SP800-90Ar1 defines
 different types of input for the DRGB. This implementation uses the following
 types:
 
@@ -183,9 +185,9 @@ _Further reading:_
 
 Per default the tool tries to fetch a seed from an external (supposedly true) random source.
 
-Because there are different opinions what technique delivers truly random data, this tool
+Because there are various opinions what technique delivers truly random data, this tool
 incorporates 3 different services backed by different hardware RNG. Also to mitigate the fact
-that if 1 source is either compromised or produces predictable outcome, the other source
+that if one ore more source is either compromised or produces predictable outcome, the other source
 will mitigate that flaw.
 
 Using an external random might open a new attack vector if, for example,
@@ -199,12 +201,13 @@ make it possible to guess the random bits. Therfore there is no sole trust in
 an external service. Every generation of random data will see seeding from both
 local and external sources.
 
-HKDF is used to expand the external seed to the desired length.
+[HMAC-based key derivation function (HKDF)](https://en.wikipedia.org/wiki/HKDF)
+ described in [RFC5869](https://tools.ietf.org/html/rfc5869) is used to expand the external seed to the desired length.
 
 ###### Random.org
 
-[Random.org](https://www.random.org/) is a website that produces true random numbers based on atmospheric noise captured by several radios tuned between stations. The service has existed since 1998 and was built by Dr. Mads Haahr of the School of Computer Science and Statistics at Trinity College, Dublin in Ireland.
-Random.org offers TLS encrypted access and signed random data with JSON-RPC 2.0
+[Random.org](https://www.random.org/) is a website that produces "true random numbers" based on atmospheric noise captured by several radios tuned between stations. The service has existed since 1998 and was built by [Dr. Mads Haahr](https://www.scss.tcd.ie/Mads.Haahr/) of the [School of Computer Science and Statistics at Trinity College](https://www.scss.tcd.ie/), Dublin in Ireland.
+Random.org offers [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security) encrypted access and signed random data with [JSON-RPC 2.0](http://www.jsonrpc.org/specification)
 
 _References:_
 * [Statistical Analysis](https://www.random.org/analysis/)
@@ -212,10 +215,10 @@ _References:_
 
 ###### Hotbits
 
-[Hotbits](https://www.fourmilab.ch/hotbits/) is "genuine random numbers" service generated by timing successive
-[pairs of radioactive decays detected](https://www.fourmilab.ch/hotbits/how3.html) by a
+[Hotbits](https://www.fourmilab.ch/hotbits/) is "genuine random numbers" service generating data
+ by timing successive [pairs of radioactive decays detected](https://www.fourmilab.ch/hotbits/how3.html) by a
 [Geiger-Müller tube](https://en.wikipedia.org/wiki/Geiger%E2%80%93M%C3%BCller_tube)
-interfaced to a computer. This service was created by John Walker in 1996.
+interfaced to a computer. This service was created by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer)) in 1996.
 Hotbits offers raw bytes with a simple HTTP GET request over TLS.
 
 _References:_
@@ -224,7 +227,8 @@ _References:_
 
 ###### ANU Quantum Random Numbers Server
 
-A quantum random number generator offered by the Australian National University. The random numbers are generated in real-time by measuring the quantum fluctuations of the vacuum. The services provides
+A quantum random number generator [offered by the Australian National University](https://qrng.anu.edu.au/).
+The random numbers are generated in real-time by measuring the quantum fluctuations of the vacuum. The services provides
 a TLS encrypted JSON/REST API.
 
 _References:_

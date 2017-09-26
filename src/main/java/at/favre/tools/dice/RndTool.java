@@ -203,8 +203,8 @@ public class RndTool {
 
         int actualCount = arguments.count();
 
-
         PrintStream printStream = getStream(arguments);
+
         try {
             if (arguments.robot()) {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderSingleColumn(outputList, printStream);
@@ -221,7 +221,7 @@ public class RndTool {
     }
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
-        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), false)) : System.out;
+        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : System.out;
     }
 
     private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {
