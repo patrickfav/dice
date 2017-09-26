@@ -1,5 +1,9 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.tools.dice.encode.EncoderFormat;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Comparator;
 import java.util.List;
@@ -7,15 +11,16 @@ import java.util.List;
 public class ColumnRenderer {
     private static final int MAX_WIDTH = 80;
     private static final int LINE_BREAK_EVERY_LINES = 24;
-    private static final char SEPARATOR = ' ';
 
     private final int targetWidth;
+    private final EncoderFormat encoderFormat;
 
-    public ColumnRenderer() {
-        this(MAX_WIDTH);
+    public ColumnRenderer(EncoderFormat encoderFormat) {
+        this(encoderFormat, MAX_WIDTH);
     }
 
-    public ColumnRenderer(int targetWidth) {
+    public ColumnRenderer(EncoderFormat encoderFormat, int targetWidth) {
+        this.encoderFormat = encoderFormat;
         this.targetWidth = targetWidth;
     }
 
@@ -27,11 +32,11 @@ public class ColumnRenderer {
      * @param outStream   to write the output to
      * @return the actual used count
      */
-    public int renderAutoColumn(int targetCount, List<String> outputList, PrintStream outStream) {
+    public int renderAutoColumn(int targetCount, List<String> outputList, PrintStream outStream, boolean toFile) {
         final int columns = getColumnCount(getMaxLength(outputList));
 
         final int fill = columns - (targetCount % columns);
-        return render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream);
+        return render(outputList.subList(0, Math.min(outputList.size(), targetCount + fill)), outStream, toFile);
     }
 
     public int renderSingleColumn(List<String> outputList, PrintStream outStream) {
@@ -39,7 +44,20 @@ public class ColumnRenderer {
         return outputList.size();
     }
 
-    public int render(List<String> outputList, PrintStream outStream) {
+    public int renderNoColumns(List<String> outputList, PrintStream outStream) {
+        outputList.forEach(s -> writeNoException(outStream, encoderFormat.asBytes(s)));
+        return outputList.size();
+    }
+
+    private void writeNoException(OutputStream outputStream, byte[] bytes) {
+        try {
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            throw new IllegalStateException("could not write random data to printstream", e);
+        }
+    }
+
+    public int render(List<String> outputList, PrintStream outStream, boolean toFile) {
         if (!outputList.isEmpty()) {
             final int maxLength = getMaxLength(outputList);
             final int columns = getColumnCount(maxLength);
@@ -48,25 +66,29 @@ public class ColumnRenderer {
 
             for (int i = 0; i < outputList.size(); i++) {
                 String randomString = outputList.get(i);
-                if (columns == 1) {
-                    outStream.print(randomString);
-                } else {
-                    outStream.print(String.format("%-" + maxLength + "s", randomString));
-                }
-
-                columnCounter--;
-
-                if (columnCounter == 0 && i + 1 != outputList.size()) {
-                    columnCounter = columns;
-                    outStream.print("\n");
-                    lineCount++;
-
-                    if (lineCount % LINE_BREAK_EVERY_LINES == 0) {
-                        outStream.print("\n");
+                try {
+                    if (columns == 1) {
+                        outStream.write(encoderFormat.asBytes(randomString));
+                    } else {
+                        outStream.write(encoderFormat.asBytes(String.format("%-" + maxLength + "s", randomString)));
                     }
 
-                } else {
-                    outStream.print(SEPARATOR);
+                    columnCounter--;
+
+                    if (columnCounter == 0 && i + 1 != outputList.size()) {
+                        columnCounter = columns;
+                        outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.newLineFile() : encoderFormat.newLineCmdLine()));
+                        lineCount++;
+
+                        if (lineCount % LINE_BREAK_EVERY_LINES == 0) {
+                            outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.paragraphFile() : encoderFormat.paragraphCmdLine()));
+                        }
+
+                    } else {
+                        outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.separatorFile() : encoderFormat.separatorFile()));
+                    }
+                } catch (Exception e) {
+                    throw new IllegalStateException("could not write random to output stream", e);
                 }
             }
         }

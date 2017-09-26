@@ -17,18 +17,21 @@ import io.reactivex.schedulers.Schedulers;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class RndTool {
-    private static final int MAX_RND_LENGTH = 640;
+    private static final int MAX_RND_LENGTH = 800;
     private static final int MAX_COUNT = 4096;
 
     public static void main(String[] args) {
@@ -67,8 +70,15 @@ public class RndTool {
             System.exit(402);
         }
 
-        try {
 
+        if (arguments.outFile() != null && !arguments.outFile().getParentFile().exists()) {
+            if (!arguments.outFile().getParentFile().mkdirs()) {
+                System.err.println("could not generate dir structure for " + arguments.outFile());
+                System.exit(403);
+            }
+        }
+
+        wrapInErrorHandling(arguments, () -> {
             /*if (arguments.debug()) {
                 println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")", arguments);
             }*/
@@ -93,6 +103,16 @@ public class RndTool {
             } else {
                 requestFinished(arguments, encoder, entropyPool, start);
             }
+            return true;
+        });
+
+        return true;
+    }
+
+
+    private static void wrapInErrorHandling(Arg arguments, Callable r) {
+        try {
+            r.call();
         } catch (Exception e) {
             System.err.print("Could not create random bits.");
 
@@ -109,8 +129,6 @@ public class RndTool {
 
             System.exit(501);
         }
-
-        return true;
     }
 
     private static void fetch(final List<ServiceHandler<?>> handlers, final Arg arguments, final EntropyPool entropyPool,
@@ -123,19 +141,24 @@ public class RndTool {
                 .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), t -> {
                     System.err.println(System.lineSeparator() + t.getMessage());
                     System.exit(500);
-                }, () -> requestFinished(arguments, encoder, entropyPool, start));
+                }, () -> wrapInErrorHandling(arguments, () -> requestFinished(arguments, encoder, entropyPool, start)));
     }
 
-    private static void requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
+    private static boolean requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
 
         if (!arguments.offline()) {
             println(System.lineSeparator(), arguments);
+        }
+
+        if (arguments.outFile() != null) {
+            println("Writing data to " + arguments.outFile(), arguments);
         }
 
         printRandoms(arguments, encoder, new HmacDrbg(
                 entropyPool,
                 new NonceEntropySource(),
                 new PersonalizationSource()), start);
+        return true;
     }
 
     private static ServiceHandler.Result<?> updateSeed(ServiceHandler.Result<?> result, Arg arguments, EntropyPool entropyPool) throws IOException {
@@ -172,42 +195,33 @@ public class RndTool {
     private static void printRandoms(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, long startTime) throws IOException {
         boolean useAutoColumn = false;
         if (arguments.count() == null) {
-            if (arguments.outFile() == null) {
-                arguments = arguments.toBuilder().count(Arg.DEFAULT_COUNT).build();
-                useAutoColumn = true;
-            } else {
-                arguments = arguments.toBuilder().count(1).build();
-            }
+            arguments = arguments.toBuilder().count(Arg.DEFAULT_COUNT).build();
+            useAutoColumn = true;
         }
 
         List<String> outputList = generateRandomList(arguments, encoder, drbg, useAutoColumn);
 
         int actualCount = arguments.count();
-        if (arguments.outFile() == null) {
+
+
+        PrintStream printStream = getStream(arguments);
+        try {
             if (arguments.robot()) {
-                actualCount = new ColumnRenderer().renderSingleColumn(outputList, System.out);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderSingleColumn(outputList, printStream);
             } else if (useAutoColumn) {
-                actualCount = new ColumnRenderer().renderAutoColumn(arguments.count(), outputList, System.out);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderAutoColumn(arguments.count(), outputList, printStream, arguments.outFile() != null);
             } else {
-                actualCount = new ColumnRenderer().render(outputList, System.out);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).render(outputList, printStream, arguments.outFile() != null);
             }
-        } else {
-            if (!arguments.outFile().getParentFile().exists()) {
-                if (!arguments.outFile().getParentFile().mkdirs()) {
-                    throw new IOException("could not generate dir structure for " + arguments.outFile());
-                }
-            }
-
-            println("Writing data to " + arguments.outFile(), arguments);
-
-            try (FileOutputStream fos = new FileOutputStream(arguments.outFile(), true)) {
-                for (String s : outputList) {
-                    fos.write(encoder.asBytes(s));
-                }
-            }
+        } finally {
+            printStream.close();
         }
 
         print(System.lineSeparator() + "[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+    }
+
+    private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
+        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), false)) : System.out;
     }
 
     private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {

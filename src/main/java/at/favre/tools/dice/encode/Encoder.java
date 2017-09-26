@@ -22,14 +22,12 @@ public interface Encoder {
      */
     String encodePadded(byte[] array);
 
+
     /**
-     * Given a string returned by one of the encode methods, this will return the raw byte array.
-     * The used encoding is implementation detail.
-     *
-     * @param encodedString
-     * @return the string in byte array representation
+     * Description on how the output should be formatted (newlines, separators, etc.)
+     * @return
      */
-    byte[] asBytes(String encodedString);
+    EncoderFormat getEncoderFormat();
 
     /**
      * The names or alias for a user select the encoder

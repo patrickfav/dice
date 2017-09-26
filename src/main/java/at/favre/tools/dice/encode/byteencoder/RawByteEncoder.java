@@ -1,5 +1,8 @@
 package at.favre.tools.dice.encode.byteencoder;
 
+import at.favre.tools.dice.encode.DefaultEncoderFormat;
+import at.favre.tools.dice.encode.EncoderFormat;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -39,7 +42,7 @@ public class RawByteEncoder extends AByteEncoder {
     }
 
     @Override
-    public byte[] asBytes(String encodedString) {
-        return encodedString.getBytes(StandardCharsets.ISO_8859_1);
+    public EncoderFormat getEncoderFormat() {
+        return new DefaultEncoderFormat(" ", "", System.lineSeparator(), "", System.lineSeparator(), "", StandardCharsets.ISO_8859_1);
     }
 }

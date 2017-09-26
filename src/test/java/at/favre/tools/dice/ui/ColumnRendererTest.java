@@ -1,5 +1,7 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.tools.dice.encode.DefaultEncoderFormat;
+import at.favre.tools.dice.encode.EncoderFormat;
 import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
 import org.junit.Test;
 
@@ -14,6 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ColumnRendererTest {
+    private final EncoderFormat encoderFormat = new DefaultEncoderFormat();
 
     @Test
     public void render() throws Exception {
@@ -30,10 +33,10 @@ public class ColumnRendererTest {
         elements.add("cac");
 
         int targetWidth = 40;
-        new ColumnRenderer(targetWidth).render(elements, System.out);
+        new ColumnRenderer(encoderFormat, targetWidth).render(elements, System.out, false);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new ColumnRenderer(targetWidth).render(elements, new PrintStream(baos));
+        new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), false);
 
         String out = baos.toString("UTF-8");
         assertNotNull(out);
@@ -69,7 +72,7 @@ public class ColumnRendererTest {
         final int count = 13;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         List<String> elements = generateRnd(4, count);
-        new ColumnRenderer().renderSingleColumn(elements, new PrintStream(baos));
+        new ColumnRenderer(encoderFormat).renderSingleColumn(elements, new PrintStream(baos));
         String out = baos.toString("UTF-8");
         assertNotNull(out);
         assertTrue(out.length() > 10);
@@ -81,9 +84,9 @@ public class ColumnRendererTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         if (auto) {
-            new ColumnRenderer(targetWidth).renderAutoColumn(count, elements, new PrintStream(baos));
+            new ColumnRenderer(encoderFormat, targetWidth).renderAutoColumn(count, elements, new PrintStream(baos), false);
         } else {
-            new ColumnRenderer(targetWidth).render(elements, new PrintStream(baos));
+            new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), false);
         }
 
         String out = baos.toString("UTF-8");
