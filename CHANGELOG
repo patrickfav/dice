@@ -1,13 +1,14 @@
 # Releases
 
 ## v1.0.0
-* use HMAC DRBG
+* use NIST SP800-90Ar1 HMAC-DRBG
 * use multiple entropy sources
 * add line break every X lines of output
 * add Base58 and Base26
 * add crc32 check feature
 * add random.org signature verification
 * add hotbits and anu quantum external true random source with parallel network calls
+* add file output feature
 
 ## v0.6.0
 * robot mode
