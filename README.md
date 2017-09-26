@@ -27,7 +27,7 @@ More examples:
     java -jar dice.jar 16 --count 100
     java -jar dice.jar 16 --encoding "base64"
     java -jar dice.jar 16 --encoding "kotlin"
-    java -jar dice.jar 24 --file "./rnd-outputfile.txt"
+    java -jar dice.jar 24 --encoding "raw" --file "./rnd-outputfile.txt"
     java -jar dice.jar 16 --seed "myBadRandomSeed"
     java -jar dice.jar 16 --offline
     java -jar dice.jar 32 --encoding "base85" --urlencode --padding --crc32
@@ -48,17 +48,32 @@ This should run on any Windows, Mac or Linux machine.
 
  [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
 
-## Tl;dr How should I use it?
+## Use Cases
 
-Depends. Either you want manually create tokens or nonces, then I'll recommend base32 or base36 if it needs to be url safe and base64 if not. 16 byte usually suffice for globally unique, very hard to guess randoms.
+### Creating Nonces, Tokens or Identifiers
+
+I'll recommend base32, base36 or base58 because these encodings are typically url-safe. 16 byte usually suffice for globally unique, infeasible to brute force number.
 
     java -jar dice.jar 16 -e "base36"
 
-Or you want to create static salts, or randoms to harcode, then just use:
+### Creating static byte arrays for your application
+
+You can create static salts, or randoms to hardcode, in your code. Just pick
+your programming language to get the correct syntax (see below). E.g.:
 
     java -jar dice.jar 16 -e "java"
 
+### Creating files of entropy
+
+Create a file 1MB full of raw random bytes with this call:
+
+    java -jar dice.jar 100 -c 1024 -e "raw" -f "./outfile.txt"
+
+Successive calls wall append data, not overwrite it.
+
 ## Demo
+
+TODO
 
 ## Command Line Interface
 
@@ -101,7 +116,7 @@ Or you want to create static salts, or randoms to harcode, then just use:
 | base64       | `SpT9/x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
 | base64-url   | `SpT9_x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. Uses url safe mode |
 | base85       | `8sK;S*j=r`          | 80.1 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
-| raw          | `Jýÿ¯í`            | 100.0 % | false | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. |
+| raw          | `Jýÿ¯í`            | 100.0 % | false | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. Most useful with file output. |
 | utf8         | `J�����`            | 100.0 % | false | Prints the byte array interpreted as UTF-8 encoded text. Only for testing purpose. |
 
 

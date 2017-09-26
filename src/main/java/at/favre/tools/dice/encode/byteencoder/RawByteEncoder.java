@@ -23,7 +23,7 @@ public class RawByteEncoder extends AByteEncoder {
 
     @Override
     public String getDescription() {
-        return "Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output.";
+        return "Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. Most useful with file output.";
     }
 
     @Override

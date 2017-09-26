@@ -11,6 +11,7 @@ import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -86,6 +87,40 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         return bos.toByteArray();
     }
 
+    private byte[] envVariables() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
+            if (entry.getKey() != null) {
+                bos.write(entry.getKey().getBytes(StandardCharsets.UTF_8));
+            }
+            if (entry.getValue() != null) {
+                bos.write(entry.getValue().getBytes(StandardCharsets.UTF_8));
+            }
+        }
+        return bos.toByteArray();
+    }
+
+    private byte[] systemProperties() throws IOException {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            Enumeration enumeration = System.getProperties().propertyNames();
+            while (enumeration.hasMoreElements()) {
+                String key = enumeration.nextElement().toString();
+                if (key != null) {
+                    String value = System.getProperty(key);
+                    bos.write(key.getBytes(StandardCharsets.UTF_8));
+                    if (value != null) {
+                        bos.write(value.getBytes(StandardCharsets.UTF_8));
+                    }
+                }
+            }
+            return bos.toByteArray();
+        } catch (SecurityException e) {
+            //ignore security exception
+            return new byte[0];
+        }
+    }
+
     @Override
     public byte[] generateEntropy(int lengthByte) {
         try {
@@ -95,6 +130,8 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(osData());
             bos.write(appVersionData());
             bos.write(scmData());
+            bos.write(envVariables());
+            bos.write(systemProperties());
             return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);
