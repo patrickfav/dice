@@ -1,8 +1,11 @@
 package at.favre.tools.dice.ui;
 
 import at.favre.tools.dice.encode.DefaultEncoderFormat;
+import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderFormat;
+import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
+import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -51,7 +54,7 @@ public class ColumnRendererTest {
 
         for (int i = 1; i < maxWordLength; i += 2) {
             List<String> elements = generateRnd(i, count + 20);
-            testRender(count, targetWidth, elements, true);
+            testRender(encoderFormat, count, targetWidth, elements, true, false);
         }
     }
 
@@ -63,7 +66,7 @@ public class ColumnRendererTest {
 
         for (int i = 1; i < maxWordLength; i += 2) {
             List<String> elements = generateRnd(i, count + 20);
-            testRender(count, targetWidth, elements, true);
+            testRender(encoderFormat, count, targetWidth, elements, true, false);
         }
     }
 
@@ -80,13 +83,13 @@ public class ColumnRendererTest {
         System.out.println();
     }
 
-    private void testRender(int count, int targetWidth, List<String> elements, boolean auto) throws UnsupportedEncodingException {
+    private void testRender(EncoderFormat encoderFormat, int count, int targetWidth, List<String> elements, boolean auto, boolean isFile) throws UnsupportedEncodingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         if (auto) {
-            new ColumnRenderer(encoderFormat, targetWidth).renderAutoColumn(count, elements, new PrintStream(baos), false);
+            new ColumnRenderer(encoderFormat, targetWidth).renderAutoColumn(count, elements, new PrintStream(baos), isFile);
         } else {
-            new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), false);
+            new ColumnRenderer(encoderFormat, targetWidth).render(elements, new PrintStream(baos), isFile);
         }
 
         String out = baos.toString("UTF-8");
@@ -105,6 +108,24 @@ public class ColumnRendererTest {
             list.add(new Base36Encoder().encode(data));
         }
         return list;
+    }
+
+    @Test
+    public void testAllEncoders() throws Exception {
+        int count = 9;
+        for (Encoder encoder : new EncoderHandler().load()) {
+            List<String> rnds = generateRnd(encoder, 6, count);
+            testRender(encoder.getEncoderFormat(), count, 60, rnds, false, true);
+            testRender(encoder.getEncoderFormat(), count, 60, rnds, false, false);
+        }
+    }
+
+    private List<String> generateRnd(Encoder encoder, int length, int count) {
+        List<String> out = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            out.add(encoder.encode(ByteUtils.unsecureRandomBytes(length)));
+        }
+        return out;
     }
 
 }

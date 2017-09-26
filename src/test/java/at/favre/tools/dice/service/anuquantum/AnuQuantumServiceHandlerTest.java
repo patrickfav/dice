@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import java.net.UnknownHostException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.*;
 
 public class AnuQuantumServiceHandlerTest {
     @Test
@@ -28,6 +28,9 @@ public class AnuQuantumServiceHandlerTest {
             System.out.println(ByteUtils.bytesToHex(response.seed));
             assertTrue(response.seed.length == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
             assertTrue(response.response.success);
+            assertNotEquals(0, response.response.hashCode());
+            assertNotNull(response.response.toString());
+            assertFalse(response.response.equals(new AnuQuantomResponse("", -1, null, null, false)));
             assertTrue(response.response.length == 1);
             assertTrue(response.response.size == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
         }

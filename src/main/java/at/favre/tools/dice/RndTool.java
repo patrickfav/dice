@@ -214,7 +214,9 @@ public class RndTool {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat()).render(outputList, printStream, arguments.outFile() != null);
             }
         } finally {
-            printStream.close();
+            if (printStream != System.out) {
+                printStream.close();
+            }
         }
 
         print(System.lineSeparator() + "[" + new Date().toString() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
