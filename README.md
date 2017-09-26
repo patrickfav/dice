@@ -16,7 +16,7 @@ Main features:
  * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf)
  * Output to command line or file with automatic column formatting
  * Entropy warnings if seed is weak
- * Additional output configuration like " [www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended crc32 checksum
+ * Additional output configuration like "[www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended crc32 checksum
 
 Example usage generating randoms with 24 _byte-length_ (not char length) and default encoding:
 
@@ -36,7 +36,7 @@ This should run on any Windows, Mac or Linux machine.
 
 ### Requirements
 
-* JDK 8
+* [Java Runtime Environment (JRE) 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
 
 ## Download
 
