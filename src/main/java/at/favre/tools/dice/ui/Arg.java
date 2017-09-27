@@ -8,10 +8,10 @@ import java.io.File;
 @AutoValue
 public abstract class Arg {
     static final int DEFAULT_LENGTH = 16;
-    public static final int DEFAULT_COUNT = 32;
+    public static final long DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public static Arg create(String encoding, String seed, int length, Integer count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
+    public static Arg create(String encoding, String seed, int length, Long count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
         return builder()
                 .encoding(encoding)
                 .seed(seed)
@@ -35,7 +35,7 @@ public abstract class Arg {
     public abstract int length();
 
     @Nullable
-    public abstract Integer count();
+    public abstract Long count();
 
     public abstract boolean debug();
 
@@ -75,7 +75,7 @@ public abstract class Arg {
 
         public abstract Builder length(int value);
 
-        public abstract Builder count(Integer value);
+        public abstract Builder count(Long value);
 
         public abstract Builder debug(boolean value);
 

@@ -16,7 +16,7 @@ public class RndToolTest {
 
     @Test
     public void smokeTestRndTool() throws Exception {
-        RndTool.execute(Arg.create("java", null, 12, 10, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create("java", null, 12, 10L, true, false, false, false, false, false, null));
         RndTool.execute(Arg.create("base36", null, 4, null, true, false, false, false, false, false, null));
         RndTool.execute(Arg.create("base64", "verybaadseed", 87, null, true, false, false, false, false, false, null));
         RndTool.execute(Arg.create("base85", null, 15, null, true, true, false, false, false, false, null));
@@ -32,7 +32,7 @@ public class RndToolTest {
         assertEquals(0, tempFile.length());
 
         int length = 100;
-        int count = 1024;
+        long count = 1024L;
         RndTool.execute(Arg.create("raw", null, length, count, true, false, false, false, false, false, tempFile));
 
         assertEquals(length * count, tempFile.length());

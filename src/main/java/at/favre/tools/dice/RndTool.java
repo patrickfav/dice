@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 
 public final class RndTool {
     private static final int MAX_BYTE_PER_RANDOM = 1024;
-    private static final int MAX_BYTE_PER_CALL = 1024 * 1024 * 1024;
+    private static final long MAX_BYTE_PER_CALL = 1024 * 1024 * 1024;
 
     private RndTool() {
     }
@@ -203,7 +203,7 @@ public final class RndTool {
         PrintStream printStream = getStream(arguments);
 
         try {
-            int actualCount;
+            long actualCount;
 
             if (arguments.robot()) {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).renderSingleColumn(arguments.count(), printStream);

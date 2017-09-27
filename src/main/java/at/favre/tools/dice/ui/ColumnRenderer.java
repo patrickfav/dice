@@ -30,38 +30,53 @@ public final class ColumnRenderer {
      * @param outStream   to write the output to
      * @return the actual used count
      */
-    public int renderAutoColumn(int targetCount, PrintStream outStream, boolean toFile) {
+    public long renderAutoColumn(long targetCount, PrintStream outStream, boolean toFile) {
         String[] rndArray = new String[Math.min(RND_PER_REQUEST, encoderFormat.printWidth() * 2)];
         randomGenerator.request(rndArray);
 
-        final int columns = getColumnCount(getMaxLength(rndArray));
+        final long columns = getColumnCount(getMaxLength(rndArray));
 
-        final int fill = columns - (targetCount % columns);
+        final long fill = columns - (targetCount % columns);
         return render(targetCount + fill, outStream, toFile);
     }
 
-    public int renderSingleColumn(int count, PrintStream outStream) {
-        String[] rndArray = new String[count];
-        randomGenerator.request(rndArray);
-        for (int i = 0; i < count; i++) {
-            outStream.print(rndArray[i] + System.lineSeparator());
+    public long renderSingleColumn(long count, PrintStream outStream) {
+        int currentCount = 0;
+        int countPerIteration = RND_PER_REQUEST;
+        String[] rndArray = null;
+
+        while (currentCount < count) {
+            int nextLength = currentCount + countPerIteration > count ? (int) (count - currentCount) : countPerIteration;
+            if (rndArray == null || nextLength != rndArray.length) {
+                rndArray = new String[nextLength];
+            }
+            randomGenerator.request(rndArray);
+
+            for (String rnd : rndArray) {
+                outStream.print(rnd + System.lineSeparator());
+            }
+
+            currentCount += rndArray.length;
         }
         return count;
     }
 
-    public int render(int count, PrintStream outStream, boolean toFile) {
+    public long render(long count, PrintStream outStream, boolean toFile) {
         if (count != 0) {
             int currentCount = 0;
             int countPerIteration = RND_PER_REQUEST;
 
-            String[] rndArray;
-            int maxLength = -1;
-            int columns = -1;
-            int columnCounter = -1;
-            int lineCount = 0;
+            String[] rndArray = null;
+            long maxLength = -1;
+            long columns = -1;
+            long columnCounter = -1;
+            long lineCount = 0;
 
             while (currentCount < count) {
-                rndArray = new String[currentCount + countPerIteration > count ? count - currentCount : countPerIteration];
+                int nextLength = currentCount + countPerIteration > count ? (int) (count - currentCount) : countPerIteration;
+                if (rndArray == null || nextLength != rndArray.length) {
+                    rndArray = new String[nextLength];
+                }
                 randomGenerator.request(rndArray);
 
                 if (maxLength <= 0) {
@@ -107,8 +122,8 @@ public final class ColumnRenderer {
         return Arrays.stream(outputList).max(Comparator.comparingInt(String::length)).get().length();
     }
 
-    private int getColumnCount(int maxLength) {
-        int columns = Math.max(1, encoderFormat.printWidth() / maxLength);
+    private long getColumnCount(long maxLength) {
+        long columns = Math.max(1, encoderFormat.printWidth() / maxLength);
 
         while (maxLength * columns + columns > encoderFormat.printWidth()) {
             columns--;

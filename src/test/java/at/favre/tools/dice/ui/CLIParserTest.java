@@ -19,7 +19,7 @@ public class CLIParserTest {
     @Test
     public void testSimpleCount() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("4 -" + CLIParser.ARG_COUNT + " 1123 " + "-" + CLIParser.ARG_ENCODING + " testTest"));
-        Arg expectedArg = Arg.create("testTest", null, 4, 1123, false, false, false, false, false, false, null);
+        Arg expectedArg = Arg.create("testTest", null, 4, 1123L, false, false, false, false, false, false, null);
         assertEquals(expectedArg, parsedArg);
     }
 
@@ -33,14 +33,14 @@ public class CLIParserTest {
     @Test
     public void testOnline() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("4 -" + CLIParser.ARG_COUNT + " 1123 " + "-" + CLIParser.ARG_ONLINE));
-        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 4, 1123, true, false, false, false, false, false, null);
+        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 4, 1123L, true, false, false, false, false, false, null);
         assertEquals(expectedArg, parsedArg);
     }
 
     @Test
     public void testUrlEncode() throws Exception {
         Arg parsedArg = CLIParser.parse(asArgArray("4 -" + CLIParser.ARG_COUNT + " 1123 " + "-" + CLIParser.ARG_ONLINE));
-        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 4, 1123, true, false, false, false, false, false, null);
+        Arg expectedArg = Arg.create(Arg.DEFAULT_ENCODING, null, 4, 1123L, true, false, false, false, false, false, null);
         assertEquals(expectedArg, parsedArg);
     }
 
