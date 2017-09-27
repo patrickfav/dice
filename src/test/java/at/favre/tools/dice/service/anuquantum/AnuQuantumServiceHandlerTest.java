@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class AnuQuantumServiceHandlerTest {
     @Test
     public void getRandom() throws Exception {
-        ServiceHandler.Result<AnuQuantomResponse> response = new AnuQuantumServiceHandler(true).getRandom();
+        ServiceHandler.Result<AnuQuantumResponse> response = new AnuQuantumServiceHandler(true).getRandom();
 
         assertNotNull(response);
 
@@ -30,7 +30,7 @@ public class AnuQuantumServiceHandlerTest {
             assertTrue(response.response.success);
             assertNotEquals(0, response.response.hashCode());
             assertNotNull(response.response.toString());
-            assertFalse(response.response.equals(new AnuQuantomResponse("", -1, null, null, false)));
+            assertFalse(response.response.equals(new AnuQuantumResponse("", -1, null, null, false)));
             assertTrue(response.response.length == 1);
             assertTrue(response.response.size == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
         }

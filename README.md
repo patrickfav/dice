@@ -71,7 +71,7 @@ Create a file 1MB full of raw random bytes with this call:
 
     java -jar dice.jar 100 -c 1024 -e "raw" -f "./outfile.txt"
 
-Successive calls wall append data, not overwrite it.
+Successive calls will append data, not overwrite it.
 
 ## Demo
 

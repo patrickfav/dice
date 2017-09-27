@@ -19,7 +19,7 @@ import java.net.UnknownHostException;
  * <p>
  * See https://www.random.org/
  */
-public class RandomOrgServiceHandler extends AServiceHandler {
+public final class RandomOrgServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BIT = 192;
 
     /*

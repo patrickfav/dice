@@ -11,5 +11,5 @@ import java.util.Map;
 public interface AnuQuantumService {
     @Headers({"DNT: 1"})
     @GET("/API/jsonI.php?length=1&type=hex16")
-    Call<AnuQuantomResponse> getRandom(@HeaderMap Map<String, String> headers, @Query("size") int byteLength);
+    Call<AnuQuantumResponse> getRandom(@HeaderMap Map<String, String> headers, @Query("size") int byteLength);
 }

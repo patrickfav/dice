@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  * <p>
  * See https://www.fourmilab.ch/hotbits/
  */
-public class HotbitsServiceHandler extends AServiceHandler {
+public final class HotbitsServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BYTE = 24;
 
     /*

@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
  * <p>
  * See https://qrng.anu.edu.au/
  */
-public class AnuQuantumServiceHandler extends AServiceHandler {
+public final class AnuQuantumServiceHandler extends AServiceHandler {
     final static int ENTROPY_SEED_LENGTH_BYTE = 24;
 
     public AnuQuantumServiceHandler(boolean debug) {
@@ -23,7 +23,7 @@ public class AnuQuantumServiceHandler extends AServiceHandler {
     }
 
     @Override
-    public Result<AnuQuantomResponse> getRandom() {
+    public Result<AnuQuantumResponse> getRandom() {
         long startTime = System.currentTimeMillis();
 
         OkHttpClient client = createClient();
@@ -39,7 +39,7 @@ public class AnuQuantumServiceHandler extends AServiceHandler {
         AnuQuantumService service = retrofit.create(AnuQuantumService.class);
 
         try {
-            Response<AnuQuantomResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
+            Response<AnuQuantumResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
                 byte[] rawResponse = ByteUtils.hexToBytes(response.body().data.get(0));
                 return new Result<>(getName(), rawResponse, response.body(), System.currentTimeMillis() - startTime);

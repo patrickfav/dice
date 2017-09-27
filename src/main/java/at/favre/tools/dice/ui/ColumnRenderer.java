@@ -2,14 +2,11 @@ package at.favre.tools.dice.ui;
 
 import at.favre.tools.dice.encode.EncoderFormat;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Comparator;
 import java.util.List;
 
-public class ColumnRenderer {
-    private static final int MAX_WIDTH = 80;
+public final class ColumnRenderer {
     private static final int LINE_BREAK_EVERY_LINES = 24;
 
     private final EncoderFormat encoderFormat;
@@ -36,19 +33,6 @@ public class ColumnRenderer {
     public int renderSingleColumn(List<String> outputList, PrintStream outStream) {
         outputList.forEach(s -> outStream.print(s + System.lineSeparator()));
         return outputList.size();
-    }
-
-    public int renderNoColumns(List<String> outputList, PrintStream outStream) {
-        outputList.forEach(s -> writeNoException(outStream, encoderFormat.asBytes(s)));
-        return outputList.size();
-    }
-
-    private void writeNoException(OutputStream outputStream, byte[] bytes) {
-        try {
-            outputStream.write(bytes);
-        } catch (IOException e) {
-            throw new IllegalStateException("could not write random data to printstream", e);
-        }
     }
 
     public int render(List<String> outputList, PrintStream outStream, boolean toFile) {
