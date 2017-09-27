@@ -32,8 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class RndTool {
-    private static final int MAX_RND_LENGTH = 800;
-    private static final int MAX_COUNT = 4096;
+    private static final int MAX_BYTE_PER_CALL = 250 * 1024 * 1024;
 
     private RndTool() {
     }
@@ -64,21 +63,26 @@ public final class RndTool {
             System.exit(400);
         }
 
-        if (arguments.length() > MAX_RND_LENGTH || arguments.length() <= 0) {
-            System.err.println("The random length must be between 1 and " + MAX_RND_LENGTH + " byte");
+        if (arguments.length() <= 0) {
+            System.err.println("The random length must be greater than 0");
             System.exit(401);
         }
 
-        if (arguments.count() != null && (arguments.count() > MAX_COUNT || arguments.count() <= 0)) {
-            System.err.println("Count parameter must be between 1 and " + MAX_COUNT);
+        if (arguments.count() != null && arguments.count() <= 0) {
+            System.err.println("Count parameter must be greater than 0");
             System.exit(402);
         }
 
+        if ((arguments.count() != null && (arguments.count() * arguments.length() > MAX_BYTE_PER_CALL))
+                || arguments.length() > MAX_BYTE_PER_CALL) {
+            System.err.println("This PRNG can only generate " + MAX_BYTE_PER_CALL + " bytes at once.");
+            System.exit(403);
+        }
 
         if (arguments.outFile() != null && !arguments.outFile().getParentFile().exists()) {
             if (!arguments.outFile().getParentFile().mkdirs()) {
                 System.err.println("could not generate dir structure for " + arguments.outFile());
-                System.exit(403);
+                System.exit(404);
             }
         }
 
@@ -199,11 +203,11 @@ public final class RndTool {
 
         List<String> outputList = generateRandomList(arguments, encoder, drbg, useAutoColumn);
 
-        int actualCount = arguments.count();
-
         PrintStream printStream = getStream(arguments);
 
         try {
+            int actualCount;
+
             if (arguments.robot()) {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderSingleColumn(outputList, printStream);
             } else if (useAutoColumn) {
@@ -211,13 +215,15 @@ public final class RndTool {
             } else {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat()).render(outputList, printStream, arguments.outFile() != null);
             }
+
+            print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
         } finally {
             if (printStream != System.out) {
                 printStream.close();
             }
         }
 
-        print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+
     }
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
@@ -227,7 +233,8 @@ public final class RndTool {
     private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {
         List<String> outputList = new ArrayList<>(arguments.length());
 
-        int countGenerated = arguments.count() + (useAutoColumn ? (int) Math.ceil((double) encoder.getEncoderFormat().printWidth() / (double) arguments.length()) + 5 : 0);
+        int countGenerated = arguments.count() + (useAutoColumn ? Math.min((int)
+                Math.ceil((double) encoder.getEncoderFormat().printWidth() / (double) arguments.length()), 100) + 5 : 0);
         for (int i = 0; i < countGenerated; i++) {
             byte[] rnd = drbg.nextBytes(arguments.length());
 

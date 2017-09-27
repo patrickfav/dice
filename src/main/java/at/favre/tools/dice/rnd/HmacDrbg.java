@@ -10,10 +10,10 @@ import java.util.Arrays;
  * Deterministic Random Bit Generator based on HMAC-SHA256.
  * <p>
  * Also known as: HMAC_DRBG.
- * See http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf for thorough specification.
+ * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf for thorough specification.
  * <p>
  * Reseeding is supported.
- * See http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf Section 8.6.8.
+ * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf Section 8.6.8.
  */
 public final class HmacDrbg implements DeterministicRandomBitGenerator {
     // "V" from the the spec.
@@ -24,7 +24,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     private int bytesGenerated;
 
     // Assume maximum security strength for HMAC-512, which is 512.
-    // See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #1.
+    // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #1.
     private static final int SECURITY_STRENGTH_BIT = 512;
 
     /**
@@ -35,20 +35,20 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * The constructor's entropyInput should contain this many high quality random bytes.
      * HMAC_DRBG requires entropy input to be security_strength bits long.
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
      */
     private static final int ENTROPY_INPUT_SIZE_BYTES = SECURITY_STRENGTH_BIT / 8;
 
     /**
      * HMAC_DRBG requires nonce to be at least 1/2 security_strength bits long.
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
      */
     private static final int NONCE_INPUT_SIZE_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
 
     /**
      * Personalization strings should not exceed this many bytes in length.
      * <p>
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #7.
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #7.
      */
     private static final int PERSONALIZATION_STRING_LENGTH_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
 
@@ -61,9 +61,9 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     private static final int MAX_BYTES_PER_SEED = 10 * 1024 * 1024;
 
-    // See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #2.
+    // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #2.
     private static final int DIGEST_NUM_BYTES = SECURITY_STRENGTH_BIT / 8;
-    // floor(7500/8); see: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf D.2 #5.
+    // floor(7500/8); see: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #5.
     private static final int MAX_BYTES_PER_REQUEST = 937;
     private static final byte[] BYTE_ARRAY_0 = {0};
     private static final byte[] BYTE_ARRAY_1 = {1};
@@ -97,7 +97,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         this.currentByteSeedInterval = Math.min(byteSeedInterval, MAX_BYTES_PER_SEED);
 
         // HMAC_DRBG Instantiate Process
-        // See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf 10.1.1.2
+        // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.1.2
 
         // 2. Key = 0x00 00...00
         setKey(new byte[SECURITY_STRENGTH_BIT / 8]);
@@ -156,7 +156,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * HMAC_DRBG Update Process
      * <p>
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf 10.1.2.2
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.2.2
      */
     private void hmacDrbgUpdate(byte[] providedData) {
         // 1. K = HMAC(K, V || 0x00 || provided_data)
@@ -197,7 +197,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * HMAC_DRBG Generate Process
      * <p>
-     * See: http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf 10.1.2.5
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.2.5
      * <p>
      * We do not support additional_input, assuming it to be always null.
      * <p>

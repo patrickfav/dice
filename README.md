@@ -173,6 +173,13 @@ _References:_
 * [Formal Verficiation of the HMAC-DRBG Pseudo Random Number Generator](https://www.cs.cmu.edu/~kqy/resources/thesis.pdf)
 * [Security Analysis of DRBG Using HMAC in NIST SP800-90Ar1](http://repo.flib.u-fukui.ac.jp/dspace/bitstream/10098/2126/1/art.pdf)
 
+### Output Test Results
+
+This PRNG was tested with Robert G. Brown's [dieharder](http://webhome.phy.duke.edu/~rgb/General/dieharder.php) test suite for random number generators, which among others, includes the [ NIST Statistical Test Suite](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-22r1a.pdf).
+
+The reports can be seen in `/misc/reports/*` in this repo
+
+
 ### DRBG Seeding & Input Sources
 
 A DRGB needs to be seeded by strong entropy sources so it can safely
