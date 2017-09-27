@@ -15,6 +15,7 @@ import at.favre.tools.dice.util.Entropy;
 import at.favre.tools.dice.util.MiscUtil;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -214,7 +215,7 @@ public final class RndTool {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).render(arguments.count(), printStream, arguments.outFile() != null);
             }
 
-            print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+            print(getSummary(arguments, System.currentTimeMillis() - startTime, actualCount * arguments.length()), arguments);
         } finally {
             if (printStream != System.out) {
                 printStream.close();
@@ -222,6 +223,12 @@ public final class RndTool {
         }
 
 
+    }
+
+    @NotNull
+    private static String getSummary(Arg arguments, long durationMs, long byteGen) {
+        double bandwidth = Math.round(byteGen / durationMs / 10.24) / 100.0;
+        return System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + byteGen + " bytes generated in " + durationMs + " ms." + (bandwidth > 0 ? " (" + bandwidth + " MB/s)" : "");
     }
 
     private static ColumnRenderer.RandomGenerator genFromArg(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg) {
