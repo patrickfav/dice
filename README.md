@@ -12,11 +12,11 @@ Main features:
 
  * Supports all common byte encodings and more (hex, [base32](https://en.wikipedia.org/wiki/Base32), [base36](https://en.wikipedia.org/wiki/Base36), base64, [base85](https://en.wikipedia.org/wiki/Ascii85#RFC_1924_version), etc.)
  * Optional secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
- * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swifth, go,...)
+ * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swift, go,...)
  * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf)
  * Output to command line or file with automatic column formatting
  * Entropy warnings if seed is weak
- * Additional output configuration like "[www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended crc32 checksum
+ * Additional output configuration like "[www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended [crc32 checksum](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
 
 Example usage generating randoms with 24 _byte-length_ (not char length) and default encoding:
 
@@ -221,7 +221,7 @@ measures against this:
 * The connections is encrypted with TLS (ie. HTTPS) and the random
 is singed by the creator which will be verified by a local pinned certificate (only random.org).
 * The seed is only a part of the entropy source and the knowledge of it does not
-make it possible to guess the random bits. Therfore there is no sole trust in
+make it possible to guess the random bits. Therefore there is no sole trust in
 an external service. Every generation of random data will see seeding from both
 local and external sources.
 
