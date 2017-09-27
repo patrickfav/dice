@@ -125,8 +125,26 @@
           rgb_lagged_sum|  21|   1000000|     100|0.78849027|  PASSED
           rgb_lagged_sum|  22|   1000000|     100|0.99108222|  PASSED
           rgb_lagged_sum|  23|   1000000|     100|0.96478584|  PASSED
-
-
+          rgb_lagged_sum|  24|   1000000|     100|0.92582184|  PASSED
+          rgb_lagged_sum|  25|   1000000|     100|0.94260552|  PASSED
+          rgb_lagged_sum|  26|   1000000|     100|0.92365468|  PASSED
+          rgb_lagged_sum|  27|   1000000|     100|0.57765018|  PASSED
+          rgb_lagged_sum|  28|   1000000|     100|0.39730763|  PASSED
+          rgb_lagged_sum|  29|   1000000|     100|0.09196085|  PASSED
+          rgb_lagged_sum|  30|   1000000|     100|0.35172300|  PASSED
+          rgb_lagged_sum|  31|   1000000|     100|0.81817221|  PASSED
+          rgb_lagged_sum|  32|   1000000|     100|0.70273312|  PASSED
+         rgb_kstest_test|   0|     10000|    1000|0.25795819|  PASSED
+         dab_bytedistrib|   0|  51200000|       1|0.46317459|  PASSED
+                 dab_dct| 256|     50000|       1|0.25345028|  PASSED
+    Preparing to run test 207.  ntuple = 0
+            dab_filltree|  32|  15000000|       1|0.44875639|  PASSED
+            dab_filltree|  32|  15000000|       1|0.94215317|  PASSED
+    Preparing to run test 208.  ntuple = 0
+           dab_filltree2|   0|   5000000|       1|0.20743378|  PASSED
+           dab_filltree2|   1|   5000000|       1|0.13086959|  PASSED
+    Preparing to run test 209.  ntuple = 0
+            dab_monobit2|  12|  65000000|       1|0.49134419|  PASSED
 
 ### Warnings
 
@@ -178,3 +196,18 @@
     # The file file_input_raw was rewound 11 times
     # The file file_input_raw was rewound 11 times
     # The file file_input_raw was rewound 12 times
+    # The file file_input_raw was rewound 13 times
+    # The file file_input_raw was rewound 14 times
+    # The file file_input_raw was rewound 15 times
+    # The file file_input_raw was rewound 16 times
+    # The file file_input_raw was rewound 17 times
+    # The file file_input_raw was rewound 18 times
+    # The file file_input_raw was rewound 19 times
+    # The file file_input_raw was rewound 21 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
+    # The file file_input_raw was rewound 22 times
