@@ -14,8 +14,6 @@ import at.favre.tools.dice.util.ByteUtils;
 import at.favre.tools.dice.util.Entropy;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.URLCodec;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,7 +30,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class RndTool {
-    private static final int MAX_BYTE_PER_CALL = 250 * 1024 * 1024;
+    private static final int MAX_BYTE_PER_RANDOM = 1024;
+    private static final int MAX_BYTE_PER_CALL = 1024 * 1024 * 1024;
 
     private RndTool() {
     }
@@ -63,8 +62,8 @@ public final class RndTool {
             System.exit(400);
         }
 
-        if (arguments.length() <= 0) {
-            System.err.println("The random length must be greater than 0");
+        if (arguments.length() <= 0 || arguments.length() > MAX_BYTE_PER_RANDOM) {
+            System.err.println("The random length must be between than 1 and " + MAX_BYTE_PER_RANDOM);
             System.exit(401);
         }
 
@@ -201,19 +200,17 @@ public final class RndTool {
             useAutoColumn = true;
         }
 
-        List<String> outputList = generateRandomList(arguments, encoder, drbg, useAutoColumn);
-
         PrintStream printStream = getStream(arguments);
 
         try {
             int actualCount;
 
             if (arguments.robot()) {
-                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderSingleColumn(outputList, printStream);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).renderSingleColumn(arguments.count(), printStream);
             } else if (useAutoColumn) {
-                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).renderAutoColumn(arguments.count(), outputList, printStream, arguments.outFile() != null);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).renderAutoColumn(arguments.count(), printStream, arguments.outFile() != null);
             } else {
-                actualCount = new ColumnRenderer(encoder.getEncoderFormat()).render(outputList, printStream, arguments.outFile() != null);
+                actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).render(arguments.count(), printStream, arguments.outFile() != null);
             }
 
             print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
@@ -226,35 +223,14 @@ public final class RndTool {
 
     }
 
+    private static ColumnRenderer.RandomGenerator genFromArg(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg) {
+        return new ColumnRenderer.DefaultRandomGenerator(encoder, drbg, arguments.length(), arguments.crc32(), arguments.padding(), arguments.urlencode());
+    }
+
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
         return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : System.out;
     }
 
-    private static List<String> generateRandomList(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg, boolean useAutoColumn) {
-        List<String> outputList = new ArrayList<>(arguments.length());
-
-        int countGenerated = arguments.count() + (useAutoColumn ? Math.min((int)
-                Math.ceil((double) encoder.getEncoderFormat().printWidth() / (double) arguments.length()), 100) + 5 : 0);
-        for (int i = 0; i < countGenerated; i++) {
-            byte[] rnd = drbg.nextBytes(arguments.length());
-
-            if (arguments.crc32()) {
-                rnd = ByteUtils.appendCrc32(rnd);
-            }
-
-            String randomEncodedString = arguments.padding() ? encoder.encodePadded(rnd) : encoder.encode(rnd);
-
-            if (arguments.urlencode()) {
-                try {
-                    randomEncodedString = new URLCodec().encode(randomEncodedString);
-                } catch (EncoderException e) {
-                    throw new IllegalStateException("could not url encode", e);
-                }
-            }
-            outputList.add(randomEncodedString);
-        }
-        return outputList;
-    }
 
     public static String jarVersion() {
         String version = RndTool.class.getPackage().getImplementationVersion();

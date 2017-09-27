@@ -59,7 +59,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf section D.2.
      * Reseeding is necessary when this threshold is reached.
      */
-    private static final int MAX_BYTES_PER_SEED = 10 * 1024 * 1024;
+    private static final int MAX_BYTES_PER_SEED = 1024 * 1024 * 1024;
 
     // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #2.
     private static final int DIGEST_NUM_BYTES = SECURITY_STRENGTH_BIT / 8;

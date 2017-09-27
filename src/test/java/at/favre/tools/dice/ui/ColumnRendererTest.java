@@ -1,5 +1,6 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.tools.dice.DrbgMock;
 import at.favre.tools.dice.encode.DefaultEncoderFormat;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderFormat;
@@ -20,25 +21,15 @@ import static org.junit.Assert.assertTrue;
 
 public class ColumnRendererTest {
     private final EncoderFormat encoderFormat = new DefaultEncoderFormat();
+    private final ColumnRenderer.RandomGenerator generator = new ColumnRenderer.DefaultRandomGenerator(new Base36Encoder()
+            , new DrbgMock(), 6);
 
     @Test
     public void render() throws Exception {
-        List<String> elements = new ArrayList<>();
-        elements.add("hallo");
-        elements.add("hallooooo");
-        elements.add("mu");
-        elements.add("mukka");
-        elements.add("asdaslhhhhaad");
-        elements.add("kammdhha");
-        elements.add("haud");
-        elements.add("adw2");
-        elements.add("dasd");
-        elements.add("cac");
-
-        new ColumnRenderer(encoderFormat).render(elements, System.out, false);
+        new ColumnRenderer(encoderFormat, generator).render(5, System.out, false);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        new ColumnRenderer(encoderFormat).render(elements, new PrintStream(baos), false);
+        new ColumnRenderer(encoderFormat, generator).render(2, new PrintStream(baos), false);
 
         String out = baos.toString("UTF-8");
         assertNotNull(out);
@@ -51,8 +42,7 @@ public class ColumnRendererTest {
         final int count = 32;
 
         for (int i = 1; i < maxWordLength; i += 2) {
-            List<String> elements = generateRnd(i, count + 20);
-            testRender(encoderFormat, count, elements, true, false);
+            testRender(generator, encoderFormat, count, true, false);
         }
     }
 
@@ -62,17 +52,14 @@ public class ColumnRendererTest {
         final int count = 32;
 
         for (int i = 1; i < maxWordLength; i += 2) {
-            List<String> elements = generateRnd(i, count + 20);
-            testRender(encoderFormat, count, elements, true, false);
+            testRender(generator, encoderFormat, count, true, false);
         }
     }
 
     @Test
     public void renderMany() throws Exception {
-        final int count = 13;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        List<String> elements = generateRnd(4, count);
-        new ColumnRenderer(encoderFormat).renderSingleColumn(elements, new PrintStream(baos));
+        new ColumnRenderer(encoderFormat, generator).renderSingleColumn(13, new PrintStream(baos));
         String out = baos.toString("UTF-8");
         assertNotNull(out);
         assertTrue(out.length() > 10);
@@ -80,13 +67,13 @@ public class ColumnRendererTest {
         System.out.println();
     }
 
-    private void testRender(EncoderFormat encoderFormat, int count, List<String> elements, boolean auto, boolean isFile) throws UnsupportedEncodingException {
+    private void testRender(ColumnRenderer.RandomGenerator randomGenerator, EncoderFormat encoderFormat, int count, boolean auto, boolean isFile) throws UnsupportedEncodingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         if (auto) {
-            new ColumnRenderer(encoderFormat).renderAutoColumn(count, elements, new PrintStream(baos), isFile);
+            new ColumnRenderer(encoderFormat, randomGenerator).renderAutoColumn(count, new PrintStream(baos), isFile);
         } else {
-            new ColumnRenderer(encoderFormat).render(elements, new PrintStream(baos), isFile);
+            new ColumnRenderer(encoderFormat, randomGenerator).render(count, new PrintStream(baos), isFile);
         }
 
         String out = baos.toString("UTF-8");
@@ -111,9 +98,13 @@ public class ColumnRendererTest {
     public void testAllEncoders() throws Exception {
         int count = 9;
         for (Encoder encoder : new EncoderHandler().load()) {
-            List<String> rnds = generateRnd(encoder, 6, count);
-            testRender(encoder.getEncoderFormat(), count, rnds, false, true);
-            testRender(encoder.getEncoderFormat(), count, rnds, false, false);
+            for (int i = 1; i < 9; i += 7) {
+                testRender(new ColumnRenderer.DefaultRandomGenerator(encoder
+                        , new DrbgMock(), 2 * i), encoder.getEncoderFormat(), count, false, true);
+                testRender(new ColumnRenderer.DefaultRandomGenerator(encoder
+                        , new DrbgMock(), 2 * i), encoder.getEncoderFormat(), count, false, false);
+            }
+
         }
     }
 
