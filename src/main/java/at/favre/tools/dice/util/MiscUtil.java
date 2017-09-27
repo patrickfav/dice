@@ -2,6 +2,7 @@ package at.favre.tools.dice.util;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 public final class MiscUtil {
     /**
@@ -27,5 +28,21 @@ public final class MiscUtil {
         }
 
         return true;
+    }
+
+
+    public static String jarVersion() {
+        String version = MiscUtil.class.getPackage().getImplementationVersion();
+        if (version == null) {
+            try {
+                Properties properties = new Properties();
+                properties.load(MiscUtil.class.getClassLoader().getResourceAsStream("git.properties"));
+                version = properties.get("git.commit.id").toString().substring(0, 7);
+            } catch (Exception e) {
+                version = "debug";
+            }
+
+        }
+        return version;
     }
 }

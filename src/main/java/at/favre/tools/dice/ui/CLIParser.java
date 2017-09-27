@@ -1,6 +1,5 @@
 package at.favre.tools.dice.ui;
 
-import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.util.MiscUtil;
 import org.apache.commons.cli.*;
@@ -124,10 +123,10 @@ public class CLIParser {
         help.setWidth(120);
         help.setLeftPadding(4);
         help.setDescPadding(3);
-        help.printHelp("<byte-length> | --help", "Version: " + RndTool.jarVersion(), options, "More details: https://github.com/patrickfav/dice", false);
+        help.printHelp("<byte-length> | --help", "Version: " + MiscUtil.jarVersion(), options, "More details: https://github.com/patrickfav/dice", false);
     }
 
     private static String getVersion() {
-        return "Version: " + RndTool.jarVersion() + "\nCopyright 2017 Patrick Favre-Bulle (https://github.com/patrickfav/dice)";
+        return "Version: " + MiscUtil.jarVersion() + "\nCopyright 2017 Patrick Favre-Bulle (https://github.com/patrickfav/dice)";
     }
 }

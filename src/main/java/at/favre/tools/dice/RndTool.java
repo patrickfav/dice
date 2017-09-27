@@ -12,6 +12,7 @@ import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
 import at.favre.tools.dice.util.ByteUtils;
 import at.favre.tools.dice.util.Entropy;
+import at.favre.tools.dice.util.MiscUtil;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -213,7 +214,7 @@ public final class RndTool {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).render(arguments.count(), printStream, arguments.outFile() != null);
             }
 
-            print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
+            print(System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + actualCount * arguments.length() + " bytes generated in " + (System.currentTimeMillis() - startTime) + " ms.", arguments);
         } finally {
             if (printStream != System.out) {
                 printStream.close();
@@ -229,15 +230,6 @@ public final class RndTool {
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
         return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : System.out;
-    }
-
-
-    public static String jarVersion() {
-        String version = RndTool.class.getPackage().getImplementationVersion();
-        if (version == null) {
-            version = "debug";
-        }
-        return version;
     }
 
     private static String getFriendlyFormattedDate() {
