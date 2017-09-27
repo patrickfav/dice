@@ -7,7 +7,7 @@ import java.security.SecureRandom;
  * Uses a strong instance of secure random to generate seeds. This will use the OS entropy pool
  * on most JVMs.
  */
-public final class SecureRandomEntropySource implements ExpandableEntropySource {
+public class SecureRandomEntropySource implements ExpandableEntropySource {
     private final SecureRandom secureRandom;
 
     public SecureRandomEntropySource() {
@@ -26,8 +26,14 @@ public final class SecureRandomEntropySource implements ExpandableEntropySource 
         }
     }
 
+    void setSeed(byte[] seed) {
+        secureRandom.setSeed(seed);
+    }
+
     @Override
     public byte[] generateEntropy(int length) {
-        return secureRandom.generateSeed(length);
+        byte[] out = new byte[length];
+        secureRandom.nextBytes(out);
+        return out;
     }
 }
