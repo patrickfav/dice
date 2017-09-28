@@ -56,7 +56,7 @@ I'll recommend base32, base36 or base58 because these encodings are typically ur
 
     java -jar dice.jar 16 -e "base36"
 
-If you require fixed char-sized output either use `hex` encoding or other encodings with supporting padding like `base32` or `base64`.
+If you require fixed char-sized output either use `hex` encoding or other encodings supporting paddings like `base32` or `base64`.
 
 ### Creating static byte arrays for your application
 
@@ -69,7 +69,7 @@ your programming language to get the correct syntax (see below). E.g.:
 
 Create a file 1MB full of raw random bytes with this call:
 
-    java -jar dice.jar 100 -c 1024 -e "raw" -f "./outfile.txt"
+    java -jar dice.jar 1024 -c 1024 -e "raw" -f "./outfile.txt"
 
 Successive calls will append data, not overwrite it.
 
