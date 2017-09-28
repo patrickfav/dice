@@ -114,11 +114,11 @@ public final class RndTool {
         return true;
     }
 
-
     private static void wrapInErrorHandling(Arg arguments, Callable r) {
         try {
             r.call();
         } catch (Exception e) {
+
             System.err.print("Could not create random bits.");
 
             if (e.getMessage() != null) {
@@ -135,6 +135,7 @@ public final class RndTool {
             System.exit(501);
         }
     }
+
 
     private static void fetch(final List<ServiceHandler<?>> handlers, final Arg arguments, final EntropyPool entropyPool,
                               final Encoder encoder, final long start) {
@@ -222,13 +223,11 @@ public final class RndTool {
                 printStream.close();
             }
         }
-
-
     }
 
     @NotNull
     private static String getSummary(Arg arguments, long durationMs, long durationRndGen, long byteGen) {
-        double bandwidth = Math.round(byteGen / durationRndGen / 10.24) / 100.0;
+        double bandwidth = durationRndGen == 0 || byteGen == 0 ? 0 : Math.round(byteGen / durationRndGen / 10.24) / 100.0;
         return System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + byteGen + " bytes generated in " + durationMs + " ms." + (bandwidth > 0 ? " (" + bandwidth + " MB/s)" : "");
     }
 
