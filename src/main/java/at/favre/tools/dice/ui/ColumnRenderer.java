@@ -31,7 +31,7 @@ public final class ColumnRenderer {
      * @return the actual used count
      */
     public long renderAutoColumn(long targetCount, PrintStream outStream, boolean toFile) {
-        String[] rndArray = new String[Math.min(RND_PER_REQUEST, encoderFormat.printWidth() * 2)];
+        String[] rndArray = new String[Math.min(RND_PER_REQUEST, Math.abs(encoderFormat.printWidth() * 2))];
         randomGenerator.request(rndArray);
 
         final long columns = getColumnCount(getMaxLength(rndArray));
@@ -123,7 +123,7 @@ public final class ColumnRenderer {
     }
 
     private long getColumnCount(long maxLength) {
-        long columns = Math.max(1, encoderFormat.printWidth() / maxLength);
+        long columns = Math.min(1024, Math.max(1, encoderFormat.printWidth() / maxLength));
 
         while (maxLength * columns + columns > encoderFormat.printWidth()) {
             columns--;
