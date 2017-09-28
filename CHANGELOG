@@ -2,6 +2,7 @@
 
 ## v1.1.0
 * support of large file output (10+ GiB) with procedural output
+* Various small fixes and enhancements
 
 ## v1.0.0
 * use NIST SP800-90Ar1 HMAC-DRBG
