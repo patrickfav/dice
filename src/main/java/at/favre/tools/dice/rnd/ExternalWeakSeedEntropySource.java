@@ -18,4 +18,9 @@ public final class ExternalWeakSeedEntropySource extends SecureRandomEntropySour
         super();
         setSeed(seed);
     }
+
+    @Override
+    public String getInformation() {
+        return super.getInformation() + " (seeded)";
+    }
 }

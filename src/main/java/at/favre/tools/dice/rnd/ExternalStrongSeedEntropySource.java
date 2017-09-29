@@ -36,4 +36,9 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
         regenerateInternalSeed(internalSeed);
         return out;
     }
+
+    @Override
+    public String getInformation() {
+        return "External Seed Entropy Source (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
+    }
 }

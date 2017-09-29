@@ -12,4 +12,11 @@ public interface EntropyPool extends ExpandableEntropySource {
      * @param source
      */
     void add(ExpandableEntropySource source);
+
+    /**
+     * Information string about the pool's source
+     *
+     * @return readable info string
+     */
+    String getInformation();
 }

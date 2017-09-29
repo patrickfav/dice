@@ -37,6 +37,13 @@ public final class HKDFEntropyPool implements EntropyPool {
     }
 
     @Override
+    public String getInformation() {
+        StringBuilder sb = new StringBuilder();
+        entropySourceList.forEach(e -> sb.append(e.getInformation()).append('\n'));
+        return sb.toString();
+    }
+
+    @Override
     public byte[] generateEntropy(int lengthByte) {
         if (entropySourceList.isEmpty()) {
             throw new IllegalStateException("entropy pool must not be empty - add entropy sources first");

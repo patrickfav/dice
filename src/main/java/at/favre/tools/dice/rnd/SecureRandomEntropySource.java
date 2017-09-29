@@ -36,4 +36,9 @@ public class SecureRandomEntropySource implements ExpandableEntropySource {
         secureRandom.nextBytes(out);
         return out;
     }
+
+    @Override
+    public String getInformation() {
+        return "SecureRandom: " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")";
+    }
 }

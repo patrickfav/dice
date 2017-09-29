@@ -1,6 +1,7 @@
 package at.favre.tools.dice.rnd;
 
 import at.favre.tools.dice.RndTool;
+import at.favre.tools.dice.util.ByteUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -134,5 +135,10 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);
         }
+    }
+
+    @Override
+    public String getInformation() {
+        return "Personalization Source (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
     }
 }

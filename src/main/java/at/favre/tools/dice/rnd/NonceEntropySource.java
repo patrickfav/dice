@@ -1,5 +1,7 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.tools.dice.util.ByteUtils;
+
 import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
 
@@ -26,5 +28,10 @@ public final class NonceEntropySource implements ExpandableEntropySource {
         buffer.putLong(System.currentTimeMillis());
         buffer.putLong(ManagementFactory.getRuntimeMXBean().getUptime());
         return HKDF.hkdf(buffer.array(), SALT, SALT, lengthByte);
+    }
+
+    @Override
+    public String getInformation() {
+        return "Nonce Entropy (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
     }
 }

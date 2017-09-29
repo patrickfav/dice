@@ -13,4 +13,11 @@ public interface ExpandableEntropySource {
      * @return a (pseudo) random byte array of
      */
     byte[] generateEntropy(int lengthByte);
+
+    /**
+     * Information string about the entropy's source
+     *
+     * @return readable info string
+     */
+    String getInformation();
 }

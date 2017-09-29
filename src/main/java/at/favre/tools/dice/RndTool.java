@@ -89,10 +89,6 @@ public final class RndTool {
         }
 
         wrapInErrorHandling(arguments, () -> {
-            /*if (arguments.debug()) {
-                println("Used secureRandom class is " + secureRandom.getProvider().getInfo() + " (" + secureRandom.getProvider().getName() + "/v" + secureRandom.getProvider().getVersion() + ")", arguments);
-            }*/
-
             if (arguments.seed() != null) {
                 byte[] seed = parseSeed(arguments.seed());
                 println("Use provided seed: " + seed.length + " bytes." + getOptionalEntropyWarning(seed), arguments);
@@ -163,14 +159,23 @@ public final class RndTool {
     private static boolean requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
         println("", arguments);
 
+        ExpandableEntropySource nonceSource = new NonceEntropySource();
+        ExpandableEntropySource persoSource = new PersonalizationSource();
+
+        if (arguments.debug()) {
+            println(nonceSource.getInformation(), arguments);
+            println(persoSource.getInformation(), arguments);
+            println(entropyPool.getInformation(), arguments);
+        }
+
         if (arguments.outFile() != null) {
             print("Writing data to " + arguments.outFile(), arguments);
         }
 
         printRandoms(arguments, encoder, new HmacDrbg(
                 entropyPool,
-                new NonceEntropySource(),
-                new PersonalizationSource()), start);
+                nonceSource,
+                persoSource), start);
         return true;
     }
 
