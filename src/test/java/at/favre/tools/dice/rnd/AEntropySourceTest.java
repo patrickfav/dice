@@ -6,8 +6,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public abstract class AEntropySourceTest {
     abstract ExpandableEntropySource getExpandableEntropySource();
@@ -18,6 +17,8 @@ public abstract class AEntropySourceTest {
         if (entropySource == null) {
             return;
         }
+
+        assertNotNull(entropySource.getInformation());
 
         Set<byte[]> pastSeeds = new HashSet<>();
         for (int i = 8; i < 64; i += 8) {

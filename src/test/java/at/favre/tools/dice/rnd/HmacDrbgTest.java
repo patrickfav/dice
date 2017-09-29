@@ -15,10 +15,21 @@ import static org.junit.Assert.assertTrue;
 public class HmacDrbgTest {
 
     private DeterministicRandomBitGenerator hmacDrbg;
+    private ExpandableEntropySource mockExpandableEntropySource = new ExpandableEntropySource() {
+        @Override
+        public byte[] generateEntropy(int lengthByte) {
+            return new SecureRandom().generateSeed(lengthByte);
+        }
+
+        @Override
+        public String getInformation() {
+            return "info";
+        }
+    };
 
     @Before
     public void setUp() throws Exception {
-        hmacDrbg = new HmacDrbg(length -> new SecureRandom().generateSeed(length), length -> new SecureRandom().generateSeed(length), length -> new SecureRandom().generateSeed(length));
+        hmacDrbg = new HmacDrbg(mockExpandableEntropySource, mockExpandableEntropySource, mockExpandableEntropySource);
     }
 
     @Test

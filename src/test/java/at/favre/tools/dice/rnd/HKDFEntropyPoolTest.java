@@ -7,8 +7,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HKDFEntropyPoolTest {
 
@@ -24,6 +23,8 @@ public class HKDFEntropyPoolTest {
 
     @Test
     public void generateSeed() throws Exception {
+        assertNotNull(entropyPool.getInformation());
+
         Set<byte[]> pastSeeds = new HashSet<>();
         for (int i = 8; i < 64; i += 8) {
             byte[] seed = entropyPool.generateEntropy(i);
