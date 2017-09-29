@@ -48,6 +48,10 @@ This should run on any Windows, Mac or Linux machine.
 
  [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
 
+## Demo
+
+[![asciicast](https://asciinema.org/a/2m5Q1sXieuUoaTGMcy17occzz.png)](https://asciinema.org/a/2m5Q1sXieuUoaTGMcy17occzz)
+
 ## Use Cases
 
 ### Creating Nonces, Tokens, Identifiers or Passwords
@@ -72,10 +76,6 @@ Create a file 1MB full of raw random bytes with this call:
     java -jar dice.jar 1024 -c 1024 -e "raw" -f "./outfile.txt"
 
 Successive calls will append data, not overwrite it.
-
-## Demo
-
-TODO
 
 ## Command Line Interface
 
