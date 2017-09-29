@@ -2,7 +2,7 @@
 
 ## v1.2.0
 * add debug info for entropy sources
-
+* add threaded seed generator
 
 ## v1.1.0
 * support of large file output (10+ GiB) with procedural output

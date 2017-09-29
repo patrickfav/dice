@@ -4,16 +4,22 @@ import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.util.ByteUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
+import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 /**
  * Reads static and dynamic data from the machine like MAC addresses and cpu usage to pin the
@@ -26,6 +32,32 @@ import java.util.Properties;
  */
 public final class PersonalizationSource implements ExpandableEntropySource {
     private static final byte[] SALT = new byte[]{(byte) 0xDE, 0x56, (byte) 0xA9, (byte) 0xDB, 0x23, 0x52, (byte) 0x98, (byte) 0xF0, 0x5F, 0x26, 0x0D, 0x36, 0x19, 0x4C, 0x55, (byte) 0xA8};
+
+    private byte[] readTempDirContent() {
+        File f = new File(System.getProperty("java.io.tmpdir"));
+        int count = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(f.toPath())) {
+            // We use a Random object to choose what file names
+            // should be used. Otherwise on a machine with too
+            // many files, the same first 1024 files always get
+            // used. Any, We make sure the first 512 files are
+            // always used.
+            Random r = new Random();
+            for (Path entry : stream) {
+                if (count < 512 || r.nextBoolean()) {
+                    bos.write(entry.getFileName().toString().getBytes());
+                }
+                if (count++ > 1024) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            bos.write(e.hashCode());
+        }
+        return bos.toByteArray();
+    }
 
     private byte[] concatMacAddresses() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -42,6 +74,7 @@ public final class PersonalizationSource implements ExpandableEntropySource {
     private byte[] runtimeData() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        final Runtime rt = Runtime.getRuntime();
 
         bos.write(runtimeMXBean.getName().getBytes(StandardCharsets.UTF_8));
         bos.write(runtimeMXBean.getVmName().getBytes(StandardCharsets.UTF_8));
@@ -49,6 +82,10 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         bos.write(runtimeMXBean.getVmVersion().getBytes(StandardCharsets.UTF_8));
         bos.write(runtimeMXBean.getClassPath().getBytes(StandardCharsets.UTF_8));
         bos.write(ByteBuffer.allocate(Long.BYTES).putLong(runtimeMXBean.getStartTime()).array());
+
+        bos.write(ByteBuffer.allocate(Long.BYTES).putLong(rt.totalMemory()).array());
+        bos.write(ByteBuffer.allocate(Long.BYTES).putLong(rt.freeMemory()).array());
+
         return bos.toByteArray();
     }
 
@@ -120,10 +157,12 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         }
     }
 
+
     @Override
     public byte[] generateEntropy(int lengthByte) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
             bos.write(concatMacAddresses());
             bos.write(runtimeData());
             bos.write(osData());
@@ -131,6 +170,8 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(scmData());
             bos.write(envVariables());
             bos.write(systemProperties());
+            bos.write(readTempDirContent());
+            bos.write(InetAddress.getLocalHost().toString().getBytes());
             return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);

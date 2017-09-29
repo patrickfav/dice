@@ -57,6 +57,7 @@ public final class RndTool {
 
         Encoder encoder = loader.findByName(arguments.encoding());
         EntropyPool entropyPool = new HKDFEntropyPool();
+        entropyPool.add(new ThreadedEntropySource());
         entropyPool.add(new SecureRandomEntropySource());
 
         if (encoder == null) {

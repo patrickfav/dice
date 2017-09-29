@@ -1,12 +1,12 @@
 # Dice
 
-A pseudo random bit generator which generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding) like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
+A cryptographically secure pseudorandom number generator which generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding) like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
 [![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master)
 
-<sup>* depending on the used provider</sup>
+<sup>* depending on the used [provider](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp)</sup>
 
 Main features:
 
@@ -264,6 +264,12 @@ _References:_
 The caller may provide a string that additionally seeds the random bit generator. A seed provided by the user is seen as weak seed and will always
 be combined with the internal state of a strong `SecureRandom` instance.
 
+##### Threaded Seed Generator
+
+A port of SUN's threaded [seed generator](http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/sun/security/provider/SeedGenerator.java) by [Joshua Bloch](https://en.wikipedia.org/wiki/Joshua_Bloch). The seed is produced by counting the number of times the VM manages to loop in a given period. This number roughly reflects the machine load at that point in time. The samples are translated using a permutation (s-box) and then XORed together. This process is non linear and should prevent the samples from "averaging out". This implementation uses faster timings to produce values faster.
+
+This generator is mainly used as a fallback if there is no external seed and the internal seeds fail.
+
 ### Nonce Input
 
 The nonce is composed of:
@@ -285,8 +291,9 @@ For this the following data will be gathered:
 
 * MAC address of all network adapters
 * Runtime & OS information (e.g. uptime, current cpu usage, processor count, classpath)
-* SCM information (e.g. commit hash, committer, etc.)
-* Tool version name
+* SCM information (e.g. commit hash, committer, etc.) & version name
+* Environmental variables and system properties
+* Content of the temp directory
 
 The resulting data will be hashed with HKDF.
 
