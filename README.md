@@ -60,7 +60,7 @@ I'll recommend base32, base36 or base58 because these encodings are typically ur
 
     java -jar dice.jar 16 -e "base36"
 
-If you require fixed char-sized output either use `hex` encoding or other encodings supporting paddings like `base32` or `base64`.
+If you require fixed char-sized output either use `hex` encoding or other encodings supporting paddings like `base32` or `base64`. For passwords, high-density encodings are recommended like `base85`.
 
 ### Creating static byte arrays for your application
 
