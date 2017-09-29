@@ -50,7 +50,7 @@ This should run on any Windows, Mac or Linux machine.
 
 ## Demo
 
-[![asciicast](https://asciinema.org/a/2m5Q1sXieuUoaTGMcy17occzz.png)](https://asciinema.org/a/2m5Q1sXieuUoaTGMcy17occzz)
+[![asciicast](https://asciinema.org/a/140170.png)](https://asciinema.org/a/140170)
 
 ## Use Cases
 
