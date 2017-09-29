@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public final class RndTool {
             }*/
 
             if (arguments.seed() != null) {
-                byte[] seed = arguments.seed().getBytes(StandardCharsets.UTF_8);
+                byte[] seed = parseSeed(arguments.seed());
                 println("Use provided seed: " + seed.length + " bytes." + getOptionalEntropyWarning(seed), arguments);
                 entropyPool.add(new ExternalWeakSeedEntropySource(arguments.seed()));
             }
@@ -112,6 +113,14 @@ public final class RndTool {
         });
 
         return true;
+    }
+
+    private static byte[] parseSeed(String seed) {
+        try {
+            return ByteBuffer.allocate(Long.BYTES).putLong(Long.parseLong(seed)).array();
+        } catch (Exception e) {
+            return seed.getBytes(StandardCharsets.UTF_8);
+        }
     }
 
     private static void wrapInErrorHandling(Arg arguments, Callable r) {

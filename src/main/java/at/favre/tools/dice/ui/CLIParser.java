@@ -93,7 +93,7 @@ public class CLIParser {
 
         Option count = Option.builder(ARG_COUNT).longOpt("count").argName("number").desc("How many randoms should be generated. Automatically chosen if this argument is omitted.").hasArgs().build();
         Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("Output byte-to-text encoding. Available encodings include:\n" + new EncoderHandler().getSupportedEncodingList()).build();
-        Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string").hasArgs().desc("Uses the utf-8 byte representation of given parameter to seed the internal random generator. Warns if entropy is low.").build();
+        Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string|number").hasArgs().desc("Uses either the 64-bit integer interpretation or the utf-8 byte representation of given parameter to seed the internal random generator. Warns if entropy is low.").build();
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
         Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to Random.org to seed random generator (use when offline).").build();
         Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
