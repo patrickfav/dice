@@ -217,7 +217,7 @@ public final class RndTool {
                 actualCount = new ColumnRenderer(encoder.getEncoderFormat(), genFromArg(arguments, encoder, drbg)).render(arguments.count(), printStream, arguments.outFile() != null);
             }
 
-            print(getSummary(arguments, System.currentTimeMillis() - startTime, System.currentTimeMillis() - startRndGen, actualCount * arguments.length()), arguments);
+            println(getSummary(System.currentTimeMillis() - startTime, System.currentTimeMillis() - startRndGen, actualCount * arguments.length()), arguments);
         } finally {
             if (printStream != System.out) {
                 printStream.close();
@@ -226,7 +226,7 @@ public final class RndTool {
     }
 
     @NotNull
-    private static String getSummary(Arg arguments, long durationMs, long durationRndGen, long byteGen) {
+    private static String getSummary(long durationMs, long durationRndGen, long byteGen) {
         double bandwidth = durationRndGen == 0 || byteGen == 0 ? 0 : Math.round(byteGen / durationRndGen / 10.24) / 100.0;
         return System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + byteGen + " bytes generated in " + durationMs + " ms." + (bandwidth > 0 ? " (" + bandwidth + " MB/s)" : "");
     }
