@@ -1,5 +1,9 @@
 # Releases
 
+## v1.2.0
+* add debug info for entropy sources
+
+
 ## v1.1.0
 * support of large file output (10+ GiB) with procedural output
 * Various small fixes and enhancements
