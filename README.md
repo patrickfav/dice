@@ -177,7 +177,7 @@ _References:_
 
 This PRNG was tested with Robert G. Brown's [dieharder](http://webhome.phy.duke.edu/~rgb/General/dieharder.php) test suite for random number generators, which among others, includes the [ NIST Statistical Test Suite](http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-22r1a.pdf).
 
-The reports can be seen in `/misc/reports/*` in this repo
+The reports can be seen in `/misc/reports/*` in this repo.
 
 
 ### DRBG Seeding & Input Sources
