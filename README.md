@@ -56,7 +56,7 @@ This should run on any Windows, Mac or Linux machine.
 
 ### Creating Nonces, Tokens, Identifiers or Passwords
 
-I'll recommend base32, base36 or base58 because these encodings are typically url-safe. 16 byte usually suffice for globally unique, infeasible to brute force number.
+I'll recommend `base32`, `base36` or `base58` because these encodings are typically url-safe. 16 byte usually suffice for globally unique, infeasible to brute force number.
 
     java -jar dice.jar 16 -e "base36"
 
