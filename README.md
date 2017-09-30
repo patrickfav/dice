@@ -327,7 +327,7 @@ Use maven (3.1+) to create a jar including all dependencies
 # Credits
 
 * HMAC_DRBG implementation derived from [google/rappor](https://github.com/google/rappor)
-* Icon made by [Maxim Basinski](https://www.flaticon.com/authors/maxim-basinski) from www.flaticon.com
+* Icon based on cube icon made by [Smashicons](https://www.flaticon.com/authors/smashicons)
 
 # License
 
