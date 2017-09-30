@@ -42,7 +42,7 @@ This should run on any Windows, Mac or Linux machine.
 
 ## Download
 
-**[Grab jar from latest Release](https://github.com/patrickfav/uber-adb-tools/releases/latest)**
+**[Grab jar from latest Release](https://github.com/patrickfav/dice/releases/latest)**
 
 _Using the *.exe Launcher: [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required._
 
