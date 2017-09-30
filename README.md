@@ -8,7 +8,9 @@ A cryptographically secure pseudorandom number generator which generates byte ar
 
 <sup>* depending on the used [provider](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp)</sup>
 
-Main features:
+ ![logo](misc/icon.png)
+
+**Main features:**
 
  * Supports all common byte encodings and more (hex, [base32](https://en.wikipedia.org/wiki/Base32), [base36](https://en.wikipedia.org/wiki/Base36), base64, [base85](https://en.wikipedia.org/wiki/Ascii85#RFC_1924_version), etc.)
  * Optional secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
@@ -22,7 +24,7 @@ Example usage generating randoms with 24 _byte-length_ (not char length) and def
 
     java -jar dice.jar 24
 
-More examples:
+_More examples:_
     
     java -jar dice.jar 16 --count 100
     java -jar dice.jar 16 --encoding "base64"
@@ -42,11 +44,7 @@ This should run on any Windows, Mac or Linux machine.
 
 **[Grab jar from latest Release](https://github.com/patrickfav/uber-adb-tools/releases/latest)**
 
-### Using the *.exe Launcher
-
- ![logo](misc/icon_sm.png)
-
- [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required.
+_Using the *.exe Launcher: [Launch4J](http://launch4j.sourceforge.net/) is used to wrap the `.jar` into an Windows executable. It should automatically download the needed JRE if required._
 
 ## Demo
 
@@ -118,9 +116,6 @@ Successive calls will append data, not overwrite it.
 | base64       | `SpT9/x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
 | base64-url   | `SpT9_x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. Uses url safe mode |
 | base85       | `8sK;S*j=r`          | 80.1 % | true | Base85 uses an 85 character ASCII alphabet to encode. It's main use is with the PDF format and GIT. |
-| raw          | `Jýÿ¯í`            | 100.0 % | false | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. Most useful with file output. |
-| utf8         | `J�����`            | 100.0 % | false | Prints the byte array interpreted as UTF-8 encoded text. Only for testing purpose. |
-
 
 ### Programming Languages
 
@@ -138,6 +133,14 @@ Successive calls will append data, not overwrite it.
 | ruby         | `[0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]` |
 | rust         | `[u8; 6] = [0xd0, 0x3a, 0x4a, 0xee, 0x64, 0x11];` |
 | swift        | `[UInt8] = [0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]` |
+
+### Other
+
+| Name | Example  | Description |
+| ------------- | ------------- | ------------- |
+| raw          | `Jýÿ¯í`            | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. Most useful with file output. |
+| utf8         | `J�����`            | Prints the byte array interpreted as UTF-8 encoded text. Only for testing purpose. |
+
 
 ## Digital Signatures
 
