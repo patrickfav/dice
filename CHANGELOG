@@ -1,5 +1,8 @@
 # Releases
 
+## v1.3.0
+* support max output of 10Gib (instead of 1 Gib)
+
 ## v1.2.0
 * add debug info for entropy sources
 * add threaded seed generator

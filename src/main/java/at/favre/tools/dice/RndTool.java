@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 
 public final class RndTool {
     private static final int MAX_BYTE_PER_RANDOM = 1024;
-    private static final long MAX_BYTE_PER_CALL = 1024 * 1024 * 1024;
+    private static final long MAX_BYTE_PER_CALL = 10L * 1024L * 1024L * 1024L;
 
     private RndTool() {
     }
@@ -76,8 +76,8 @@ public final class RndTool {
             System.exit(402);
         }
 
-        if ((arguments.count() != null && (arguments.count() * arguments.length() > MAX_BYTE_PER_CALL))
-                || arguments.length() > MAX_BYTE_PER_CALL) {
+        if ((arguments.count() != null && (arguments.count() * (long) arguments.length() > MAX_BYTE_PER_CALL))
+                || (long) arguments.length() > MAX_BYTE_PER_CALL) {
             System.err.println("This PRNG can only generate " + MAX_BYTE_PER_CALL + " bytes at once.");
             System.exit(403);
         }
