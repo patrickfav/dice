@@ -3,6 +3,9 @@
 ## v1.2.0
 * add debug info for entropy sources
 * add threaded seed generator
+* update icon
+* update seed parser to interpret as Long if 64-bit integer
+* Various small fixes and enhancements
 
 ## v1.1.0
 * support of large file output (10+ GiB) with procedural output
