@@ -61,6 +61,6 @@ public final class HKDFEntropyPool implements EntropyPool {
                 throw new IllegalStateException("could not generate seed in pool", e);
             }
         });
-        return HKDF.fromHmacSha512().extractAndExpand(bos.toByteArray(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
+        return HKDF.fromHmacSha512().extractAndExpand(SALT, bos.toByteArray(), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 }

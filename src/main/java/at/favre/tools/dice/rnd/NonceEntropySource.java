@@ -29,7 +29,7 @@ public final class NonceEntropySource implements ExpandableEntropySource {
         buffer.putLong(System.nanoTime());
         buffer.putLong(System.currentTimeMillis());
         buffer.putLong(ManagementFactory.getRuntimeMXBean().getUptime());
-        return HKDF.fromHmacSha256().extractAndExpand(buffer.array(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
+        return HKDF.fromHmacSha256().extractAndExpand(SALT, buffer.array(), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 
     @Override

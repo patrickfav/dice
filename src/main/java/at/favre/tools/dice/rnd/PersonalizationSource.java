@@ -174,7 +174,7 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(systemProperties());
             bos.write(readTempDirContent());
             bos.write(InetAddress.getLocalHost().toString().getBytes());
-            return HKDF.fromHmacSha512().extractAndExpand(bos.toByteArray(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
+            return HKDF.fromHmacSha512().extractAndExpand(SALT, bos.toByteArray(), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);
         }

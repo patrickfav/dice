@@ -26,7 +26,7 @@ public class ThreadedEntropySource implements ExpandableEntropySource {
     public byte[] generateEntropy(int lengthByte) {
         byte[] seed = new byte[12];
         threadedSeedGenerator.getSeedBytes(seed);
-        return HKDF.fromHmacSha256().extractAndExpand(seed, SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
+        return HKDF.fromHmacSha256().extractAndExpand(SALT, seed, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 
     @Override

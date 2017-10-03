@@ -21,7 +21,7 @@ public final class ExternalWeakSeedEntropySource extends SecureRandomEntropySour
 
     public ExternalWeakSeedEntropySource(byte[] seed) {
         super();
-        setSeed(HKDF.fromHmacSha256().extract(seed, SALT));
+        setSeed(HKDF.fromHmacSha256().extract(SALT, seed));
     }
 
     @Override

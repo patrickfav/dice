@@ -26,7 +26,7 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
     }
 
     private void regenerateInternalSeed(byte[] seed) {
-        internalSeed = HKDF.fromHmacSha512().extract(ByteUtils.concatAll(seed, ByteBuffer.allocate(Integer.BYTES).putInt(counter++).array()), SALT);
+        internalSeed = HKDF.fromHmacSha512().extract(SALT, ByteUtils.concatAll(seed, ByteBuffer.allocate(Integer.BYTES).putInt(counter++).array()));
 
     }
 
