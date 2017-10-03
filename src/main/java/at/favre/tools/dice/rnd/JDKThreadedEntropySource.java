@@ -29,12 +29,12 @@ import java.security.PrivilegedAction;
  * This is the fallback if neither the personalization nor the secureRandom
  * environment provides good entropy.
  */
-public class ThreadedEntropySource implements ExpandableEntropySource {
+public class JDKThreadedEntropySource implements ExpandableEntropySource {
     private final static byte[] SALT = new byte[]{(byte) 0xC0, (byte) 0xA5, 0x6B, 0x50, 0x19, (byte) 0xB1, 0x78, (byte) 0xC6, 0x58, (byte) 0xC1, (byte) 0xE2, (byte) 0xEA, 0x24, 0x1C, 0x12, 0x3A};
 
     private final ThreadedSeedGenerator threadedSeedGenerator;
 
-    public ThreadedEntropySource() {
+    public JDKThreadedEntropySource() {
         threadedSeedGenerator = new ThreadedSeedGenerator();
     }
 
@@ -47,7 +47,7 @@ public class ThreadedEntropySource implements ExpandableEntropySource {
 
     @Override
     public String getInformation() {
-        return "Threaded Seed Generator";
+        return "JDK Threaded Seed Generator";
     }
 
     private static class ThreadedSeedGenerator implements Runnable {
