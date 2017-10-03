@@ -1,5 +1,8 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.lib.crypto.HKDF;
+
+import java.nio.charset.StandardCharsets;
 import java.security.PrivilegedAction;
 
 /**
@@ -23,7 +26,7 @@ public class ThreadedEntropySource implements ExpandableEntropySource {
     public byte[] generateEntropy(int lengthByte) {
         byte[] seed = new byte[12];
         threadedSeedGenerator.getSeedBytes(seed);
-        return HKDF.hkdf(seed, SALT, SALT, lengthByte);
+        return HKDF.fromHmacSha256().extractAndExpand(seed, SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 
     @Override

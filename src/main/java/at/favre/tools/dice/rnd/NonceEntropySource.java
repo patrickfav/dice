@@ -1,9 +1,11 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.util.ByteUtils;
 
 import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Nonce generate as described in SP800-90Ar1. This implementation uses a monotonic sequence number
@@ -27,7 +29,7 @@ public final class NonceEntropySource implements ExpandableEntropySource {
         buffer.putLong(System.nanoTime());
         buffer.putLong(System.currentTimeMillis());
         buffer.putLong(ManagementFactory.getRuntimeMXBean().getUptime());
-        return HKDF.hkdf(buffer.array(), SALT, SALT, lengthByte);
+        return HKDF.fromHmacSha256().extractAndExpand(buffer.array(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 
     @Override

@@ -2,6 +2,8 @@
 
 ## v1.3.0
 * support max output of 10Gib (instead of 1 Gib)
+* use `at.favre.lib:hkdf` HKDF implementation
+* additional expand user input seed with hkdf
 
 ## v1.2.0
 * add debug info for entropy sources

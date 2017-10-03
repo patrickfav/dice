@@ -1,5 +1,6 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.util.ByteUtils;
 
@@ -173,7 +174,7 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(systemProperties());
             bos.write(readTempDirContent());
             bos.write(InetAddress.getLocalHost().toString().getBytes());
-            return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
+            return HKDF.fromHmacSha512().extractAndExpand(bos.toByteArray(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);
         }

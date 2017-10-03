@@ -1,7 +1,10 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.lib.crypto.HKDF;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,6 +61,6 @@ public final class HKDFEntropyPool implements EntropyPool {
                 throw new IllegalStateException("could not generate seed in pool", e);
             }
         });
-        return HKDF.hkdf(bos.toByteArray(), SALT, SALT, lengthByte);
+        return HKDF.fromHmacSha512().extractAndExpand(bos.toByteArray(), SALT, this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 }
