@@ -300,6 +300,10 @@ For this the following data will be gathered:
 
 The resulting data will be hashed with HKDF.
 
+## Example Data
+
+Under `misc/example` a couple of files of example random data can be found (e.g. 1MiB and 10MiB)
+
 ## Build
 
 ### Jar Sign
