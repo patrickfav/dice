@@ -99,7 +99,8 @@ public final class RndTool {
             System.exit(403);
         }
 
-        if (arguments.outFile() != null && !arguments.outFile().getParentFile().exists()) {
+        if (arguments.outFile() != null && arguments.outFile().getParentFile() != null
+                && !arguments.outFile().getParentFile().exists()) {
             if (!arguments.outFile().getParentFile().mkdirs()) {
                 System.err.println("could not generate dir structure for " + arguments.outFile());
                 System.exit(404);
