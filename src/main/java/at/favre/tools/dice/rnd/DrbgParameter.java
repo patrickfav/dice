@@ -34,7 +34,7 @@ public class DrbgParameter {
         this.nonceSource = nonceSource;
         this.personalizationString = personalizationString;
         this.reseedAllowed = reseedAllowed;
-        this.reseedIntervalByte = Math.min(reseedIntervalByte, MAX_BYTES_PER_SEED);
+        this.reseedIntervalByte = reseedIntervalByte;
     }
 
     public DrbgParameter(MacFactory macFactory, ExpandableEntropySource entropySource, ExpandableEntropySource nonceSource, byte[] personalizationString, boolean reseedAllowed) {

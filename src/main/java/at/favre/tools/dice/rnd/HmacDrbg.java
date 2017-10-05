@@ -31,36 +31,7 @@ import java.util.Arrays;
  * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf Section 8.6.8.
  */
 public final class HmacDrbg implements DeterministicRandomBitGenerator {
-    // Assume maximum security strength for HMAC-512, which is 512.
-    // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #1.
-    private static final int SECURITY_STRENGTH_BIT = 512;
 
-    /**
-     * The constructor's entropyInput should contain this many high quality random bytes.
-     * HMAC_DRBG requires entropy input to be security_strength bits long.
-     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
-     */
-    private static final int ENTROPY_INPUT_SIZE_BYTES = SECURITY_STRENGTH_BIT / 8;
-    /**
-     * HMAC_DRBG requires nonce to be at least 1/2 security_strength bits long.
-     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
-     */
-    private static final int NONCE_INPUT_SIZE_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
-    /**
-     * Personalization strings should not exceed this many bytes in length.
-     * <p>
-     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #7.
-     */
-    private static final int PERSONALIZATION_STRING_LENGTH_BYTES = (SECURITY_STRENGTH_BIT / 8) / 2;
-    /**
-     * The maximum number of bytes that can be generated from this DRBG with a single seed.
-     * <p>
-     * This is conservative relative to the suggestions in
-     * http://csrc.nist.gov/publications/nistpubs/800-90A/SP800-90A.pdf section D.2.
-     * Reseeding is necessary when this threshold is reached.
-     */
-    // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #2.
-    private static final int DIGEST_NUM_BYTES = SECURITY_STRENGTH_BIT / 8;
     // floor(7500/8); see: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf D.2 #5.
     private static final int MAX_BYTES_PER_REQUEST = 937;
     private static final byte[] BYTE_ARRAY_0 = {0};
@@ -76,6 +47,12 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
 
     /**
      * For in-depth description of the parameters, see the NIST spec.
+     * <p>
+     * The constructor's entropyInput should contain security_strength bits many high quality random bytes.
+     * HMAC_DRBG requires entropy input to be security_strength bits long.
+     * <p>
+     * HMAC_DRBG requires nonce to be at least 1/2 security_strength bits long.
+     * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
      *
      * @param drbgParameter parameter defining this DRBG
      */
@@ -86,9 +63,9 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.1.2
 
         // 2. Key = 0x00 00...00
-        setKey(new byte[paramter.securityStrengthBit / 8]);
+        setKey(new byte[getSecurityStrengthBytes()]);
         // 3. V = 0x01 01...01
-        value = new byte[DIGEST_NUM_BYTES];
+        value = new byte[getSecurityStrengthBytes()];
         Arrays.fill(value, (byte) 0x01);
 
         // 4. (Key, V) = HMAC_DRBG_Update(seed_material, Key, V)
@@ -109,8 +86,8 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // Note: We are using the 8.6.7 interpretation, where the entropy_input and
         // nonce are acquired at the same time from the same source.
         return ByteUtils.concatAll(
-                paramter.entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES),
-                paramter.nonceSource.generateEntropy(NONCE_INPUT_SIZE_BYTES),
+                paramter.entropySource.generateEntropy(getSecurityStrengthBytes()),
+                paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2),
                 paramter.personalizationString);
     }
 
@@ -189,7 +166,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
             value = hash(value);
             // 4.2 temp = temp || V.
             // 5. returned_bits = Leftmost requested_number_of_bits of temp
-            int bytesToWrite = Math.min(count - bytesWritten, DIGEST_NUM_BYTES);
+            int bytesToWrite = Math.min(count - bytesWritten, getSecurityStrengthBytes());
             System.arraycopy(value, 0, out, start + bytesWritten, bytesToWrite);
             bytesWritten += bytesToWrite;
         }
@@ -202,7 +179,11 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * Request reseeding of this HMAC_DRBG
      */
     public void requestReseed(byte[] additionalInfo) {
-        hmacDrbgReseed(paramter.entropySource.generateEntropy(ENTROPY_INPUT_SIZE_BYTES), paramter.nonceSource.generateEntropy(NONCE_INPUT_SIZE_BYTES), additionalInfo);
+        hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
+    }
+
+    private int getSecurityStrengthBytes() {
+        return paramter.securityStrengthBit / 8;
     }
 
     /**
