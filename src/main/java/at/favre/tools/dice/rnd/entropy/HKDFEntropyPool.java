@@ -14,9 +14,11 @@
  *  limitations under the License.
  */
 
-package at.favre.tools.dice.rnd;
+package at.favre.tools.dice.rnd.entropy;
 
 import at.favre.lib.crypto.HKDF;
+import at.favre.tools.dice.rnd.EntropyPool;
+import at.favre.tools.dice.rnd.ExpandableEntropySource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

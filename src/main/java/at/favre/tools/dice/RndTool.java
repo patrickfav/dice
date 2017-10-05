@@ -19,6 +19,7 @@ package at.favre.tools.dice;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
+import at.favre.tools.dice.rnd.entropy.*;
 import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;

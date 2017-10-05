@@ -1,5 +1,9 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.tools.dice.rnd.entropy.ExternalStrongSeedEntropySource;
+import at.favre.tools.dice.rnd.entropy.HKDFEntropyPool;
+import at.favre.tools.dice.rnd.entropy.PersonalizationSource;
+import at.favre.tools.dice.rnd.entropy.SecureRandomEntropySource;
 import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Before;
 import org.junit.Test;

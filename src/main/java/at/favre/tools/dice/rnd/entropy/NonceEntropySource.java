@@ -14,9 +14,10 @@
  *  limitations under the License.
  */
 
-package at.favre.tools.dice.rnd;
+package at.favre.tools.dice.rnd.entropy;
 
 import at.favre.lib.crypto.HKDF;
+import at.favre.tools.dice.rnd.ExpandableEntropySource;
 import at.favre.tools.dice.util.ByteUtils;
 
 import java.lang.management.ManagementFactory;

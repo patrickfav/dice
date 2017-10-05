@@ -24,7 +24,7 @@ import java.util.*;
 
 public final class EncoderHandler {
 
-    private static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
+    static final List<Encoder> ENCODERS = Collections.unmodifiableList(Arrays.asList(
             new Base2Encoder(),
             new Base8Encoder(),
             new Base10Encoder(),
@@ -112,58 +112,5 @@ public final class EncoderHandler {
         return sb.toString();
     }
 
-    public String getByteEncoderMarkdownTable() {
-        StringBuilder sb = new StringBuilder();
 
-        //Header
-        sb.append("| ").append("Name").append(" | ");
-        sb.append("Example").append(" | ");
-        sb.append("Efficiency").append(" | ");
-        sb.append("Padding").append(" | ");
-        sb.append("Description").append(" |").append("\n");
-
-        //Header divider
-        sb.append("| ").append("-------------").append(" | ");
-        sb.append("-------------").append(" | ");
-        sb.append("-------------:").append(" | ");
-        sb.append(":-------------:").append(" | ");
-        sb.append("-------------").append(" |").append("\n");
-
-        //Body divider
-        for (Encoder encoder : ENCODERS) {
-            if (encoder instanceof AByteEncoder) {
-                AByteEncoder aByteEncoder = (AByteEncoder) encoder;
-
-                sb.append("| ").append(String.format("%-12s", aByteEncoder.names()[0])).append(" | ");
-                sb.append(String.format("%-20s", "`" + aByteEncoder.encode(exampleBytes) + "`")).append(" | ");
-                sb.append(String.format(Locale.US, "%.1f", aByteEncoder.spaceEfficiency() * 100)).append(" %").append(" | ");
-                sb.append(aByteEncoder.mayNeedPadding()).append(" | ");
-                sb.append(aByteEncoder.getDescription()).append(" |").append("\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    public String getLanguageEncoderMarkdownTable() {
-        StringBuilder sb = new StringBuilder();
-
-        //Header
-        sb.append("| ").append("Name").append(" | ");
-        sb.append("Example").append(" | ").append("\n");
-
-        //Header divider
-        sb.append("| ").append(":-------------:").append(" | ");
-        sb.append("-------------").append(" |").append("\n");
-
-        //Body divider
-        for (Encoder encoder : ENCODERS) {
-            if (encoder instanceof AProgrammingLanguagesEncoder) {
-                AProgrammingLanguagesEncoder progEncoder = (AProgrammingLanguagesEncoder) encoder;
-
-                sb.append("| ").append(String.format("%-12s", progEncoder.names()[0])).append(" | ");
-                sb.append("`").append(progEncoder.encode(exampleBytes)).append("`").append(" | ").append("\n");
-            }
-        }
-        return sb.toString();
-    }
 }
