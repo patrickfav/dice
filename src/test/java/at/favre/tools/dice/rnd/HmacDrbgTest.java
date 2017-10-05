@@ -29,7 +29,11 @@ public class HmacDrbgTest {
 
     @Before
     public void setUp() throws Exception {
-        hmacDrbg = new HmacDrbg(mockExpandableEntropySource, mockExpandableEntropySource, mockExpandableEntropySource);
+        hmacDrbg = new HmacDrbg(new DrbgParameter(MacFactory.Default.hmacSha512(),
+                mockExpandableEntropySource,
+                mockExpandableEntropySource,
+                new byte[16]
+        ));
     }
 
     @Test

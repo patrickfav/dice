@@ -192,9 +192,11 @@ public final class RndTool {
         }
 
         printRandoms(arguments, encoder, new HmacDrbg(
-                entropyPool,
-                nonceSource,
-                persoSource), start);
+                new DrbgParameter(
+                        MacFactory.Default.hmacSha512(),
+                        entropyPool,
+                        nonceSource,
+                        persoSource.generateEntropy(16))), start);
         return true;
     }
 
