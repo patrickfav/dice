@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public final class ColumnRenderer {
-    private static final int LINE_BREAK_EVERY_LINES = 24;
+    private static final int LINE_BREAK_EVERY_LINES = (int) Arg.DEFAULT_COUNT / 2;
     private static final int RND_PER_REQUEST = 100;
 
     private final EncoderFormat encoderFormat;
@@ -87,6 +87,7 @@ public final class ColumnRenderer {
             long columns = -1;
             long columnCounter = -1;
             long lineCount = 0;
+            long maxLines = 0;
 
             while (currentCount < count) {
                 int nextLength = currentCount + countPerIteration > count ? (int) (count - currentCount) : countPerIteration;
@@ -99,6 +100,10 @@ public final class ColumnRenderer {
                     maxLength = getMaxLength(rndArray);
                     columns = getColumnCount(maxLength);
                     columnCounter = columns;
+                }
+
+                if (maxLines <= 0) {
+                    maxLines = (long) ((double) count / (double) columns);
                 }
 
                 for (int i = 0; i < rndArray.length; i++) {
@@ -117,7 +122,7 @@ public final class ColumnRenderer {
                             outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.newLineFile() : encoderFormat.newLineCmdLine()));
                             lineCount++;
 
-                            if (lineCount % LINE_BREAK_EVERY_LINES == 0) {
+                            if (lineCount % LINE_BREAK_EVERY_LINES == 0 && (maxLines - lineCount > LINE_BREAK_EVERY_LINES / 2)) {
                                 outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.paragraphFile() : encoderFormat.paragraphCmdLine()));
                             }
 

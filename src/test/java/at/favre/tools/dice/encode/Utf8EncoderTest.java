@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.byteencoder.Utf8Encoder;
+import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
 
 public class Utf8EncoderTest extends AEncoderTest {
     @Override

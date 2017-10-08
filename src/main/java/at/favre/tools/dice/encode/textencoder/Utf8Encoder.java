@@ -14,7 +14,9 @@
  *  limitations under the License.
  */
 
-package at.favre.tools.dice.encode.byteencoder;
+package at.favre.tools.dice.encode.textencoder;
+
+import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
 
 import java.nio.charset.StandardCharsets;
 

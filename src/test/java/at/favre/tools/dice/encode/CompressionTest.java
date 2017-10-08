@@ -1,6 +1,10 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.byteencoder.*;
+import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
+import at.favre.tools.dice.encode.byteencoder.Base16Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base58Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base64Encoder;
+import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Ignore;
 import org.junit.Test;
