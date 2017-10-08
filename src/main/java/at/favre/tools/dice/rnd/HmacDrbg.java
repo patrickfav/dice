@@ -88,7 +88,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         return ByteUtils.concatAll(
                 paramter.entropySource.generateEntropy(getSecurityStrengthBytes()),
                 paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2),
-                paramter.personalizationString);
+                paramter.personalizationString == null ? new byte[0] : paramter.personalizationString);
     }
 
     /**

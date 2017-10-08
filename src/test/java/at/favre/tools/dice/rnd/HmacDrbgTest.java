@@ -2,18 +2,15 @@ package at.favre.tools.dice.rnd;
 
 import at.favre.tools.dice.util.ByteUtils;
 import at.favre.tools.dice.util.Entropy;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.security.SecureRandom;
 import java.util.*;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class HmacDrbgTest {
+public class HmacDrbgTest extends AHmacDrbgNistTestVectorsTest {
 
     private DeterministicRandomBitGenerator hmacDrbgSha512;
     private DeterministicRandomBitGenerator hmacDrbgSha256;
@@ -80,47 +77,16 @@ public class HmacDrbgTest {
         }
     }
 
-    /*
-
-    [SHA-1]
-    [PredictionResistance = False]
-    [EntropyInputLen = 128]
-    [NonceLen = 64]
-    [PersonalizationStringLen = 0]
-    [AdditionalInputLen = 0]
-    [ReturnedBitsLen = 640]
-
-    COUNT = 0
-    EntropyInput = e91b63309e93d1d08e30e8d556906875
-    Nonce = f59747c468b0d0da
-    PersonalizationString =
-    ** INSTANTIATE:
-        V   = 7ea45af5f8fcba082fa40bcbea2748dfe7e09f6a
-        Key = be3976a33f77e0155b7ca84a5732d44f319e5f3a
-    AdditionalInput =
-    ** GENERATE (FIRST CALL):
-        V   = 0e28fe04dd16482f8e4b048675318adcd5e6e6cf
-        Key = 764d4f1fb7b04624bcb14642acb24d70eff3c0c8
-    AdditionalInput =
-    ReturnedBits = b7928f9503a417110788f9d0c2585f8aee6fb73b220a626b3ab9825b7a9facc79723d7e1ba9255e40e65c249b6082a7bc5e3f129d3d8f69b04ed1183419d6c4f2a13b304d2c5743f41c8b0ee73225347
-         */
-
     @Test
-    public void nistTestVector() throws Exception {
-        DeterministicRandomBitGenerator drbg = new HmacDrbg(new DrbgParameter(
-                MacFactory.Default.hmacSha1(),
-                new FixedEntropySource(hex("e91b63309e93d1d08e30e8d556906875")),
-                new FixedEntropySource(hex("f59747c468b0d0da")),
-                new byte[0]
-        ));
-        //assertArrayEquals(hex("b7928f9503a417110788f9d0c2585f8aee6fb73b220a626b3ab9825b7a9facc79723d7e1ba9255e40e65c249b6082a7bc5e3f129d3d8f69b04ed1183419d6c4f2a13b304d2c5743f41c8b0ee73225347"), drbg.nextBytes(80));
-    }
+    public void testHmacDrbgZeroLengthOutput() {
+        byte[] entropy =
+                hex("8ca4a964e1ff68753db86753d09222e09b888b500be46f2a3830afa9172a1d6d");
+        byte[] nonce = hex("a59394e0af764e2f21cf751f623ffa6c");
 
-    private byte[] hex(String hex) {
-        try {
-            return Hex.decodeHex(hex.toCharArray());
-        } catch (DecoderException e) {
-            throw new IllegalStateException(e);
-        }
+        HmacDrbg drbg = new HmacDrbg(new DrbgParameter(MacFactory.Default.hmacSha256(),
+                new FixedEntropySource(entropy),
+                new FixedEntropySource(nonce), null));
+        byte[] out = drbg.nextBytes(0);
+        assertArrayEquals(new byte[0], out);
     }
 }
