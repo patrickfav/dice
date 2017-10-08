@@ -18,16 +18,20 @@ package at.favre.tools.dice.rnd.entropy;
 
 import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
+import org.apache.commons.codec.binary.Hex;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
- * Threaded Seed Generator as found in Bouncy Castle implementation
+ * Threaded Seed Generator based on the one found in Bouncy Castle implementation
  */
 public class BCThreadedEntropySource implements ExpandableEntropySource {
     private final static byte[] SALT = new byte[]{0x6B, 0x0B, (byte) 0xF5, (byte) 0xB4, 0x22, 0x78, 0x03, (byte) 0xD0, 0x39, (byte) 0xDA, 0x2B, 0x17, 0x33, (byte) 0xC7, (byte) 0x8F, 0x33, (byte) 0x81, (byte) 0xB9, (byte) 0x98, 0x7B, (byte) 0xAC, (byte) 0xFD, (byte) 0x97, 0x14, 0x4F, (byte) 0x7F, 0x03, 0x21, 0x5F, (byte) 0xFC, 0x2A, 0x5F};
 
     private final SeedGenerator threadedSeedGenerator;
+    private final BlockingQueue<Byte> buffer = new ArrayBlockingQueue<>(128);
 
     public BCThreadedEntropySource() {
         threadedSeedGenerator = new SeedGenerator();
@@ -35,7 +39,7 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
-        return HKDF.fromHmacSha256().extractAndExpand(SALT, threadedSeedGenerator.generateSeed(24, false), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
+        return HKDF.fromHmacSha256().extractAndExpand(SALT, threadedSeedGenerator.generateSeed(32), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
     }
 
     @Override
@@ -51,50 +55,70 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
      *
      * @see <a href="https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/crypto/prng/ThreadedSeedGenerator.java">Bouncy Castle Impl</a>
      */
-    private final class SeedGenerator implements Runnable {
-        private volatile int counter = 0;
-        private volatile boolean stop = false;
+    private final class SeedGenerator {
+        private volatile long counter = 0;
+        private volatile long last = 0;
 
-        public void run() {
-            while (!this.stop) {
-                this.counter++;
-            }
-
+        public SeedGenerator() {
+            new Thread(new Generator()).start();
         }
 
-        byte[] generateSeed(int numbytes, boolean fast) {
-            Thread t = new Thread(this);
-            byte[] result = new byte[numbytes];
-            this.counter = 0;
-            this.stop = false;
-            int last = 0;
-            int end;
+        private final class Counter implements Runnable {
+            volatile boolean running = true;
 
-            t.start();
-            if (fast) {
-                end = numbytes;
-            } else {
-                end = numbytes * 8;
+            public void run() {
+                while (running) {
+                    counter++;
+                }
             }
-            for (int i = 0; i < end; i++) {
-                while (this.counter == last) {
+
+            void cancel() {
+                running = false;
+            }
+        }
+
+        private final class Generator implements Runnable {
+            public void run() {
+                while (true) {
+                    Counter counterRunnable = new Counter();
+                    new Thread(counterRunnable).start();
+
+                    byte[] result = new byte[8];
+
+                    for (int i = 0; i < 8; i++) {
+                        while (counter == last) {
+                            try {
+                                Thread.sleep(1);
+                            } catch (InterruptedException e) {
+                                // ignore
+                            }
+                        }
+                        last = counter;
+                        int bytepos = i / 8;
+                        result[bytepos] = (byte) ((result[bytepos] << 1) | (last & 1));
+                    }
+
+                    counterRunnable.cancel();
+
                     try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        // ignore
+                        buffer.put(result[0]);
+                    } catch (InterruptedException ignored) {
                     }
                 }
-                last = this.counter;
-                if (fast) {
-                    result[i] = (byte) (last & 0xff);
-                } else {
-                    int bytepos = i / 8;
-                    result[bytepos] = (byte) ((result[bytepos] << 1) | (last & 1));
-                }
-
             }
-            stop = true;
-            return result;
+        }
+
+        byte[] generateSeed(int length) {
+            byte[] seed = new byte[length];
+            for (int j = 0; j < length; j++) {
+                try {
+                    seed[j] = buffer.take();
+                } catch (InterruptedException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+            System.out.println(Hex.encodeHex(seed));
+            return seed;
         }
     }
 }

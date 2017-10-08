@@ -16,6 +16,7 @@
 
 package at.favre.tools.dice.rnd;
 
+import at.favre.tools.dice.rnd.entropy.FixedEntropySource;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 

@@ -178,6 +178,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * Request reseeding of this HMAC_DRBG
      */
+    @Override
     public void requestReseed(byte[] additionalInfo) {
         hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
     }

@@ -1,5 +1,6 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.tools.dice.rnd.entropy.FixedEntropySource;
 import at.favre.tools.dice.util.ByteUtils;
 import at.favre.tools.dice.util.Entropy;
 import org.junit.Before;

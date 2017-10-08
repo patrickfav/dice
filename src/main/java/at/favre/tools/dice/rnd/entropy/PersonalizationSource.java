@@ -34,10 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Reads static and dynamic data from the machine like MAC addresses and cpu usage to pin the
@@ -176,6 +173,14 @@ public final class PersonalizationSource implements ExpandableEntropySource {
         }
     }
 
+    private byte[] misc() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bos.write(InetAddress.getLocalHost().toString().getBytes(StandardCharsets.UTF_8));
+        bos.write(Locale.getDefault().toString().getBytes(StandardCharsets.UTF_8));
+        bos.write(getClass().getName().getBytes(StandardCharsets.UTF_8));
+        return bos.toByteArray();
+    }
+
     @Override
     public byte[] generateEntropy(int lengthByte) {
         try {
@@ -189,7 +194,8 @@ public final class PersonalizationSource implements ExpandableEntropySource {
             bos.write(envVariables());
             bos.write(systemProperties());
             bos.write(readTempDirContent());
-            bos.write(InetAddress.getLocalHost().toString().getBytes());
+            bos.write(misc());
+
             return HKDF.fromHmacSha512().extractAndExpand(SALT, bos.toByteArray(), this.getClass().getName().getBytes(StandardCharsets.UTF_8), lengthByte);
         } catch (Exception e) {
             throw new IllegalStateException("could not personalization seed", e);

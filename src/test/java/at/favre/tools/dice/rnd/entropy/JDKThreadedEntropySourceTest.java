@@ -14,28 +14,14 @@
  *  limitations under the License.
  */
 
-package at.favre.tools.dice.rnd;
+package at.favre.tools.dice.rnd.entropy;
 
-/**
- * A Deterministic Random Bit Generator as defined by NIST, will output
- * pseudo random data depending on a given seed.
- */
-public interface DeterministicRandomBitGenerator {
+import at.favre.tools.dice.rnd.ExpandableEntropySource;
 
-    void requestReseed(byte[] additionalInfo);
+public class JDKThreadedEntropySourceTest extends AEntropySourceTest {
 
-    /**
-     * Get the next pseudo random data
-     *
-     * @param lengthBytes output length in byte
-     * @return new byte array with the random data
-     */
-    byte[] nextBytes(int lengthBytes);
-
-    /**
-     * Get the next pseudo random data.
-     *
-     * @param out fills this byte array with data
-     */
-    void nextBytes(byte[] out);
+    @Override
+    ExpandableEntropySource getExpandableEntropySource() {
+        return new JDKThreadedEntropySource();
+    }
 }
