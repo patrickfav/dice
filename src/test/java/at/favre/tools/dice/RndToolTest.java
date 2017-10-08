@@ -2,6 +2,7 @@ package at.favre.tools.dice;
 
 import at.favre.tools.dice.ui.AppException;
 import at.favre.tools.dice.ui.Arg;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -9,6 +10,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import static junit.framework.TestCase.*;
@@ -20,24 +22,29 @@ public class RndToolTest {
     @Test
     public void smokeTestRndTool() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(new PrintStream(baos), "java", null, 12, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "java", null, 12, 10L, true, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(new PrintStream(baos), "base36", null, 4, null, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base36", null, 4, null, true, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(new PrintStream(baos), "base64", "verybaadseed", 87, null, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base64", "verybaadseed", 87, null, true, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(new PrintStream(baos), "base85", null, 15, null, true, true, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base85", null, 15, null, true, true, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(new PrintStream(baos), "base32", null, 7, null, true, false, false, true, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base32", null, 7, null, true, false, false, true, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(new PrintStream(baos), "hex", null, 10, null, true, false, false, true, false, true, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 10, null, true, false, false, true, false, true, null));
         checkOutput(baos);
 
+    }
+
+    @NotNull
+    private PrintStream createPrintStream(ByteArrayOutputStream baos) throws UnsupportedEncodingException {
+        return new PrintStream(baos, true, "utf-8");
     }
 
     @Test(expected = AppException.class)
@@ -63,14 +70,14 @@ public class RndToolTest {
     @Test(timeout = 20 * 1000)
     public void onlineTest() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(new PrintStream(baos), "hex", null, 1, 10L, false, false, true, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, false, false, true, false, false, false, null));
         checkOutput(baos);
     }
 
     @Test
     public void debugTest() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(new PrintStream(baos), "hex", null, 1, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, true, false, false, false, false, false, null));
         checkOutput(baos);
     }
 
