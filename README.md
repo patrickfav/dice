@@ -15,7 +15,7 @@ A cryptographically secure pseudo-random number generator [CLI](https://en.wikip
  * Supports all common byte encodings and more (hex, [base32](https://en.wikipedia.org/wiki/Base32), [base36](https://en.wikipedia.org/wiki/Base36), base64, [base85](https://en.wikipedia.org/wiki/Ascii85#RFC_1924_version), etc.)
  * Optional secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
  * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swift, go,...)
- * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf)
+ * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) tested with official [test vectors](https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program)
  * Output to command line or file with automatic column formatting with upper limit of 10GiB+ of random data
  * Entropy warnings if seed is weak
  * Additional output configuration like "[www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended [crc32 checksum](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
