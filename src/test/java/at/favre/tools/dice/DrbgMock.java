@@ -8,6 +8,11 @@ public class DrbgMock implements DeterministicRandomBitGenerator {
     private Random random = new Random();
 
     @Override
+    public void requestReseed(byte[] additionalInfo) {
+        random.setSeed(random.nextLong());
+    }
+
+    @Override
     public byte[] nextBytes(int lengthBytes) {
         byte[] b = new byte[lengthBytes];
         nextBytes(b);

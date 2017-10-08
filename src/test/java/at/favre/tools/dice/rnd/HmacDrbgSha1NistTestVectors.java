@@ -176,7 +176,52 @@ public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
         testDrbg(entropy, nonce, personalizationString, expected);
     }
 
+    @Test
+    public void testHmacDrbgNistReseedCase0() {
+        byte[] entropy = hex("79349bbf7cdda5799557866621c91383");
+        byte[] nonce = hex("1146733abf8c35c8");
+        byte[] reseed = hex("c7215b5b96c48e9b338c74e3e99dfedf");
+        byte[] expected = hex("c6a16ab8d420706f0f34ab7fec5adca9d8ca3a133e159ca6ac43c6f8a2be22834a4c0a0affb10d7194f1c1a5cf7322ec1ae0964ed4bf122746e087fdb5b3e91b3493d5bb98faed49e85f130fc8a459b7");
+
+        testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedCase1() {
+        byte[] entropy = hex("ee57fc23600fb9029a9ec6c82e7b51e4");
+        byte[] nonce = hex("3e9721e4393ef9ad");
+        byte[] reseed = hex("841d276ca9519061d92d7ddfa6628ca3");
+        byte[] expected = hex("ee26a5c8ef08a1ca8f14154d67c88f5e7ed8219d931b9842ac0039f2145539f2142b44117a998c22f590f6c9b38b465b783ecff13a7750201f7ecf1b8ab393604c73b2389336609af3440cde43298b84");
+
+        testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedCase2() {
+        byte[] entropy = hex("ebfdad13c8f941d279dbb4de8d7706dd");
+        byte[] nonce = hex("fdaa279f5e4428d6");
+        byte[] reseed = hex("f785c5b2f833b69b09b71a57cf5701d4");
+        byte[] expected = hex("66e35f9b8e05a861a0b3d01c66c416d5e8b77d4d21328c625cff9163ffc92e753015aa9d7f36ae3a961681d39f271d0b627787868cec3dedc520ecb303f96a43cec67369117af268a19f5284880cb3be");
+
+        testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
+    }
+
+//    @Test
+//    public void testHmacDrbgNistWithAddInfoReseedCase0() {
+//        byte[] entropy = hex("7d7052a776fd2fb3d7191f733304ee8b");
+//        byte[] nonce = hex("be4a0ceedca80207");
+//        byte[] reseed = hex("49047e879d610955eed916e4060e00c9");
+//        byte[] additional = hex("fd8bb33aab2f6cdfbc541811861d518d");
+//        byte[] expected = hex("c6a16ab8d420706f0f34ab7fec5adca9d8ca3a133e159ca6ac43c6f8a2be22834a4c0a0affb10d7194f1c1a5cf7322ec1ae0964ed4bf122746e087fdb5b3e91b3493d5bb98faed49e85f130fc8a459b7");
+//
+//        testDrbgReseed(entropy, reseed, nonce, new byte[0], additional, expected);
+//    }
+
     private void testDrbg(byte[] entropy, byte[] nonce, byte[] perso, byte[] expected) {
         testDrbg(MacFactory.Default.hmacSha1(), entropy, nonce, perso, expected, 640);
+    }
+
+    private void testDrbgReseed(byte[] entropy, byte[] reseed, byte[] nonce, byte[] perso, byte[] additonalInput, byte[] expected) {
+        testDrbgReseed(MacFactory.Default.hmacSha1(), entropy, reseed, nonce, perso, additonalInput, expected, 640);
     }
 }

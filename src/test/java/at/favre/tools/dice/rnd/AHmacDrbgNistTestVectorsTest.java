@@ -25,12 +25,33 @@ import java.util.Arrays;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 
-public class AHmacDrbgNistTestVectorsTest {
+class AHmacDrbgNistTestVectorsTest {
 
-    protected void testDrbg(MacFactory macFactory, byte[] entropy, byte[] nonce, byte[] perso, byte[] expected, int returnedBitsLength) {
+    void testDrbg(MacFactory macFactory, byte[] entropy, byte[] nonce, byte[] perso, byte[] expected, int returnedBitsLength) {
         HmacDrbg drbg = new HmacDrbg(new DrbgParameter(macFactory,
                 new FixedEntropySource(entropy),
                 new FixedEntropySource(nonce), perso));
+        byte[] out1 = new byte[returnedBitsLength / 8];
+        drbg.nextBytes(out1);
+        byte[] out2 = new byte[returnedBitsLength / 8];
+        drbg.nextBytes(out2);
+        byte[] out3 = new byte[returnedBitsLength / 8];
+        drbg.nextBytes(out3);
+
+        assertFalse(Arrays.equals(expected, out1));
+        assertFalse(Arrays.equals(out1, out3));
+        assertFalse(Arrays.equals(out2, out3));
+
+        assertArrayEquals(expected, out2);
+    }
+
+    void testDrbgReseed(MacFactory macFactory, byte[] entropy, byte[] reseedEntropy, byte[] nonce, byte[] perso, byte[] additionalInfo, byte[] expected, int returnedBitsLength) {
+        HmacDrbg drbg = new HmacDrbg(new DrbgParameter(macFactory,
+                new FixedEntropySource(entropy, reseedEntropy),
+                new FixedEntropySource(nonce, new byte[0]),
+                perso));
+        drbg.requestReseed(additionalInfo);
+
         byte[] out1 = new byte[returnedBitsLength / 8];
         drbg.nextBytes(out1);
         byte[] out2 = new byte[returnedBitsLength / 8];

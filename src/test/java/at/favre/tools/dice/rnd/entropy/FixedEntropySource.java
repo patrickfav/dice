@@ -19,21 +19,30 @@ package at.favre.tools.dice.rnd.entropy;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class FixedEntropySource implements ExpandableEntropySource {
-    private final byte[] entropy;
+    private final Queue<byte[]> deterministicEntropyQueue = new LinkedList<>();
 
     public FixedEntropySource(byte[] entropy) {
-        this.entropy = entropy;
+        this.deterministicEntropyQueue.add(entropy);
+    }
+
+    public FixedEntropySource(byte[] entropy, byte[]... moreEntropy) {
+        this.deterministicEntropyQueue.add(entropy);
+        if (moreEntropy != null) {
+            this.deterministicEntropyQueue.addAll(Arrays.asList(moreEntropy));
+        }
     }
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
-        return entropy;
+        return deterministicEntropyQueue.remove();
     }
 
     @Override
     public String getInformation() {
-        return "FixedEntropySource (" + Arrays.hashCode(entropy) + ")";
+        return "FixedEntropySource (" + deterministicEntropyQueue.hashCode() + ")";
     }
 }
