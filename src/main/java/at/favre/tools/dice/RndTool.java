@@ -24,6 +24,7 @@ import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
+import at.favre.tools.dice.ui.AppException;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
@@ -50,8 +51,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class RndTool {
-    private static final int MAX_BYTE_PER_RANDOM = 1024;
-    private static final long MAX_BYTE_PER_CALL = 10L * 1024L * 1024L * 1024L;
+    static final int MAX_BYTE_PER_RANDOM = 1024;
+    static final long MAX_BYTE_PER_CALL = 10L * 1024L * 1024L * 1024L;
 
     private RndTool() {
     }
@@ -60,13 +61,18 @@ public final class RndTool {
         Arg arguments = CLIParser.parse(args);
 
         if (arguments != null) {
-            if (!execute(arguments)) {
+            try {
+                execute(arguments);
+            } catch (AppException e) {
+                System.err.println(e.getMessage());
+                System.exit(e.errorCode);
+            } catch (Exception e) {
                 System.exit(1);
             }
         }
     }
 
-    static boolean execute(Arg arguments) {
+    static void execute(Arg arguments) throws AppException {
         long start = System.currentTimeMillis();
 
         EncoderHandler loader = new EncoderHandler();
@@ -79,32 +85,26 @@ public final class RndTool {
         entropyPool.add(new SecureRandomEntropySource());
 
         if (encoder == null) {
-            System.err.println("Given encoder '" + arguments.encoding() + "' is not available.");
-            System.err.println("\nAvailable encoders:\n\n" + loader.getFullSupportedEncodingList());
-            System.exit(400);
+            throw new AppException("Given encoder '" + arguments.encoding() + "' is not available.\n\nAvailable encoders:\n\n" + loader.getFullSupportedEncodingList(), 400);
         }
 
         if (arguments.length() <= 0 || arguments.length() > MAX_BYTE_PER_RANDOM) {
-            System.err.println("The random length must be between than 1 and " + MAX_BYTE_PER_RANDOM);
-            System.exit(401);
+            throw new AppException("The random length must be between than 1 and " + MAX_BYTE_PER_RANDOM, 401);
         }
 
         if (arguments.count() != null && arguments.count() <= 0) {
-            System.err.println("Count parameter must be greater than 0");
-            System.exit(402);
+            throw new AppException("Count parameter must be greater than 0", 402);
         }
 
         if ((arguments.count() != null && (arguments.count() * (long) arguments.length() > MAX_BYTE_PER_CALL))
                 || (long) arguments.length() > MAX_BYTE_PER_CALL) {
-            System.err.println("This PRNG can only generate " + MAX_BYTE_PER_CALL + " bytes at once.");
-            System.exit(403);
+            throw new AppException("This PRNG can only generate " + MAX_BYTE_PER_CALL + " bytes at once.", 403);
         }
 
         if (arguments.outFile() != null && arguments.outFile().getParentFile() != null
                 && !arguments.outFile().getParentFile().exists()) {
             if (!arguments.outFile().getParentFile().mkdirs()) {
-                System.err.println("could not generate dir structure for " + arguments.outFile());
-                System.exit(404);
+                throw new AppException("could not generate dir structure for " + arguments.outFile(), 404);
             }
         }
 
@@ -127,8 +127,6 @@ public final class RndTool {
             }
             return true;
         });
-
-        return true;
     }
 
     private static byte[] parseSeed(String seed) {
@@ -213,13 +211,13 @@ public final class RndTool {
 
     private static void print(String msg, Arg arg) {
         if (!arg.robot()) {
-            System.out.print(msg);
+            arg.cmdLinePrintStream().print(msg);
         }
     }
 
     private static void println(String msg, Arg arg) {
         if (!arg.robot()) {
-            System.out.println(msg);
+            arg.cmdLinePrintStream().println(msg);
         }
     }
 
@@ -272,7 +270,7 @@ public final class RndTool {
     }
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
-        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : System.out;
+        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : arguments.cmdLinePrintStream();
     }
 
     private static String getFriendlyFormattedDate() {

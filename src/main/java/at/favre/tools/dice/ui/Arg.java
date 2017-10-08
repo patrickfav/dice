@@ -20,6 +20,7 @@ import com.google.auto.value.AutoValue;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.PrintStream;
 
 @AutoValue
 public abstract class Arg {
@@ -27,8 +28,9 @@ public abstract class Arg {
     public static final long DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public static Arg create(String encoding, String seed, int length, Long count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
+    public static Arg create(PrintStream cmdLinePrintStream, String encoding, String seed, int length, Long count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
         return builder()
+                .cmdLinePrintStream(cmdLinePrintStream)
                 .encoding(encoding)
                 .seed(seed)
                 .length(length)
@@ -42,6 +44,8 @@ public abstract class Arg {
                 .outFile(outFile)
                 .build();
     }
+
+    public abstract PrintStream cmdLinePrintStream();
 
     public abstract String encoding();
 
@@ -72,6 +76,7 @@ public abstract class Arg {
 
     public static Builder builder() {
         return new AutoValue_Arg.Builder()
+                .cmdLinePrintStream(System.out)
                 .encoding(DEFAULT_ENCODING)
                 .length(DEFAULT_LENGTH)
                 .debug(false)
@@ -85,6 +90,8 @@ public abstract class Arg {
 
     @AutoValue.Builder
     public abstract static class Builder {
+        public abstract Builder cmdLinePrintStream(PrintStream value);
+
         public abstract Builder encoding(String value);
 
         public abstract Builder seed(String value);
