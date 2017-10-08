@@ -21,6 +21,7 @@ import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
 import at.favre.tools.dice.rnd.entropy.*;
 import at.favre.tools.dice.service.ServiceHandler;
+import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
 import at.favre.tools.dice.ui.AppException;
@@ -118,7 +119,7 @@ public final class RndTool {
                 final List<ServiceHandler<?>> handlers = new ArrayList<>();
                 handlers.add(new RandomOrgServiceHandler(arguments.debug()));
                 handlers.add(new HotbitsServiceHandler(arguments.debug()));
-                //handlers.add(new AnuQuantumServiceHandler(arguments.debug()));
+                handlers.add(new AnuQuantumServiceHandler(arguments.debug()));
 
                 fetch(handlers, arguments, entropyPool, encoder, start);
             } else {
