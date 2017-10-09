@@ -42,7 +42,7 @@ public final class NonceEntropySource implements ExpandableEntropySource {
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 4);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 5);
         buffer.putLong(++sequenceCounter);
         buffer.putLong(System.nanoTime());
         buffer.putLong(System.currentTimeMillis());

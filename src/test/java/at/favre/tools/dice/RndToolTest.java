@@ -97,7 +97,7 @@ public class RndToolTest {
 
         int length = 100;
         long count = 1024L;
-        RndTool.execute(Arg.create(System.out, "raw", null, length, count, true, false, false, false, false, false, tempFile));
+        RndTool.execute(Arg.create(System.out, "raw", null, length, count, true, false, true, false, false, false, tempFile));
 
         assertEquals(length * count, tempFile.length());
     }
