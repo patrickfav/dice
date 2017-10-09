@@ -19,6 +19,7 @@ package at.favre.tools.dice.rnd;
 import org.junit.Test;
 
 public class HmacDrbgSha512NistTestVectors extends AHmacDrbgNistTestVectorsTest {
+    private final static int DEFAULT_NIST_OUT_LENGTH_BIT = 2048;
 
     @Test
     public void testHmacDrbgNistCase0() {
@@ -208,11 +209,55 @@ public class HmacDrbgSha512NistTestVectors extends AHmacDrbgNistTestVectorsTest 
         testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
     }
 
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase0() {
+        byte[] entropy = hex("4686a959e17dfb96c294b09c0f7a60efb386416cfb4c8972bcc55e44a151607a");
+        byte[] nonce = hex("5226543b4c89321bbfb0f11f18ee3462");
+        byte[] reseed = hex("5ef50daaf29929047870235c17762f5df5d9ab1af656e0e215fcc6fd9fc0d85d");
+        byte[] additionalInputReseed = hex("d2383c3e528492269e6c3b3aaa2b54fbf48731f5aa52150ce7fc644679a5e7c6");
+        byte[] additional1 = hex("c841e7a2d9d13bdb8644cd7f5d91d241a369e12dc6c9c2be50d1ed29484bff98");
+        byte[] additional2 = hex("9054cf9216af66a788d3bf6757b8987e42d4e49b325e728dc645d5e107048245");
+        byte[] expected = hex("b60d8803531b2b8583d17bdf3ac7c01f3c65cf9b069862b2d39b9024b34c172b712db0704acb078a1ab1aec0390dbaee2dec9be7b234e63da481fd469a92c77bc7bb2cfca586855520e0f9e9d47dcb9bdf2a2fdfa9f2b4342ef0ea582616b55477717cfd516d46d6383257743656f7cf8b38402ba795a8c9d35a4aa88bec623313dad6ead689d152b54074f183b2fee556f554db343626cea853718f18d386bc8bebb0c07b3c5e96ceb391ffceece88864dbd3be83a613562c5c417a24807d5f9332974f045e79a9ade36994af6cf9bbeeb71d0025fcb4ad50f121cbc2df7cd12ff5a50cddfd9a4bbc6d942d743c8b8fbebe00eeccea3d14e07ff8454fa715da");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase1() {
+        byte[] entropy = hex("0bfd73a55c96ecbb6104fc1f91d8601e7b57cdf85d6e6b5360920b4e7d1cd026");
+        byte[] nonce = hex("29bb1c55e637fae1608f389d179f4fd2");
+        byte[] reseed = hex("650251a37ad27c2b5264b1605ed5a51df949086c10ece31255701733ee1c8539");
+        byte[] additionalInputReseed = hex("15b3816392285fc665572c48a168068a10994cbe4ceaa1955f07075039c73b4a");
+        byte[] additional1 = hex("374241cf3073e2f82956c76897944ae9c43907fd6781202b10e953c3aab1cfb1");
+        byte[] additional2 = hex("4d434031e2a2b1e1ac5ec98081be46d05de1b4d25e3b4dbc8f040b627f8a6f7f");
+        byte[] expected = hex("f4283abc7c0f40478bbf0234e2f7656b7c6d1d356c12a3e1f76666baa19e8a05fc1537bdd2fe855adbec4ed4d287fbf571615f415867a2e188ab60b3390053b27bd8bf4745887c93e68d0dfd01608d6b306af273b66db6400daeae962882c4c6a19b363f24d4bd543a8bcc7935f078602cee1cf3c7b30343ae2ae0d5ab111764d719205fc30325b2f938b4ec4d0f1fee2f431e70cb1aa1e7d826d54b7b4fc50560453349d2c52f09d6f5eaac72b5b9ca9b00142d45abc550eff26f1dfb8229bfd1eb21e4567145d7ca47c84001abd7f5f5e7101b9941302929a37f2150620b899907f7216f3e2bb1fd028b196031692bdbc0d2769c448b024880a131ed98612f");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase2() {
+        byte[] entropy = hex("da5589e7fee0a023e01a50aa54987c5b6d70503b78403762cdb53c9ae7ec65f8");
+        byte[] nonce = hex("53df14cd7e30ba0eb703b912387469bf");
+        byte[] reseed = hex("7f000e5dd78dd80722e194a4616aa373be2e093d23f2a4e7224b841ef550772d");
+        byte[] additionalInputReseed = hex("4c74a4655dcbebd1331b86bc224be30e6c3386ba844716d1a6938447ca7a317d");
+        byte[] additional1 = hex("6397e8fe13b3ebb08c0b7ce460b5a149b23433e110b881a9c095cf24d236cee9");
+        byte[] additional2 = hex("6aba359faab473d0d51f21bbe7b2ffef3a03b64364777a48f80698643d9b2504");
+        byte[] expected = hex("49c7ea8e2740fedafd8d31571a240f175ab5eb83b2104f738f3bdce41c160c19edf7b2e2c0603d9e7f4f26f132f6b8bd8c61fb0eb391a5b4b6d23e3db20584e08be87648984d0b9f3b05c763665b110d58fba8d3b7c635a78ed8f56ce05414b8bf4e0985e1ff0b4f55eda8cd516836099ded2b6092c9a1d532bba363e0811cf507a22189cd3d20ac6e66380fc8dde32dca54ec76130cbdc0aa70b5bf3b582ce1405c69dc0e26f65d91644c557d1b55ef9cd893355e7836efcf53dac2d468c4909e1538ec1555c94c04b62448092f44e81be7c0984bec13a53a953efdc16d3497b1ef5fca39231feff486c84fa7756419bc909c8782559951d971157441047b80");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
     private void testDrbg(byte[] entropy, byte[] nonce, byte[] perso, byte[] expected) {
-        testDrbg(MacFactory.Default.hmacSha512(), entropy, nonce, perso, expected, 2048);
+        testDrbg(MacFactory.Default.hmacSha512(), entropy, nonce, perso, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
     }
 
     private void testDrbgReseed(byte[] entropy, byte[] reseed, byte[] nonce, byte[] perso, byte[] additonalInput, byte[] expected) {
-        testDrbgReseed(MacFactory.Default.hmacSha512(), entropy, reseed, nonce, perso, additonalInput, expected, 2048);
+        testDrbgReseed(MacFactory.Default.hmacSha512(), entropy, reseed, nonce, perso, additonalInput, null, null, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
+
+    }
+
+    private void testDrbgReseedWithAdditionalInfo(byte[] entropy, byte[] reseed, byte[] nonce, byte[] perso, byte[] additonalInputReseed, byte[] additonalInput1, byte[] additonalInput2, byte[] expected) {
+        testDrbgReseed(MacFactory.Default.hmacSha512(), entropy, reseed, nonce, perso, additonalInputReseed, additonalInput1, additonalInput2, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
     }
 }

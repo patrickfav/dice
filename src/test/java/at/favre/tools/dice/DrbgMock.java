@@ -15,12 +15,12 @@ public class DrbgMock implements DeterministicRandomBitGenerator {
     @Override
     public byte[] nextBytes(int lengthBytes) {
         byte[] b = new byte[lengthBytes];
-        nextBytes(b);
+        nextBytes(b, null);
         return b;
     }
 
     @Override
-    public void nextBytes(byte[] out) {
+    public void nextBytes(byte[] out, byte[] additionalInfo) {
         random.nextBytes(out);
     }
 }

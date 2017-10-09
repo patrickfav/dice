@@ -32,11 +32,11 @@ class AHmacDrbgNistTestVectorsTest {
                 new FixedEntropySource(entropy),
                 new FixedEntropySource(nonce), perso));
         byte[] out1 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out1);
+        drbg.nextBytes(out1, null);
         byte[] out2 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out2);
+        drbg.nextBytes(out2, null);
         byte[] out3 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out3);
+        drbg.nextBytes(out3, null);
 
         assertFalse(Arrays.equals(expected, out1));
         assertFalse(Arrays.equals(out1, out3));
@@ -45,19 +45,28 @@ class AHmacDrbgNistTestVectorsTest {
         assertArrayEquals(expected, out2);
     }
 
-    void testDrbgReseed(MacFactory macFactory, byte[] entropy, byte[] reseedEntropy, byte[] nonce, byte[] perso, byte[] additionalInfo, byte[] expected, int returnedBitsLength) {
+    void testDrbgReseed(MacFactory macFactory,
+                        byte[] entropy,
+                        byte[] reseedEntropy,
+                        byte[] nonce,
+                        byte[] perso,
+                        byte[] additionalInfoReseed,
+                        byte[] additionalInfo1,
+                        byte[] additionalInfo2,
+                        byte[] expected,
+                        int returnedBitsLength) {
         HmacDrbg drbg = new HmacDrbg(new DrbgParameter(macFactory,
                 new FixedEntropySource(entropy, reseedEntropy),
                 new FixedEntropySource(nonce, new byte[0]),
                 perso));
-        drbg.requestReseed(additionalInfo);
+        drbg.requestReseed(additionalInfoReseed);
 
         byte[] out1 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out1);
+        drbg.nextBytes(out1, additionalInfo1);
         byte[] out2 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out2);
+        drbg.nextBytes(out2, additionalInfo2);
         byte[] out3 = new byte[returnedBitsLength / 8];
-        drbg.nextBytes(out3);
+        drbg.nextBytes(out3, null);
 
         assertFalse(Arrays.equals(expected, out1));
         assertFalse(Arrays.equals(out1, out3));
@@ -66,7 +75,7 @@ class AHmacDrbgNistTestVectorsTest {
         assertArrayEquals(expected, out2);
     }
 
-    protected byte[] hex(String hex) {
+    byte[] hex(String hex) {
         try {
             return Hex.decodeHex(hex.toCharArray());
         } catch (DecoderException e) {

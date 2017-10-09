@@ -20,6 +20,8 @@ import org.junit.Test;
 
 public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
 
+    private final static int DEFAULT_NIST_OUT_LENGTH_BIT = 640;
+
     @Test
     public void testHmacDrbgNistCase0() {
         byte[] entropy = hex("e91b63309e93d1d08e30e8d556906875");
@@ -206,11 +208,54 @@ public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
         testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
     }
 
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase0() {
+        byte[] entropy = hex("7d7052a776fd2fb3d7191f733304ee8b");
+        byte[] nonce = hex("be4a0ceedca80207");
+        byte[] reseed = hex("49047e879d610955eed916e4060e00c9");
+        byte[] additionalInputReseed = hex("fd8bb33aab2f6cdfbc541811861d518d");
+        byte[] additional1 = hex("99afe347540461ddf6abeb491e0715b4");
+        byte[] additional2 = hex("02f773482dd7ae66f76e381598a64ef0");
+        byte[] expected = hex("a736343844fc92511391db0addd9064dbee24c8976aa259a9e3b6368aa6de4c9bf3a0effcda9cb0e9dc33652ab58ecb7650ed80467f76a849fb1cfc1ed0a09f7155086064db324b1e124f3fc9e614fcb");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase1() {
+        byte[] entropy = hex("29c62afa3c52208a3fdecb43fa613f15");
+        byte[] nonce = hex("6c9eb59ac3c2d48b");
+        byte[] reseed = hex("bd87be99d184165412314140d4027141");
+        byte[] additionalInputReseed = hex("433ddaf259d14bcf897630ccaa27338c");
+        byte[] additional1 = hex("141146d404f284c2d02b6a10156e3382");
+        byte[] additional2 = hex("edc343dbffe71ab4114ac3639d445b65");
+        byte[] expected = hex("8c730f0526694d5a9a45dbab057a1975357d65afd3eff303320bd14061f9ad38759102b6c60116f6db7a6e8e7ab94c05500b4d1e357df8e957ac8937b05fb3d080a0f90674d44de1bd6f94d295c4519d");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
+    @Test
+    public void testHmacDrbgNistReseedWithAdditionalInputCase2() {
+        byte[] entropy = hex("0c0d1c0328a384e697678ac87303dd62");
+        byte[] nonce = hex("c8780b4ac33f1867");
+        byte[] reseed = hex("4ea4dce5b190d4e381eb7a5b5e12b4f1");
+        byte[] additionalInputReseed = hex("0557bc052aa8eabab0baa42ca38fbbe9");
+        byte[] additional1 = hex("985865c180e0bfb7cdbed11b58b5e509");
+        byte[] additional2 = hex("f40452f8c5b8f4cbc1675f70bb803740");
+        byte[] expected = hex("4a1f442eae6c861b622014b079dfd47543176b82bc60826cfa02d3923ef0563f8deba8362c8d1950a70e80d67189fb4d904b855ed0ac39942aa8673e0951b4876354b849a6c1c51d0c35a3f4ed4e2f22");
+
+        testDrbgReseedWithAdditionalInfo(entropy, reseed, nonce, new byte[0], additionalInputReseed, additional1, additional2, expected);
+    }
+
     private void testDrbg(byte[] entropy, byte[] nonce, byte[] perso, byte[] expected) {
-        testDrbg(MacFactory.Default.hmacSha1(), entropy, nonce, perso, expected, 640);
+        testDrbg(MacFactory.Default.hmacSha1(), entropy, nonce, perso, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
     }
 
     private void testDrbgReseed(byte[] entropy, byte[] reseed, byte[] nonce, byte[] perso, byte[] additonalInput, byte[] expected) {
-        testDrbgReseed(MacFactory.Default.hmacSha1(), entropy, reseed, nonce, perso, additonalInput, expected, 640);
+        testDrbgReseed(MacFactory.Default.hmacSha1(), entropy, reseed, nonce, perso, additonalInput, null, null, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
+    }
+
+    private void testDrbgReseedWithAdditionalInfo(byte[] entropy, byte[] reseed, byte[] nonce, byte[] perso, byte[] additonalInputReseed, byte[] additonalInput1, byte[] additonalInput2, byte[] expected) {
+        testDrbgReseed(MacFactory.Default.hmacSha1(), entropy, reseed, nonce, perso, additonalInputReseed, additonalInput1, additonalInput2, expected, DEFAULT_NIST_OUT_LENGTH_BIT);
     }
 }

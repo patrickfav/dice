@@ -16,13 +16,21 @@
 
 package at.favre.tools.dice.rnd;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A Deterministic Random Bit Generator as defined by NIST, will output
  * pseudo random data depending on a given seed.
  */
 public interface DeterministicRandomBitGenerator {
 
-    void requestReseed(byte[] additionalInfo);
+    /**
+     * Requests a reseed of this DRBG. Uses the internal entropy sources,
+     * provided through {@link DrbgParameter}
+     *
+     * @param additionalInfo optional parameter to increase the security cushion see NIST SP 800-90Ar1 Section 8.7.2
+     */
+    void requestReseed(@Nullable byte[] additionalInfo);
 
     /**
      * Get the next pseudo random data
@@ -35,7 +43,9 @@ public interface DeterministicRandomBitGenerator {
     /**
      * Get the next pseudo random data.
      *
-     * @param out fills this byte array with data
+     * @param out            fills this byte array with data
+     * @param additionalInfo can be null, additional information that is used to increase the security cushion,
+     *                       see NIST SP 800-90Ar1 Section 8.7.2
      */
-    void nextBytes(byte[] out);
+    void nextBytes(byte[] out, @Nullable byte[] additionalInfo);
 }

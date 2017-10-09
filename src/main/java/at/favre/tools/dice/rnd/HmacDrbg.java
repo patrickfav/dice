@@ -17,17 +17,19 @@
 package at.favre.tools.dice.rnd;
 
 import at.favre.tools.dice.util.ByteUtils;
+import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Mac;
 import java.util.Arrays;
 
 /**
- * Deterministic Random Bit Generator based on HMAC-SHA256.
+ * Deterministic Random Bit Generator based on any HMAC implementation available to {@link Mac}
  * <p>
  * Also known as: HMAC_DRBG.
  * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf for thorough specification.
  * <p>
- * Reseeding is supported.
+ * Reseeding and additional info is supported.
+ * <p>
  * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf Section 8.6.8.
  */
 public final class HmacDrbg implements DeterministicRandomBitGenerator {
@@ -40,7 +42,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
 
     // "V" from the the spec.
     private byte[] value;
-    // An instance of HMAC-SHA512 configured with "Key" from the spec.
+    // An instance of HMAC configured with "Key" from the spec.
     private Mac hmac;
     // The total number of bytes that have been generated from this DRBG so far.
     private int bytesGenerated;
@@ -63,7 +65,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.1.2
 
         // 2. Key = 0x00 00...00
-        setKey(new byte[getSecurityStrengthBytes()]);
+        initHmac(new byte[getSecurityStrengthBytes()]);
         // 3. V = 0x01 01...01
         value = new byte[getSecurityStrengthBytes()];
         Arrays.fill(value, (byte) 0x01);
@@ -94,16 +96,8 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * Set's the "Key" state from the spec.
      */
-    private void setKey(byte[] key) {
+    private void initHmac(byte[] key) {
         hmac = paramter.macFactory.create(key);
-    }
-
-    /**
-     * Computes hmac("key" from the spec, x).
-     */
-    private byte[] hash(byte[] x) {
-        hmac.update(x);
-        return hmac.doFinal();
     }
 
     /**
@@ -113,24 +107,26 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     private void hmacDrbgUpdate(byte[] providedData) {
         // 1. K = HMAC(K, V || 0x00 || provided_data)
-        setKey(hash(ByteUtils.concatAll(value, BYTE_ARRAY_0, emptyIfNull(providedData))));
+        initHmac(hmac.doFinal(ByteUtils.concatAll(value, BYTE_ARRAY_0, emptyIfNull(providedData))));
         // 2. V = HMAC(K, V);
-        value = hash(value);
+        value = hmac.doFinal(value);
         // 3. If (provided_data = Null), then return K and V.
         if (providedData == null) {
             return;
         }
         // 4. K = HMAC (K, V || 0x01 || provided_data).
-        setKey(hash(ByteUtils.concatAll(value, BYTE_ARRAY_1, providedData)));
+        initHmac(hmac.doFinal(ByteUtils.concatAll(value, BYTE_ARRAY_1, providedData)));
         // 5. V = HMAC (K, V).
-        value = hash(value);
+        value = hmac.doFinal(value);
     }
 
     /**
      * Request reseeding of this HMAC_DRBG
+     * <p>
+     * This uses the provided entropy sources as well as an optional additionalInfo
      */
     @Override
-    public void requestReseed(byte[] additionalInfo) {
+    public void requestReseed(@Nullable byte[] additionalInfo) {
         hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
     }
 
@@ -158,19 +154,19 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * HMAC_DRBG Generate Process
      * <p>
      * See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.2.5
-     * <p>
-     * We do not support additional_input, assuming it to be always null.
-     * <p>
-     * We guarantee that reseeding is never required through the use of currentByteSeedInterval
-     * rather than RESEED_INTERVAL.
+     *
+     * @param out             target byte array to write random bytes
+     * @param start           where to start to write in out
+     * @param count           how many bytes from start
+     * @param additionalInput The additional input string received from the consuming application. Note that the length of the additional_input string may be zero or null
      */
-    private void hmacDrbgGenerate(byte[] out, int start, int count) {
+    private void hmacDrbgGenerate(byte[] out, int start, int count, byte[] additionalInput) {
         // 3. temp = Null.
         int bytesWritten = 0;
         // 4. While (len (temp) < requested_number_of_bits) do:
         while (bytesWritten < count) {
             // 4.1 V = HMAC (Key, V).
-            value = hash(value);
+            value = hmac.doFinal(value);
             // 4.2 temp = temp || V.
             // 5. returned_bits = Leftmost requested_number_of_bits of temp
             int bytesToWrite = Math.min(count - bytesWritten, getSecurityStrengthBytes());
@@ -179,10 +175,14 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         }
 
         // 6. (Key, V) = HMAC_DRBG_Update (additional_input, Key, V).
-        hmacDrbgUpdate(null);
+        hmacDrbgUpdate(additionalInput);
     }
 
-
+    /**
+     * Security Strength in Bits; depending on the used HMAC hash
+     *
+     * @return bit length
+     */
     private int getSecurityStrengthBytes() {
         return paramter.securityStrengthBit / 8;
     }
@@ -193,7 +193,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     @Override
     public byte[] nextBytes(int lengthBytes) {
         byte result[] = new byte[lengthBytes];
-        nextBytes(result);
+        nextBytes(result, null);
         return result;
     }
 
@@ -201,16 +201,24 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * Fills the output vector with pseudo-random bytes.
      */
     @Override
-    public void nextBytes(byte[] out) {
-        nextBytes(out, 0, out.length);
+    public void nextBytes(byte[] out, byte[] additionalInfo) {
+        generateBytesProcess(out, 0, out.length, additionalInfo);
     }
 
     /**
      * Fills out[start] through out[start+count-1] (inclusive) with pseudo-random bytes.
+     * <p>
+     * See NIST.SP.800-90Ar1 10.1.2.5 (HMAC_DRBG Generate Process)
+     *
+     * @param additionalInput may be null
      */
-    public void nextBytes(byte[] out, int start, int count) {
+    private void generateBytesProcess(byte[] out, int start, int count, byte[] additionalInput) {
         if (count == 0) {
             return;
+        }
+
+        if (additionalInput != null) {
+            hmacDrbgUpdate(additionalInput);
         }
 
         if (paramter.reseedAllowed && bytesGenerated + count > paramter.reseedIntervalByte) {
@@ -221,7 +229,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
             int bytesWritten = 0;
             while (bytesWritten < count) {
                 int bytesToWrite = Math.min(count - bytesWritten, MAX_BYTES_PER_REQUEST);
-                hmacDrbgGenerate(out, start + bytesWritten, bytesToWrite);
+                hmacDrbgGenerate(out, start + bytesWritten, bytesToWrite, additionalInput);
                 bytesWritten += bytesToWrite;
             }
         } finally {
