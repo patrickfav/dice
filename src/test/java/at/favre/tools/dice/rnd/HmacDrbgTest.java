@@ -93,13 +93,19 @@ public class HmacDrbgTest extends AHmacDrbgNistTestVectorsTest {
 
     @Test
     public void testShouldAutoReseed() {
-        byte[] entropy = hex("8ca4a964e1ff68753db86753d09222e09b888b500be46f2a3830afa9172a1d6d");
-        byte[] nonce = hex("a59394e0af764e2f21cf751f623ffa6c");
-
         HmacDrbg drbg = new HmacDrbg(new DrbgParameter(MacFactory.Default.hmacSha256(),
-                new FixedEntropySource(entropy),
-                new FixedEntropySource(nonce), null));
-        byte[] out = drbg.nextBytes(0);
-        assertArrayEquals(new byte[0], out);
+                new FixedEntropySource(hex("8ca4a964e1ff68753db1"), hex("500be46f2a3830afa9172a1d6d")),
+                new FixedEntropySource(hex("a59394e0af764e2f21cf751f623ffa6c")), hex("67d321"), true, 128));
+
+        byte[] out = drbg.nextBytes(64);
+        byte[] out2 = drbg.nextBytes(64);
+        byte[] out3 = drbg.nextBytes(64);
+        assertEquals(64, out.length);
+        assertEquals(64, out2.length);
+        assertEquals(64, out3.length);
+
+        assertFalse(Arrays.equals(out, out2));
+        assertFalse(Arrays.equals(out, out3));
+        assertFalse(Arrays.equals(out2, out3));
     }
 }

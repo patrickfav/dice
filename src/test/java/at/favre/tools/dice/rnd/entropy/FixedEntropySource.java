@@ -38,7 +38,11 @@ public class FixedEntropySource implements ExpandableEntropySource {
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
-        return deterministicEntropyQueue.remove();
+        if (deterministicEntropyQueue.isEmpty()) {
+            return new byte[0];
+        } else {
+            return deterministicEntropyQueue.remove();
+        }
     }
 
     @Override
