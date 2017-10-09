@@ -206,17 +206,6 @@ public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
         testDrbgReseed(entropy, reseed, nonce, new byte[0], new byte[0], expected);
     }
 
-//    @Test
-//    public void testHmacDrbgNistWithAddInfoReseedCase0() {
-//        byte[] entropy = hex("7d7052a776fd2fb3d7191f733304ee8b");
-//        byte[] nonce = hex("be4a0ceedca80207");
-//        byte[] reseed = hex("49047e879d610955eed916e4060e00c9");
-//        byte[] additional = hex("fd8bb33aab2f6cdfbc541811861d518d");
-//        byte[] expected = hex("c6a16ab8d420706f0f34ab7fec5adca9d8ca3a133e159ca6ac43c6f8a2be22834a4c0a0affb10d7194f1c1a5cf7322ec1ae0964ed4bf122746e087fdb5b3e91b3493d5bb98faed49e85f130fc8a459b7");
-//
-//        testDrbgReseed(entropy, reseed, nonce, new byte[0], additional, expected);
-//    }
-
     private void testDrbg(byte[] entropy, byte[] nonce, byte[] perso, byte[] expected) {
         testDrbg(MacFactory.Default.hmacSha1(), entropy, nonce, perso, expected, 640);
     }

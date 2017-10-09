@@ -127,6 +127,14 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     }
 
     /**
+     * Request reseeding of this HMAC_DRBG
+     */
+    @Override
+    public void requestReseed(byte[] additionalInfo) {
+        hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
+    }
+
+    /**
      * HMAC_DRBG Reseed Process
      * <p>
      * Let HMAC_DRBG_Update be the function specified in Section
@@ -138,7 +146,6 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * @param additionalData The additional input string received from the consuming application. Note that the length of the additional_input string may be zero or null
      */
     private void hmacDrbgReseed(byte[] entropyInput, byte[] nonce, byte[] additionalData) {
-
         //1. seed_material = entropy_input || additional_input.
         byte[] seedMaterial = ByteUtils.concatAll(entropyInput, nonce, emptyIfNull(additionalData));
         //2. (Key, V) = HMAC_DRBG_Update (seed_material, Key, V)
@@ -175,13 +182,6 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         hmacDrbgUpdate(null);
     }
 
-    /**
-     * Request reseeding of this HMAC_DRBG
-     */
-    @Override
-    public void requestReseed(byte[] additionalInfo) {
-        hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
-    }
 
     private int getSecurityStrengthBytes() {
         return paramter.securityStrengthBit / 8;
