@@ -18,7 +18,6 @@ package at.favre.tools.dice.rnd.entropy;
 
 import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import org.apache.commons.codec.binary.Hex;
 
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -31,7 +30,7 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
     private final static byte[] SALT = new byte[]{0x6B, 0x0B, (byte) 0xF5, (byte) 0xB4, 0x22, 0x78, 0x03, (byte) 0xD0, 0x39, (byte) 0xDA, 0x2B, 0x17, 0x33, (byte) 0xC7, (byte) 0x8F, 0x33, (byte) 0x81, (byte) 0xB9, (byte) 0x98, 0x7B, (byte) 0xAC, (byte) 0xFD, (byte) 0x97, 0x14, 0x4F, (byte) 0x7F, 0x03, 0x21, 0x5F, (byte) 0xFC, 0x2A, 0x5F};
 
     private final SeedGenerator threadedSeedGenerator;
-    private final BlockingQueue<Byte> buffer = new ArrayBlockingQueue<>(128);
+    private final BlockingQueue<Byte> buffer = new ArrayBlockingQueue<>(64);
 
     public BCThreadedEntropySource() {
         threadedSeedGenerator = new SeedGenerator();
@@ -58,9 +57,10 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
     private final class SeedGenerator {
         private volatile long counter = 0;
         private volatile long last = 0;
+        private volatile Thread thread;
 
         public SeedGenerator() {
-            new Thread(new Generator()).start();
+            startNewGeneratorThread();
         }
 
         private final class Counter implements Runnable {
@@ -79,7 +79,7 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
 
         private final class Generator implements Runnable {
             public void run() {
-                while (true) {
+                while (buffer.remainingCapacity() > 0) {
                     Counter counterRunnable = new Counter();
                     new Thread(counterRunnable).start();
 
@@ -99,16 +99,17 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
                     }
 
                     counterRunnable.cancel();
-
-                    try {
-                        buffer.put(result[0]);
-                    } catch (InterruptedException ignored) {
-                    }
+                    //System.out.println("put new " + result[0]);
+                    buffer.offer(result[0]);
                 }
             }
         }
 
         byte[] generateSeed(int length) {
+            if (buffer.remainingCapacity() < length && (thread == null || thread.getState() == Thread.State.TERMINATED)) {
+                startNewGeneratorThread();
+            }
+
             byte[] seed = new byte[length];
             for (int j = 0; j < length; j++) {
                 try {
@@ -117,8 +118,15 @@ public class BCThreadedEntropySource implements ExpandableEntropySource {
                     throw new IllegalStateException(e);
                 }
             }
-            System.out.println(Hex.encodeHex(seed));
+            //System.out.println(Hex.encodeHex(seed));
             return seed;
+        }
+
+        private void startNewGeneratorThread() {
+            thread = new Thread(new Generator());
+            thread.setDaemon(true);
+            thread.setPriority(Thread.MIN_PRIORITY);
+            thread.start();
         }
     }
 }
