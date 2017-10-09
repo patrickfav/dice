@@ -37,4 +37,17 @@ public class RandomOrgServiceHandlerTest {
         }
     }
 
+    @Test
+    public void testResponseModel() {
+        RandomOrgBlobResponse response = new RandomOrgBlobResponse("jsonrpc 2", 44,
+                new RandomOrgBlobResponse.Result(
+                        new RandomOrgBlobResponse.Random(new String[]{"1", "2"}, "api", "base64", "1", 2),
+                        "sig", 4, 1, 4, 6));
+
+        assertNotNull(response.toString());
+        assertNotEquals(0, response.hashCode());
+        assertEquals(response, response);
+        assertNotEquals(new String("muh"), response);
+    }
+
 }
