@@ -1,9 +1,9 @@
 package at.favre.tools.dice.encode;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
 import at.favre.tools.dice.encode.languages.AProgrammingLanguagesEncoder;
 import at.favre.tools.dice.ui.Arg;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class EncoderHandlerTest {
-    private final byte[] exampleBytes = ByteUtils.unsecureRandomBytes(7);
+    private final byte[] exampleBytes = Bytes.random(7).array();
 
     @Test
     public void load() throws Exception {

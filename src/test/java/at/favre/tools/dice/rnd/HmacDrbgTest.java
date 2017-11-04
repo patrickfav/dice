@@ -1,8 +1,7 @@
 package at.favre.tools.dice.rnd;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.rnd.entropy.FixedEntropySource;
-import at.favre.tools.dice.util.ByteUtils;
-import at.favre.tools.dice.util.Entropy;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,7 +70,7 @@ public class HmacDrbgTest extends AHmacDrbgNistTestVectorsTest {
                 int nextLen = 16;
                 byte[] out = drbg.nextBytes(nextLen);
                 assertTrue(out.length == nextLen);
-                assertTrue(new Entropy<>(ByteUtils.toList(out)).entropy() > 3);
+                assertTrue(Bytes.wrap(out).entropy() > 3);
                 assertFalse(pastSeeds.contains(out));
                 pastSeeds.add(out);
             }

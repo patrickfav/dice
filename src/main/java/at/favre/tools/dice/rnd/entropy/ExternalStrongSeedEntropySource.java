@@ -16,11 +16,10 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.util.ByteUtils;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -43,7 +42,7 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
     }
 
     private void regenerateInternalSeed(byte[] seed) {
-        internalSeed = HKDF.fromHmacSha512().extract(SALT, ByteUtils.concatAll(seed, ByteBuffer.allocate(Integer.BYTES).putInt(counter++).array()));
+        internalSeed = HKDF.fromHmacSha512().extract(SALT, Bytes.from(seed).append(counter++).array());
 
     }
 
@@ -57,6 +56,6 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
 
     @Override
     public String getInformation() {
-        return "External Seed Entropy Source (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
+        return "External Seed Entropy Source (" + Bytes.from(generateEntropy(2)).encodeHex(true) + ")";
     }
 }

@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in kotlin syntax byte array (e.g. <code>byteArrayOf(0x3A,...)</code>)
@@ -26,7 +26,7 @@ public class KotlinByteArrayEncoder extends AProgrammingLanguagesEncoder {
     public String encode(byte[] array) {
         return encodeInternal(array, "byteArrayOf(", ")", ",", b -> {
             StringBuilder sb = new StringBuilder();
-            sb.append("0x").append(ByteUtils.byteToHex(b));
+            sb.append("0x").append(Bytes.from(b).encodeHex(true));
             if ((b & 0xFF) >= 127) {
                 sb.append(".toByte()");
             }

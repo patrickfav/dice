@@ -16,6 +16,7 @@
 
 package at.favre.tools.dice.ui;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderFormat;
 import at.favre.tools.dice.rnd.DeterministicRandomBitGenerator;
@@ -181,7 +182,7 @@ public final class ColumnRenderer {
                 byte[] rnd = drbg.nextBytes(length);
 
                 if (crc32) {
-                    rnd = ByteUtils.appendCrc32(rnd);
+                    rnd = Bytes.wrap(rnd).transform(new ByteUtils.Crc32AppenderTransformer()).array();
                 }
 
                 String randomEncodedString = padding ? encoder.encodePadded(rnd) : encoder.encode(rnd);

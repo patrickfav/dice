@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in c# syntax byte array (e.g. <code>new byte[]{0x3A,...}</code>)
@@ -24,7 +24,7 @@ import at.favre.tools.dice.util.ByteUtils;
 public class CSharpEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "new byte[]{", "};", ",", b -> "0x" + ByteUtils.byteToHex(b));
+        return encodeInternal(array, "new byte[]{", "};", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override

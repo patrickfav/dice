@@ -1,7 +1,7 @@
 package at.favre.tools.dice.service.hotbits;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.service.randomorg.RandomOrgServiceHandler;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
@@ -25,7 +25,7 @@ public class HotbitsServiceHandlerTest {
         } else {
             assertNotNull(response.seed);
             assertNull(response.response);
-            System.out.println(ByteUtils.bytesToHex(response.seed));
+            System.out.println(Bytes.from(response.seed).encodeHex());
             assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BYTE);
         }
     }

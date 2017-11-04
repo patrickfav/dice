@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -12,12 +12,11 @@ public class StringEncodingTest {
     public void testStringEncoding() {
         for (int x = 0; x < 5; x++) {
             for (int i = 0; i < 32; i++) {
-                byte[] testArray = ByteUtils.unsecureRandomBytes(i);
-                String hex = ByteUtils.bytesToHex(testArray);
-
+                byte[] testArray = Bytes.random(i).array();
+                String hex = Bytes.from(testArray).encodeHex(true);
                 String encoded = new String(testArray, StandardCharsets.ISO_8859_1);
                 System.out.println(encoded);
-                String hexStringEncoded = ByteUtils.bytesToHex(encoded.getBytes(StandardCharsets.ISO_8859_1));
+                String hexStringEncoded = Bytes.from(encoded, StandardCharsets.ISO_8859_1).encodeHex(true);
 
                 System.out.println(hex);
                 System.out.println(hexStringEncoded);

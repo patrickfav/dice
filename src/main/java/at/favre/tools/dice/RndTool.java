@@ -16,6 +16,7 @@
 
 package at.favre.tools.dice;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.rnd.*;
@@ -28,8 +29,6 @@ import at.favre.tools.dice.ui.AppException;
 import at.favre.tools.dice.ui.Arg;
 import at.favre.tools.dice.ui.CLIParser;
 import at.favre.tools.dice.ui.ColumnRenderer;
-import at.favre.tools.dice.util.ByteUtils;
-import at.favre.tools.dice.util.Entropy;
 import at.favre.tools.dice.util.MiscUtil;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
@@ -223,9 +222,9 @@ public final class RndTool {
 
     private static String getOptionalEntropyWarning(byte[] seed) {
         StringBuilder sb = new StringBuilder();
-        double entropy = new Entropy<>(ByteUtils.toList(seed)).entropy();
+        double entropy = Bytes.wrap(seed).entropy();
         if (entropy < 3) {
-            sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", new Entropy<>(ByteUtils.toList(seed)).entropy())).append(")");
+            sb.append(" (WARN: low entropy of ").append(String.format(Locale.US, "%.2f", Bytes.wrap(seed).entropy())).append(")");
         }
         return sb.toString();
     }

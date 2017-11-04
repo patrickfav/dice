@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in java syntax byte array (e.g. <code>new byte[]{0x3A,...}</code>)
@@ -29,7 +29,7 @@ public class JavaByteArrayEncoder extends AProgrammingLanguagesEncoder {
             if ((b & 0xFF) >= 127) {
                 sb.append("(byte) ");
             }
-            sb.append("0x").append(ByteUtils.byteToHex(b));
+            sb.append("0x").append(Bytes.from(b).encodeHex(true));
             return sb.toString();
         });
     }

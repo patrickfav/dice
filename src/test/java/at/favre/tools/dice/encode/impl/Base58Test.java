@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode.impl;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class Base58Test {
 
     private void testEncode(Base58 base58) throws Exception {
         for (int i = 8; i < 64; i += 8) {
-            byte[] randomBytes = ByteUtils.unsecureRandomBytes(i);
+            byte[] randomBytes = Bytes.random(i).array();
             String encoded = base58.encode(randomBytes);
             System.out.println(encoded);
             assertNotNull(encoded);

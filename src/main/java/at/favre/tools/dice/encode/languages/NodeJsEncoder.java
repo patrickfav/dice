@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in node js syntax byte array (e.g. <code>new Buffer([0x4, 0xFF, 0x01, 0x20, 0x0]);</code>)
@@ -24,7 +24,7 @@ import at.favre.tools.dice.util.ByteUtils;
 public class NodeJsEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "new Buffer([", "]);", ",", b -> "0x" + ByteUtils.byteToHex(b));
+        return encodeInternal(array, "new Buffer([", "]);", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override

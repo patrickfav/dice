@@ -1,6 +1,6 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,10 +21,10 @@ public abstract class AEncoderTest {
 
     @Before
     public void setUp() throws Exception {
-        randomBytes8 = ByteUtils.unsecureRandomBytes(8);
-        randomBytes16 = ByteUtils.unsecureRandomBytes(16);
-        randomBytes24 = ByteUtils.unsecureRandomBytes(24);
-        randomBytes32 = ByteUtils.unsecureRandomBytes(32);
+        randomBytes8 = Bytes.random(8).array();
+        randomBytes16 = Bytes.random(16).array();
+        randomBytes24 = Bytes.random(24).array();
+        randomBytes32 = Bytes.random(32).array();
         encoder = createInstance();
         System.out.println("\n" + Arrays.toString(encoder.names()));
     }

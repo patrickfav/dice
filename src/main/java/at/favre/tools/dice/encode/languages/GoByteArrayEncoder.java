@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in go syntax byte array (e.g. <code>[...]byte = {0, 21,...}</code>)
@@ -24,7 +24,7 @@ import at.favre.tools.dice.util.ByteUtils;
 public class GoByteArrayEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "[...]byte = {", "}", ",", (byte b) -> "0x" + ByteUtils.byteToHex(b));
+        return encodeInternal(array, "[...]byte = {", "}", ",", (byte b) -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override

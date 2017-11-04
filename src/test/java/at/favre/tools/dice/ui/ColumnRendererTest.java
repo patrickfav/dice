@@ -1,12 +1,12 @@
 package at.favre.tools.dice.ui;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.DrbgMock;
 import at.favre.tools.dice.encode.DefaultEncoderFormat;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderFormat;
 import at.favre.tools.dice.encode.EncoderHandler;
 import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -111,7 +111,7 @@ public class ColumnRendererTest {
     private List<String> generateRnd(Encoder encoder, int length, int count) {
         List<String> out = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            out.add(encoder.encode(ByteUtils.unsecureRandomBytes(length)));
+            out.add(encoder.encode(Bytes.random(length).array()));
         }
         return out;
     }

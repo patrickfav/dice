@@ -1,7 +1,7 @@
 package at.favre.tools.dice.service.anuquantum;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.service.ServiceHandler;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
@@ -25,7 +25,7 @@ public class AnuQuantumServiceHandlerTest {
         } else {
             assertNotNull(response.seed);
             assertNotNull(response.response);
-            System.out.println(ByteUtils.bytesToHex(response.seed));
+            System.out.println(Bytes.from(response.seed).encodeHex());
             assertTrue(response.seed.length == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
             assertTrue(response.response.success);
             assertNotEquals(0, response.response.hashCode());

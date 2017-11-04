@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in c syntax byte array (e.g. <code>{ 0x00, 0x11, 0x22 };</code>)
@@ -24,7 +24,7 @@ import at.favre.tools.dice.util.ByteUtils;
 public class CEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "{", "};", ",", b -> "0x" + ByteUtils.byteToHex(b));
+        return encodeInternal(array, "{", "};", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override

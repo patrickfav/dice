@@ -16,8 +16,8 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.rnd.EntropyPool;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class HKDFEntropyPoolTest {
             assertFalse(pastSeeds.contains(seed));
             pastSeeds.add(seed);
 
-            System.out.println(ByteUtils.bytesToHex(seed));
+            System.out.println(Bytes.from(seed).encodeHex());
         }
     }
 }

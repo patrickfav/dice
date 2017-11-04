@@ -16,9 +16,9 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.util.ByteUtils;
 
 import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
@@ -56,6 +56,6 @@ public final class NonceEntropySource implements ExpandableEntropySource {
 
     @Override
     public String getInformation() {
-        return "Nonce Entropy (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
+        return "Nonce Entropy (" + Bytes.from(generateEntropy(2)).encodeHex(true) + ")";
     }
 }

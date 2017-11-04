@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.languages;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 
 /**
  * Encodes in Perl syntax byte array (e.g. <code>$a2_bytes = pack 0xAA, 0x31, 0x3;</code>)
@@ -24,7 +24,7 @@ import at.favre.tools.dice.util.ByteUtils;
 public class PerlEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "pack ", ";", ",", b -> "0x" + ByteUtils.byteToHex(b));
+        return encodeInternal(array, "pack ", ";", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override

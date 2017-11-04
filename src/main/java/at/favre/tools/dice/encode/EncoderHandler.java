@@ -16,12 +16,12 @@
 
 package at.favre.tools.dice.encode;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.byteencoder.*;
 import at.favre.tools.dice.encode.imgencoder.HexAsciiImageEncoder;
 import at.favre.tools.dice.encode.languages.*;
 import at.favre.tools.dice.encode.textencoder.RawByteEncoder;
 import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
-import at.favre.tools.dice.util.ByteUtils;
 
 import java.util.*;
 
@@ -57,7 +57,7 @@ public final class EncoderHandler {
             new Utf8Encoder()
     ));
 
-    private final byte[] exampleBytes = ByteUtils.unsecureRandomBytes(7);
+    private final byte[] exampleBytes = Bytes.random(7).array();
 
     public List<Encoder> load() {
         Set<String> modes = new HashSet<>();

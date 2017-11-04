@@ -16,10 +16,10 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.lib.crypto.HKDF;
 import at.favre.tools.dice.RndTool;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.util.ByteUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -204,6 +204,6 @@ public final class PersonalizationSource implements ExpandableEntropySource {
 
     @Override
     public String getInformation() {
-        return "Personalization Source (" + ByteUtils.bytesToHex(generateEntropy(2)) + ")";
+        return "Personalization Source (" + Bytes.from(generateEntropy(2)).encodeHex(true) + ")";
     }
 }

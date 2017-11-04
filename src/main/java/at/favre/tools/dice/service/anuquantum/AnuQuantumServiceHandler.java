@@ -16,8 +16,8 @@
 
 package at.favre.tools.dice.service.anuquantum;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.service.AServiceHandler;
-import at.favre.tools.dice.util.ByteUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -57,7 +57,7 @@ public final class AnuQuantumServiceHandler extends AServiceHandler {
         try {
             Response<AnuQuantumResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
-                byte[] rawResponse = ByteUtils.hexToBytes(response.body().data.get(0));
+                byte[] rawResponse = Bytes.parseHex(response.body().data.get(0)).array();
                 return new Result<>(getName(), rawResponse, response.body(), System.currentTimeMillis() - startTime);
             }
         } catch (UnknownHostException e) {

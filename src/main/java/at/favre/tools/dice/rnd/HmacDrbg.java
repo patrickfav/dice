@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.rnd;
 
-import at.favre.tools.dice.util.ByteUtils;
+import at.favre.lib.bytes.Bytes;
 import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Mac;
@@ -87,10 +87,10 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // 1. seed_material = entropy_input + nonce + personalization_string
         // Note: We are using the 8.6.7 interpretation, where the entropy_input and
         // nonce are acquired at the same time from the same source.
-        return ByteUtils.concatAll(
+        return Bytes.from(
                 paramter.entropySource.generateEntropy(getSecurityStrengthBytes()),
                 paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2),
-                paramter.personalizationString == null ? new byte[0] : paramter.personalizationString);
+                paramter.personalizationString == null ? new byte[0] : paramter.personalizationString).array();
     }
 
     /**
@@ -107,7 +107,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     private void hmacDrbgUpdate(byte[] providedData) {
         // 1. K = HMAC(K, V || 0x00 || provided_data)
-        initHmac(hmac.doFinal(ByteUtils.concatAll(value, BYTE_ARRAY_0, emptyIfNull(providedData))));
+        initHmac(hmac.doFinal(Bytes.from(value, BYTE_ARRAY_0, emptyIfNull(providedData)).array()));
         // 2. V = HMAC(K, V);
         value = hmac.doFinal(value);
         // 3. If (provided_data = Null), then return K and V.
@@ -115,7 +115,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
             return;
         }
         // 4. K = HMAC (K, V || 0x01 || provided_data).
-        initHmac(hmac.doFinal(ByteUtils.concatAll(value, BYTE_ARRAY_1, providedData)));
+        initHmac(hmac.doFinal(Bytes.from(value, BYTE_ARRAY_1, providedData).array()));
         // 5. V = HMAC (K, V).
         value = hmac.doFinal(value);
     }
@@ -143,7 +143,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     private void hmacDrbgReseed(byte[] entropyInput, byte[] nonce, byte[] additionalData) {
         //1. seed_material = entropy_input || additional_input.
-        byte[] seedMaterial = ByteUtils.concatAll(entropyInput, nonce, emptyIfNull(additionalData));
+        byte[] seedMaterial = Bytes.from(entropyInput, nonce, emptyIfNull(additionalData)).array();
         //2. (Key, V) = HMAC_DRBG_Update (seed_material, Key, V)
         hmacDrbgUpdate(seedMaterial);
         //3. reseed_counter = 1.

@@ -16,8 +16,8 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -44,7 +44,7 @@ public abstract class AEntropySourceTest {
             assertFalse(pastSeeds.contains(seed));
             pastSeeds.add(seed);
 
-            System.out.println(ByteUtils.bytesToHex(seed));
+            System.out.println(Bytes.from(seed).encodeHex());
         }
     }
 }

@@ -1,7 +1,7 @@
 package at.favre.tools.dice.service.randomorg;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.service.randomorg.model.RandomOrgBlobResponse;
-import at.favre.tools.dice.util.ByteUtils;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
@@ -28,7 +28,7 @@ public class RandomOrgServiceHandlerTest {
         } else {
             assertNotNull(response.seed);
             assertNotNull(response.response);
-            System.out.println(ByteUtils.bytesToHex(response.seed));
+            System.out.println(Bytes.from(response.seed).encodeHex());
             System.out.println(response.response.toString());
 
             assertFalse(response.response.equals(1));
