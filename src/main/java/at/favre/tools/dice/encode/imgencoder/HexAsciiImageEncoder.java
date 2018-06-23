@@ -46,4 +46,9 @@ public class HexAsciiImageEncoder extends AEncoder {
         }
         return out;
     }
+
+    @Override
+    public String getDescription() {
+        return "Creates simple ascii style images containing some symbols. (experimental)";
+    }
 }

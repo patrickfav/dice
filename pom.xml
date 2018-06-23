@@ -220,17 +220,14 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <minVersion>1.7.0</minVersion>
-                                <opts>
-                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
-                                </opts>
+                                <minVersion>1.8.0</minVersion>
                             </jre>
                             <versionInfo>
                                 <fileVersion>0.0.0.1</fileVersion>
                                 <txtFileVersion>0.0.0.1</txtFileVersion>
-                                <fileDescription>A tool that enables advanced features through adb
+                                <fileDescription>Creates cryptographic random numbers in various encodings
                                 </fileDescription>
-                                <copyright>Patrick Favre-Bulle, 2016</copyright>
+                                <copyright>Patrick Favre-Bulle, 2017</copyright>
                                 <productVersion>${project.version}.0</productVersion>
                                 <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>Dice Random Generator</productName>
