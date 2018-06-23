@@ -3,6 +3,9 @@
 ## v1.4.0
 * update a lot of internal dependencies
 * add check for entropy with counter to fail execution if they overflow
+* add image encoder
+* improve column rendering (cli out)
+* add bc threaded seed generator
 
 ## v1.3.0
 * support max output of 10Gib (instead of 1 Gib)
