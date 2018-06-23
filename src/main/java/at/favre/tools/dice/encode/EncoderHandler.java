@@ -46,6 +46,7 @@ public final class EncoderHandler {
             new GoByteArrayEncoder(),
             new KotlinByteArrayEncoder(),
             new NodeJsEncoder(),
+            new JsEncoder(),
             new PerlEncoder(),
             new PhpEncoder(),
             new Python3Encoder(),

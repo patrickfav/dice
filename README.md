@@ -83,7 +83,7 @@ Successive calls will append data, not overwrite it.
     -d,--debug               Prints additional info for debugging.
     -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
                              binary, octal, dec, base16, BASE16, base26, base32, base36, base58, base64, base64-url,
-                             base85, c, c#, java, go, kotlin, node, perl, php, python3, ruby, rust, swift, raw, utf8
+                             base85, c, c#, java, go, kotlin, node, js, perl, php, python3, ruby, rust, swift, raw, utf8
     -f,--file <path>         Prints the random data to given file instead of the command line. Will create the file if
                              it does not exist or append the data if it does.
     -h,--help                Shows this page.
