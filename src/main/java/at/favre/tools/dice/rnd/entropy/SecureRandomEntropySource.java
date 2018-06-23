@@ -40,7 +40,7 @@ public class SecureRandomEntropySource implements ExpandableEntropySource {
              */
             secureRandom.nextBytes(new byte[4]);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("could not get strong secure random instace", e);
+            throw new IllegalStateException("could not get strong secure random instance", e);
         }
     }
 

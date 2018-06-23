@@ -31,7 +31,7 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
     private final static byte[] SALT = new byte[]{0x29, 0x05, 0x27, 0x2B, (byte) 0xD7, 0x56, (byte) 0x84, 0x27, (byte) 0xD6, (byte) 0xE1, 0x62, 0x4B, (byte) 0xBD, (byte) 0xC9, 0x62, (byte) 0x80};
 
     private byte[] internalSeed;
-    private int counter = 0;
+    private long counter = Long.MIN_VALUE;
 
     public ExternalStrongSeedEntropySource(String seed) {
         this(seed.getBytes(StandardCharsets.UTF_8));
@@ -42,6 +42,10 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
     }
 
     private void regenerateInternalSeed(byte[] seed) {
+        if (counter >= Long.MAX_VALUE) {
+            throw new IllegalStateException("counter reached max value (2^64)");
+        }
+
         internalSeed = HKDF.fromHmacSha512().extract(SALT, Bytes.from(seed).append(counter++).array());
 
     }

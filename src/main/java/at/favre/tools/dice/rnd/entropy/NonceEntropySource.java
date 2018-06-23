@@ -42,6 +42,10 @@ public final class NonceEntropySource implements ExpandableEntropySource {
 
     @Override
     public byte[] generateEntropy(int lengthByte) {
+        if (sequenceCounter >= Long.MAX_VALUE) {
+            throw new IllegalStateException("sequence counter reached max value (2^64)");
+        }
+
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES * 5);
         buffer.putLong(++sequenceCounter);
         buffer.putLong(System.nanoTime());
