@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
-@Ignore
+@Ignore("simple test for the best encoding while compressed - only run on demand")
 public class CompressionTest {
 
     @Test
