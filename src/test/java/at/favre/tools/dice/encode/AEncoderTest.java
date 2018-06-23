@@ -20,7 +20,7 @@ public abstract class AEncoderTest {
     private Encoder encoder;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         randomBytes8 = Bytes.random(8).array();
         randomBytes16 = Bytes.random(16).array();
         randomBytes24 = Bytes.random(24).array();
@@ -30,7 +30,7 @@ public abstract class AEncoderTest {
     }
 
     @Test
-    public void encode() throws Exception {
+    public void encode() {
         testByteArray(new byte[]{0});
         testByteArray(new byte[]{1});
         testByteArray(new byte[]{1, 2});
