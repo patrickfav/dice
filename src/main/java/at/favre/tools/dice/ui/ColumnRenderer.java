@@ -17,10 +17,10 @@
 package at.favre.tools.dice.ui;
 
 import at.favre.lib.bytes.Bytes;
+import at.favre.lib.bytes.BytesTransformers;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderFormat;
 import at.favre.tools.dice.rnd.DeterministicRandomBitGenerator;
-import at.favre.tools.dice.util.ByteUtils;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 
@@ -182,7 +182,7 @@ public final class ColumnRenderer {
                 byte[] rnd = drbg.nextBytes(length);
 
                 if (crc32) {
-                    rnd = Bytes.wrap(rnd).transform(new ByteUtils.Crc32AppenderTransformer()).array();
+                    rnd = Bytes.wrap(rnd).transform(BytesTransformers.checksumAppendCrc32()).array();
                 }
 
                 String randomEncodedString = padding ? encoder.encodePadded(rnd) : encoder.encode(rnd);
