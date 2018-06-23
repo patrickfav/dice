@@ -42,5 +42,10 @@ public final class ByteUtils {
             crc32.update(original);
             return Bytes.from(Bytes.wrap(original), Bytes.from(crc32.getValue()).copy(3, 4)).array();
         }
+
+        @Override
+        public boolean supportInPlaceTransformation() {
+            return false;
+        }
     }
 }
