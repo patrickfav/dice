@@ -16,7 +16,7 @@ A cryptographically secure pseudo-random number generator [CLI](https://en.wikip
  * Optional secure seeding of random generator with [random.org](https://www.random.org/), [Hotbits](https://www.fourmilab.ch/hotbits/) and [ANU Quantum Random Numbers Server](https://qrng.anu.edu.au/)
  * Generates code for random byte arrays for many programming languages (java, c, c#, kotlin, phyton, swift, go,...)
  * [NIST SP800-90Ar1 HMAC_DRBG](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf) tested with official [test vectors](https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program)
- * Output to command line or file with automatic column formatting with upper limit of 10GiB+ of random data
+ * Output to command line or file with automatic column formatting with upper limit of 10GiB+ of random data (~20MiB/s)
  * Entropy warnings if seed is weak
  * Additional output configuration like "[www-form-urlencoding](https://en.wikipedia.org/wiki/Percent-encoding)", padding of output and appended [crc32 checksum](https://en.wikipedia.org/wiki/Cyclic_redundancy_check)
 
@@ -127,6 +127,7 @@ Successive calls will append data, not overwrite it.
 | go           | `[...]byte = {0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11}` |
 | kotlin       | `byteArrayOf(0xD0.toByte(), 0x3A, 0x4A, 0xEE.toByte(), 0x64, 0x11)` |
 | node         | `new Buffer([0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]);` |
+| javascript   | `Uint8Array.from([0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]);` |
 | perl         | `pack 0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11;` |
 | php          | `array(208, 58, 74, 238, 100, 17);` |
 | python3      | `bytes([0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11])` |

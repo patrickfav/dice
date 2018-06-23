@@ -4,6 +4,7 @@
 * update a lot of internal dependencies
 * add check for entropy with counter to fail execution if they overflow
 * add image encoder
+* add javascript encoder in addition to node (uses Uint8Array instead of Buffer)
 * improve column rendering (cli out)
 * add bc threaded seed generator
 

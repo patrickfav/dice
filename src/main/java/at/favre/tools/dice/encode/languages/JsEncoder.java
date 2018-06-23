@@ -19,21 +19,21 @@ package at.favre.tools.dice.encode.languages;
 import at.favre.lib.bytes.Bytes;
 
 /**
- * Encodes in node js syntax byte array (e.g. <code>new Buffer([0x4, 0xFF, 0x01, 0x20, 0x0]);</code>)
+ * Encodes in node js syntax byte array (e.g. <code>Uint8Array.from([0xD0, 0x3A, 0x4A, 0xEE, 0x64, 0x11]);</code>)
  */
-public class NodeJsEncoder extends AProgrammingLanguagesEncoder {
+public class JsEncoder extends AProgrammingLanguagesEncoder {
     @Override
     public String encode(byte[] array) {
-        return encodeInternal(array, "new Buffer([", "]);", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
+        return encodeInternal(array, "Uint8Array.from([", "]);", ",", b -> "0x" + Bytes.from(b).encodeHex(true));
     }
 
     @Override
     public String[] names() {
-        return new String[]{"node", "nodejs"};
+        return new String[]{"js", "javascript"};
     }
 
     @Override
     String getProgrammingLanguageName() {
-        return "Node";
+        return "Javascript";
     }
 }
