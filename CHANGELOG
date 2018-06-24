@@ -1,6 +1,10 @@
 # Releases
 
 ## v1.4.0
+* fix exe launcher starting on java9/10
+* add js encoder to list of supported encoders
+
+## v1.4.0
 * update a lot of internal dependencies
 * add check for entropy with counter to fail execution if they overflow
 * add image encoder
