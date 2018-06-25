@@ -35,7 +35,7 @@ public class HexAsciiImageEncoder extends AEncoder {
     }
 
     private static final char[] IMG_CHARS =
-            {'`', '-', '.', ':', ';', '-', '=', '+', '~', '?', '(', '}', '*', '#', '%', '@'};
+            {'`', '´', '.', ':', ';', '-', '=', '+', '~', '?', '(', '}', '*', '_', '%', '&'};
 
     private static char[] encodeGrayscale(final byte[] data) {
         final int l = data.length;
