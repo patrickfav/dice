@@ -28,7 +28,7 @@ public abstract class Arg {
     public static final long DEFAULT_COUNT = 32;
     public static final String DEFAULT_ENCODING = "hex";
 
-    public static Arg create(PrintStream cmdLinePrintStream, String encoding, String seed, int length, Long count, boolean offline, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
+    public static Arg create(PrintStream cmdLinePrintStream, String encoding, String seed, int length, Long count, boolean offline, boolean enableAnuQuantum, boolean urlencode, boolean debug, boolean padding, boolean robot, boolean crc32, File outFile) {
         return builder()
                 .cmdLinePrintStream(cmdLinePrintStream)
                 .encoding(encoding)
@@ -36,6 +36,7 @@ public abstract class Arg {
                 .length(length)
                 .count(count)
                 .offline(offline)
+                .enableAnuQuantum(enableAnuQuantum)
                 .urlencode(urlencode)
                 .debug(debug)
                 .padding(padding)
@@ -61,6 +62,8 @@ public abstract class Arg {
 
     public abstract boolean offline();
 
+    public abstract boolean enableAnuQuantum();
+
     public abstract boolean urlencode();
 
     public abstract boolean padding();
@@ -81,6 +84,7 @@ public abstract class Arg {
                 .length(DEFAULT_LENGTH)
                 .debug(false)
                 .offline(false)
+                .enableAnuQuantum(false)
                 .urlencode(false)
                 .padding(false)
                 .robot(false)
@@ -103,6 +107,8 @@ public abstract class Arg {
         public abstract Builder debug(boolean value);
 
         public abstract Builder offline(boolean value);
+
+        public abstract Builder enableAnuQuantum(boolean value);
 
         public abstract Builder urlencode(boolean value);
 

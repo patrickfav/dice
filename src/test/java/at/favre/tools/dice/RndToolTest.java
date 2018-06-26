@@ -22,22 +22,22 @@ public class RndToolTest {
     @Test
     public void smokeTestRndTool() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(createPrintStream(baos), "java", null, 12, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "java", null, 12, 10L, true, false, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(createPrintStream(baos), "base36", null, 4, null, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base36", null, 4, null, true, false, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(createPrintStream(baos), "base64", "verybaadseed", 87, null, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base64", "verybaadseed", 87, null, true, false, false, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(createPrintStream(baos), "base85", null, 15, null, true, true, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base85", null, 15, null, true, false, true, false, false, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(createPrintStream(baos), "base32", null, 7, null, true, false, false, true, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "base32", null, 7, null, true, false, false, false, true, false, false, null));
         checkOutput(baos);
 
-        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 10, null, true, false, false, true, false, true, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 10, null, true, false, false, false, true, false, true, null));
         checkOutput(baos);
 
     }
@@ -49,35 +49,35 @@ public class RndToolTest {
 
     @Test(expected = AppException.class)
     public void zeroLength() throws Exception {
-        RndTool.execute(Arg.create(System.out, "hex", null, 0, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(System.out, "hex", null, 0, 10L, true, false, false, false, false, false, false, null));
     }
 
     @Test(expected = AppException.class)
     public void zeroLengthWithDebug() throws Exception {
-        RndTool.execute(Arg.create(System.out, "hex", null, 0, 10L, true, false, true, false, false, false, null));
+        RndTool.execute(Arg.create(System.out, "hex", null, 0, 10L, true, false, false, true, false, false, false, null));
     }
 
     @Test(expected = AppException.class)
     public void minusLength() throws Exception {
-        RndTool.execute(Arg.create(System.out, "hex", null, -1, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(System.out, "hex", null, -1, 10L, true, false, false, false, false, false, false, null));
     }
 
     @Test(expected = AppException.class, timeout = 500)
     public void tooManyBytes() throws Exception {
-        RndTool.execute(Arg.create(System.out, "hex", null, 1, RndTool.MAX_BYTE_PER_CALL + 1, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(System.out, "hex", null, 1, RndTool.MAX_BYTE_PER_CALL + 1, true, false, false, false, false, false, false, null));
     }
 
     @Test(timeout = 20 * 1000)
     public void onlineTest() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, false, false, true, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, false, false, false, true, false, false, false, null));
         checkOutput(baos);
     }
 
     @Test
     public void debugTest() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, true, false, false, false, false, false, null));
+        RndTool.execute(Arg.create(createPrintStream(baos), "hex", null, 1, 10L, true, false, false, false, false, false, false, null));
         checkOutput(baos);
     }
 
@@ -97,7 +97,7 @@ public class RndToolTest {
 
         int length = 100;
         long count = 1024L;
-        RndTool.execute(Arg.create(System.out, "raw", null, length, count, true, false, true, false, false, false, tempFile));
+        RndTool.execute(Arg.create(System.out, "raw", null, length, count, true, false, false, true, false, false, false, tempFile));
 
         assertEquals(length * count, tempFile.length());
     }

@@ -118,7 +118,10 @@ public final class RndTool {
                 final List<ServiceHandler<?>> handlers = new ArrayList<>();
                 handlers.add(new RandomOrgServiceHandler(arguments.debug()));
                 handlers.add(new HotbitsServiceHandler(arguments.debug()));
-                handlers.add(new AnuQuantumServiceHandler(arguments.debug()));
+
+                if (arguments.enableAnuQuantum()) {
+                    handlers.add(new AnuQuantumServiceHandler(arguments.debug()));
+                }
 
                 fetch(handlers, arguments, entropyPool, encoder, start);
             } else {
@@ -157,7 +160,6 @@ public final class RndTool {
             System.exit(501);
         }
     }
-
 
     private static void fetch(final List<ServiceHandler<?>> handlers, final Arg arguments, final EntropyPool entropyPool,
                               final Encoder encoder, final long start) {

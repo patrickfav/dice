@@ -77,25 +77,29 @@ Successive calls will append data, not overwrite it.
 
 ## Command Line Interface
 
-    -c,--count <number>      How many randoms should be generated. Automatically chosen if this argument is omitted.
-       --crc32               If this flag is set, 4 bytes of CRC32 checksum will be appended to every random value. If
-                             you need to check the integrity of the data.
-    -d,--debug               Prints additional info for debugging.
-    -e,--encoding <string>   Output byte-to-text encoding. Available encodings include:
-                             binary, octal, dec, base16, BASE16, base26, base32, base36, base58, base64, base64-url,
-                             base85, c, c#, java, go, kotlin, node, js, perl, php, python3, ruby, rust, swift, raw, utf8
-    -f,--file <path>         Prints the random data to given file instead of the command line. Will create the file if
-                             it does not exist or append the data if it does.
-    -h,--help                Shows this page.
-    -o,--offline             Skips request to Random.org to seed random generator (use when offline).
-    -p,--padding             If this flag is set, byte-to-text output will be padded to full byte if needed.
-    -r,--robot               If this flag is set, output will be more friendly for scripting (ie. no verbose text, only
-                             the randoms 1 per line)
-    -s,--seed <string>       Uses the utf-8 byte representation of given parameter to seed the internal random
-                             generator. Warns if entropy is low.
-    -u,--urlencode           Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the
-                             output strings
-    -v,--version             Prints application version.
+       --anuquantum             Enable external, supposed true random generator ANU Quantum; note this service is known
+                                to be slow (only when online).
+    -c,--count <number>         How many randoms should be generated. Automatically chosen if this argument is omitted.
+       --crc32                  If this flag is set, 4 bytes of CRC32 checksum will be appended to every random value.
+                                If you need to check the integrity of the data.
+    -d,--debug                  Prints additional info for debugging.
+    -e,--encoding <string>      Output byte-to-text encoding. Available encodings include:
+                                binary, octal, dec, base16, BASE16, base26, base32, base36, base58, base64, base64-url,
+                                base85, c, c#, java, go, kotlin, node, js, perl, php, python3, ruby, rust, swift, img,
+                                raw, utf8
+    -f,--file <path>            Prints the random data to given file instead of the command line. Will create the file
+                                if it does not exist or append the data if it does.
+    -h,--help                   Shows this page.
+    -o,--offline                Skips request to external random generators (random.org & hotbits) for seeding (use when
+                                offline).
+    -p,--padding                If this flag is set, byte-to-text output will be padded to full byte if needed.
+    -r,--robot                  If this flag is set, output will be more friendly for scripting (ie. no verbose text,
+                                only the randoms 1 per line)
+    -s,--seed <string|number>   Uses either the 64-bit integer interpretation or the utf-8 byte representation of given
+                                parameter to seed the internal random generator. Warns if entropy is low.
+    -u,--urlencode              Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on
+                                the output strings
+    -v,--version                Prints application version.
 
 
 ## Supported Encodings
