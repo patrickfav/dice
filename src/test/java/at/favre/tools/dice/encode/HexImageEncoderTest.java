@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.imgencoder.HexAsciiImageEncoder;
+import at.favre.tools.dice.encode.imgencoder.HexBlockImageEncoder;
 
 public class HexImageEncoderTest extends AEncoderTest {
     @Override
@@ -26,6 +26,6 @@ public class HexImageEncoderTest extends AEncoderTest {
 
     @Override
     Encoder createInstance() {
-        return new HexAsciiImageEncoder();
+        return new HexBlockImageEncoder();
     }
 }

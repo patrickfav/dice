@@ -141,6 +141,7 @@ Successive calls will append data, not overwrite it.
 | ------------- | ------------- | ------------- |
 | raw          | `Jýÿ¯í`            | Prints the raw byte array encoded in ISO_8859_1 which does not change the byte output. Most useful with file output. |
 | utf8         | `J�����`            | Prints the byte array interpreted as UTF-8 encoded text. Only for testing purpose. |
+| img          | `▙▝▚░▓▃`            | Prints a byte per character encoded in unicode block elements. |
 
 
 ## Digital Signatures

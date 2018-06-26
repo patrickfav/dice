@@ -18,7 +18,7 @@ package at.favre.tools.dice.encode;
 
 import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.byteencoder.*;
-import at.favre.tools.dice.encode.imgencoder.HexAsciiImageEncoder;
+import at.favre.tools.dice.encode.imgencoder.HexBlockImageEncoder;
 import at.favre.tools.dice.encode.languages.*;
 import at.favre.tools.dice.encode.textencoder.RawByteEncoder;
 import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
@@ -53,7 +53,7 @@ public final class EncoderHandler {
             new RubyEncoder(),
             new RustEncoder(),
             new SwiftEncoder(),
-            new HexAsciiImageEncoder(),
+            new HexBlockImageEncoder(),
             new RawByteEncoder(),
             new Utf8Encoder()
     ));

@@ -18,7 +18,12 @@ package at.favre.tools.dice.encode.imgencoder;
 
 import at.favre.tools.dice.encode.AEncoder;
 
-public class HexAsciiImageEncoder extends AEncoder {
+public class HexBlockImageEncoder extends AEncoder {
+    // All possible Blocks: {'▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '▉', '▊', '▋', '▌', '▍', '▎', '▏', '▐', '░', '▒', '▓', '▔', '▕', '▖', '▗', '▘', '▝', '▚', '▞', '▙', '▛', '▜', '▟'};
+
+    private static final Character[] IMG_CHARS =
+            {'▁', '▃', '▅', '▇', '▍', '▐', '░', '▒', '▓', '▖', '▘', '▝', '▚', '▙', '▛', '▜'};
+
     @Override
     public String encode(byte[] array) {
         return new String(encodeGrayscale(array));
@@ -31,11 +36,8 @@ public class HexAsciiImageEncoder extends AEncoder {
 
     @Override
     public String[] names() {
-        return new String[]{"img"};
+        return new String[]{"img", "block"};
     }
-
-    private static final char[] IMG_CHARS =
-            {'`', '´', '.', ':', ';', '-', '=', '+', '~', '?', '(', '}', '*', '_', '%', '&'};
 
     private static char[] encodeGrayscale(final byte[] data) {
         final int l = data.length;
@@ -49,6 +51,6 @@ public class HexAsciiImageEncoder extends AEncoder {
 
     @Override
     public String getDescription() {
-        return "Creates simple ascii style images containing some symbols. (experimental)";
+        return "Creates simple ascii block style images. (experimental)";
     }
 }
