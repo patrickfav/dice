@@ -1,3 +1,6 @@
+# To let the CI execute the maven wrapper, use this command and push the change:
+#    git update-index --chmod=+x mvnw
+
 sudo: required
 language: java
 install: true
@@ -18,10 +21,10 @@ before_script:
   - sudo apt-get install libc6:i386 libstdc++6:i386
 
 script:
-  - mvn clean install -X -Djarsigner.skip=false
+  - ./mvnw clean install -X -Djarsigner.skip=false
 
 after_success:
-  - mvn test jacoco:report coveralls:report
+  - ./mvnw test jacoco:report coveralls:report
 
 deploy:
   - provider: releases

@@ -3,6 +3,7 @@
 ##v1.5.0
 * enhance img encoder using block symbols
 * make anu quantum external rng optional (very slow)
+* switch to maven wrapper
 
 ## v1.4.1
 * fix exe launcher starting on java9/10
