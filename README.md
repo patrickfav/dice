@@ -4,7 +4,7 @@ A cryptographically secure pseudo-random number generator [CLI](https://en.wikip
 
  [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/dice.svg?branch=master)](https://travis-ci.org/patrickfav/dice)
-[![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/1de38f9649402c750053/maintainability)](https://codeclimate.com/github/patrickfav/dice/maintainability)
 
 <sup>* depending on the used [provider](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp)</sup>
 
