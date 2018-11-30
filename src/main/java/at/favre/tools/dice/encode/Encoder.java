@@ -42,7 +42,7 @@ public interface Encoder {
     /**
      * Description on how the output should be formatted (newlines, separators, etc.)
      *
-     * @return
+     * @return format
      */
     EncoderFormat getEncoderFormat();
 
