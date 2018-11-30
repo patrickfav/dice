@@ -16,8 +16,8 @@
 
 package at.favre.tools.dice.encode.byteencoder;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.ui.Arg;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * Encodes in to base16 (ie. hex) e.g. <code>6e33a8f4c9f69e91</code>
@@ -31,7 +31,7 @@ public abstract class Base16Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return String.valueOf(Hex.encodeHex(array, lowerCase));
+        return Bytes.wrap(array).encodeHex(!lowerCase);
     }
 
     @Override

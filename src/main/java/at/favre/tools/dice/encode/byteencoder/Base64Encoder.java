@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.encode.byteencoder;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
 
 /**
  * Encodes in to base64 e.g. <code>NUZDT6c7SOxz0YgRw3JGqc+BKnJM3fuH</code>
@@ -30,12 +30,14 @@ public class Base64Encoder extends AByteEncoder {
 
     @Override
     public String encode(byte[] array) {
-        return encodePadded(array).replace("=", "");
+        Base64.Encoder encoder = urlSafe ? Base64.getUrlEncoder() : Base64.getEncoder();
+        return encoder.withoutPadding().encodeToString(array);
     }
 
     @Override
     public String encodePadded(byte[] array) {
-        return new Base64(1, null, urlSafe).encodeAsString(array);
+        Base64.Encoder encoder = urlSafe ? Base64.getUrlEncoder() : Base64.getEncoder();
+        return encoder.encodeToString(array);
     }
 
     @Override
