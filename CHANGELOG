@@ -3,7 +3,9 @@
 ##v1.5.0
 * enhance img encoder using block symbols
 * make anu quantum external rng optional (very slow)
-* switch to maven wrapper
+* switch to maven wrapper (using maven 3.6.0)
+* fix Base85 encoder claiming it is url-safe
+* add checkstyle
 
 ## v1.4.1
 * fix exe launcher starting on java9/10
