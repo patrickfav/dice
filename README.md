@@ -228,7 +228,7 @@ an attacker might read the seed send over the network. There are 2
 measures against this:
 
 * The connections is encrypted with TLS (ie. HTTPS) and the random
-is singed by the creator which will be verified by a local pinned certificate (only random.org).
+is signed by the creator which will be verified by a local pinned certificate (only random.org).
 * The seed is only a part of the entropy source and the knowledge of it does not
 make it possible to guess the random bits. Therefore there is no sole trust in
 an external service. Every generation of random data will see seeding from both
@@ -248,7 +248,7 @@ _References:_
 
 ###### Hotbits
 
-[Hotbits](https://www.fourmilab.ch/hotbits/) is "genuine random numbers" service generating data
+[Hotbits](https://www.fourmilab.ch/hotbits/) is a "genuine random numbers" service generating data
  by timing successive [pairs of radioactive decays detected](https://www.fourmilab.ch/hotbits/how3.html) by a
 [Geiger-Müller tube](https://en.wikipedia.org/wiki/Geiger%E2%80%93M%C3%BCller_tube)
 interfaced to a computer. This service was created by [John Walker](https://en.wikipedia.org/wiki/John_Walker_(programmer)) in 1996.
