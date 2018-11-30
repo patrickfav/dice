@@ -47,7 +47,7 @@ public class RandomOrgServiceHandlerTest {
         assertNotNull(response.toString());
         assertNotEquals(0, response.hashCode());
         assertEquals(response, response);
-        assertNotEquals(new String("muh"), response);
+        assertNotEquals("muh", response);
     }
 
 }

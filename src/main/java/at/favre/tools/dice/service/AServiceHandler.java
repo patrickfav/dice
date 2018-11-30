@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AServiceHandler<T> implements ServiceHandler<T> {
-    private final static String USER_AGENT = "dice/" + MiscUtil.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
+    private static final String USER_AGENT = "dice/" + MiscUtil.jarVersion() + " (" + System.getProperty("os.name") + "; Java " + System.getProperty("java.version") + ") github.com/patrickfav/dice";
     protected final boolean debug;
 
     protected AServiceHandler(boolean debug) {

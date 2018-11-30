@@ -38,7 +38,7 @@ import java.nio.charset.StandardCharsets;
  * See https://www.random.org/
  */
 public final class RandomOrgServiceHandler extends AServiceHandler {
-    final static int ENTROPY_SEED_LENGTH_BIT = 192;
+    static final int ENTROPY_SEED_LENGTH_BIT = 192;
 
     public RandomOrgServiceHandler(boolean debug) {
         super(debug);

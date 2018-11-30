@@ -21,12 +21,12 @@ public class HotbitsServiceHandlerTest {
         }
 
         if (response.throwable != null && response.throwable instanceof UnknownHostException) {
-            System.out.printf(response.errorMsg);
+            System.out.print(response.errorMsg);
         } else {
             assertNotNull(response.seed);
             assertNull(response.response);
             System.out.println(Bytes.from(response.seed).encodeHex());
-            assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BYTE);
+            assertEquals(response.seed.length, ENTROPY_SEED_LENGTH_BYTE);
         }
     }
 }

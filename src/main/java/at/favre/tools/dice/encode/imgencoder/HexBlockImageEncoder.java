@@ -21,8 +21,7 @@ import at.favre.tools.dice.encode.AEncoder;
 public class HexBlockImageEncoder extends AEncoder {
     // All possible Blocks: {'▁', '▂', '▃', '▄', '▅', '▆', '▇', '█', '▉', '▊', '▋', '▌', '▍', '▎', '▏', '▐', '░', '▒', '▓', '▔', '▕', '▖', '▗', '▘', '▝', '▚', '▞', '▙', '▛', '▜', '▟'};
 
-    private static final Character[] IMG_CHARS =
-            {'▁', '▃', '▅', '▇', '▍', '▐', '░', '▒', '▓', '▖', '▘', '▝', '▚', '▙', '▛', '▜'};
+    private static final Character[] IMG_CHARS = {'▁', '▃', '▅', '▇', '▍', '▐', '░', '▒', '▓', '▖', '▘', '▝', '▚', '▙', '▛', '▜'};
 
     @Override
     public String encode(byte[] array) {

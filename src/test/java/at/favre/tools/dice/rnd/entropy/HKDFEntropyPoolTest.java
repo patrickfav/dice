@@ -45,7 +45,7 @@ public class HKDFEntropyPoolTest {
         Set<byte[]> pastSeeds = new HashSet<>();
         for (int i = 8; i < 64; i += 8) {
             byte[] seed = entropyPool.generateEntropy(i);
-            assertTrue(seed.length == i);
+            assertEquals(seed.length, i);
             assertFalse(pastSeeds.contains(seed));
             pastSeeds.add(seed);
 

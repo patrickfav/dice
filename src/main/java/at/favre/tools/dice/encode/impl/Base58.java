@@ -43,10 +43,10 @@ import java.util.Arrays;
  * number of leading zeros (which are otherwise lost during the mathematical operations on the
  * numbers), and finally represent the resulting base-58 digits as alphanumeric ASCII characters.
  */
-public class Base58 {
-    public static final char[] BITCOIN_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
-    public static final char[] RIPPLE_ALPHABET = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz".toCharArray();
-    public static final char[] FLICKR_ALPHABET = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ".toCharArray();
+public final class Base58 {
+    private static final char[] BITCOIN_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz".toCharArray();
+    private static final char[] RIPPLE_ALPHABET = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz".toCharArray();
+    private static final char[] FLICKR_ALPHABET = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ".toCharArray();
 
     public static Base58 BitcoinEncoder() {
         return new Base58(BITCOIN_ALPHABET);

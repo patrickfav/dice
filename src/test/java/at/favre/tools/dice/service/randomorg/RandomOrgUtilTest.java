@@ -42,5 +42,4 @@ public class RandomOrgUtilTest {
         assertFalse(Arrays.equals(plain, encrypted));
 
     }
-
 }

@@ -20,7 +20,7 @@ import com.github.fzakaria.ascii85.Ascii85;
 
 /**
  * Encodes in to ascii85 e.g. <code>9jqo^BlbD-BleB1DJ</code>, used by Adobe.
- *
+ * <p>
  * See https://github.com/fzakaria/ascii85
  */
 public class Base85Encoder extends AByteEncoder {

@@ -28,7 +28,7 @@ public class BCThreadedEntropySourceTest extends AEntropySourceTest {
     public void generateEntropy() throws Exception {
         BCThreadedEntropySource source = new BCThreadedEntropySource();
 
-        Thread.currentThread().sleep(25);
+        Thread.sleep(25);
 
         byte[] seed = source.generateEntropy(1024);
         byte[] seed1 = source.generateEntropy(1024);

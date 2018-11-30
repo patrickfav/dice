@@ -25,7 +25,7 @@ import java.util.Arrays;
  */
 public class Base2Encoder extends AByteEncoder {
 
-    private final static int GROUP_LENGTH = 8;
+    private static final int GROUP_LENGTH = 8;
 
     @Override
     public String encode(byte[] array) {

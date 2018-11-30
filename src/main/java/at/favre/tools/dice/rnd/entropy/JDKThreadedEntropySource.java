@@ -31,7 +31,9 @@ import java.security.PrivilegedAction;
  * environment provides good entropy.
  */
 public final class JDKThreadedEntropySource implements ExpandableEntropySource {
-    private final static byte[] SALT = new byte[]{0x75, (byte) 0xCC, 0x3A, 0x7B, 0x21, 0x6D, 0x08, (byte) 0xAD, (byte) 0xD9, (byte) 0xD7, (byte) 0xA3, 0x35, 0x1C, 0x56, 0x13, 0x2C, 0x44, 0x2E, 0x74, (byte) 0xB2, 0x14, 0x2C, 0x15, 0x39, 0x5A, (byte) 0xC6, (byte) 0xBA, 0x3C, (byte) 0xCF, 0x71, 0x19, 0x2B};
+    private static final byte[] SALT = new byte[]{0x75, (byte) 0xCC, 0x3A, 0x7B, 0x21, 0x6D, 0x08, (byte) 0xAD, (byte) 0xD9, (byte) 0xD7, (byte) 0xA3,
+            0x35, 0x1C, 0x56, 0x13, 0x2C, 0x44, 0x2E, 0x74, (byte) 0xB2, 0x14, 0x2C, 0x15, 0x39, 0x5A, (byte) 0xC6, (byte) 0xBA, 0x3C, (byte) 0xCF,
+            0x71, 0x19, 0x2B};
 
     private final ThreadedSeedGenerator threadedSeedGenerator;
 
@@ -101,21 +103,19 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
             start = end = 0;
 
             final ThreadGroup[] finalsg = new ThreadGroup[1];
-            Thread t = java.security.AccessController.doPrivileged
-                    ((PrivilegedAction<Thread>) () -> {
-                        ThreadGroup parent, group =
-                                Thread.currentThread().getThreadGroup();
-                        while ((parent = group.getParent()) != null)
-                            group = parent;
-                        finalsg[0] = new ThreadGroup
-                                (group, "Dice SeedGenerator ThreadGroup");
-                        Thread newT = new Thread(finalsg[0],
-                                ThreadedSeedGenerator.this,
-                                "Dice SeedGenerator Thread");
-                        newT.setPriority(Thread.MIN_PRIORITY);
-                        newT.setDaemon(true);
-                        return newT;
-                    });
+            Thread t = java.security.AccessController.doPrivileged((PrivilegedAction<Thread>) () -> {
+                ThreadGroup parent, group = Thread.currentThread().getThreadGroup();
+                while ((parent = group.getParent()) != null) {
+                    group = parent;
+                }
+                finalsg[0] = new ThreadGroup(group, "Dice SeedGenerator ThreadGroup");
+                Thread newT = new Thread(finalsg[0],
+                        ThreadedSeedGenerator.this,
+                        "Dice SeedGenerator Thread");
+                newT.setPriority(Thread.MIN_PRIORITY);
+                newT.setDaemon(true);
+                return newT;
+            });
             seedGroup = finalsg[0];
             t.start();
         }
@@ -124,7 +124,7 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
          * This method does the actual work. It collects random bytes and
          * pushes them into the queue.
          */
-        final public void run() {
+        public final void run() {
             try {
                 while (true) {
                     // Queue full? Wait till there's room.
@@ -143,8 +143,7 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
                         // Start some noisy threads
                         try {
                             BogusThread bt = new BogusThread();
-                            Thread t = new Thread
-                                    (seedGroup, bt, "Dice SeedGenerator Thread");
+                            Thread t = new Thread(seedGroup, bt, "Dice SeedGenerator Thread");
                             t.start();
                         } catch (Exception e) {
                             throw new InternalError("internal error: " +
@@ -154,7 +153,6 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
                         // We wait 250milli quanta, so the minimum wait time
                         // cannot be under 250milli.
                         int latch = 0;
-                        latch = 0;
                         long l = System.currentTimeMillis() + 50;
                         while (System.currentTimeMillis() < l) {
                             synchronized (this) {
@@ -230,12 +228,12 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
          */
 
         private static class BogusThread implements Runnable {
-            final public void run() {
+            public final void run() {
                 try {
                     for (int i = 0; i < 5; i++)
                         Thread.sleep(50);
                     // System.gc();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }

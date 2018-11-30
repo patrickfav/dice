@@ -16,7 +16,6 @@
 
 package at.favre.tools.dice.encode.byteencoder;
 
-
 import at.favre.tools.dice.encode.impl.Base58;
 
 /**

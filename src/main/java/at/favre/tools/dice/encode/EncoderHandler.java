@@ -17,13 +17,40 @@
 package at.favre.tools.dice.encode;
 
 import at.favre.lib.bytes.Bytes;
-import at.favre.tools.dice.encode.byteencoder.*;
+import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
+import at.favre.tools.dice.encode.byteencoder.Base10Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base16Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base26Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base2Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base32Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base36Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base58Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base64Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base85Encoder;
+import at.favre.tools.dice.encode.byteencoder.Base8Encoder;
 import at.favre.tools.dice.encode.imgencoder.HexBlockImageEncoder;
-import at.favre.tools.dice.encode.languages.*;
+import at.favre.tools.dice.encode.languages.CEncoder;
+import at.favre.tools.dice.encode.languages.CSharpEncoder;
+import at.favre.tools.dice.encode.languages.GoByteArrayEncoder;
+import at.favre.tools.dice.encode.languages.JavaByteArrayEncoder;
+import at.favre.tools.dice.encode.languages.JsEncoder;
+import at.favre.tools.dice.encode.languages.KotlinByteArrayEncoder;
+import at.favre.tools.dice.encode.languages.NodeJsEncoder;
+import at.favre.tools.dice.encode.languages.PerlEncoder;
+import at.favre.tools.dice.encode.languages.PhpEncoder;
+import at.favre.tools.dice.encode.languages.Python3Encoder;
+import at.favre.tools.dice.encode.languages.RubyEncoder;
+import at.favre.tools.dice.encode.languages.RustEncoder;
+import at.favre.tools.dice.encode.languages.SwiftEncoder;
 import at.favre.tools.dice.encode.textencoder.RawByteEncoder;
 import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public final class EncoderHandler {
 
@@ -116,6 +143,4 @@ public final class EncoderHandler {
         sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
     }
-
-
 }

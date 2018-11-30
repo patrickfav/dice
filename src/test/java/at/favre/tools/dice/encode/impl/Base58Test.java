@@ -37,5 +37,4 @@ public class Base58Test {
             assertTrue(Arrays.equals(randomBytes, decoded));
         }
     }
-
 }

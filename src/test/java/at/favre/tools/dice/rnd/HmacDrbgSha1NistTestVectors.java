@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
 
-    private final static int DEFAULT_NIST_OUT_LENGTH_BIT = 640;
+    private static final int DEFAULT_NIST_OUT_LENGTH_BIT = 640;
 
     @Test
     public void testHmacDrbgNistCase0() {
@@ -67,7 +67,6 @@ public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
         testDrbg(entropy, nonce, new byte[0], expected);
     }
 
-
     @Test
     public void testHmacDrbgNistCase5() {
         byte[] entropy = hex("6b20dda65a96f564fc0253d38dbc290b");
@@ -94,7 +93,6 @@ public class HmacDrbgSha1NistTestVectors extends AHmacDrbgNistTestVectorsTest {
                 "8e13a574d17dc8b44382d3b263e857f50816755917603a07ca4987fd40340042a1e6a82a227647130304d73d8704fd9ad4db3ae42daaa55b1f93948e70c451a12724fed870e02a1a8ec4eeab716c6854");
         testDrbg(entropy, nonce, new byte[0], expected);
     }
-
 
     @Test
     public void testHmacDrbgNistCase8() {

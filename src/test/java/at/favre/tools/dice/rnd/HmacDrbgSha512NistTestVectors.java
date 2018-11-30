@@ -19,7 +19,7 @@ package at.favre.tools.dice.rnd;
 import org.junit.Test;
 
 public class HmacDrbgSha512NistTestVectors extends AHmacDrbgNistTestVectorsTest {
-    private final static int DEFAULT_NIST_OUT_LENGTH_BIT = 2048;
+    private static final int DEFAULT_NIST_OUT_LENGTH_BIT = 2048;
 
     @Test
     public void testHmacDrbgNistCase0() {
@@ -68,7 +68,6 @@ public class HmacDrbgSha512NistTestVectors extends AHmacDrbgNistTestVectorsTest 
         testDrbg(entropy, nonce, new byte[0], expected);
     }
 
-
     @Test
     public void testHmacDrbgNistCase5() {
         byte[] entropy = hex("a14be417001030f6a9c543f829715b075d0efd8fa35acc7eed02a1401c6f59df");
@@ -95,7 +94,6 @@ public class HmacDrbgSha512NistTestVectors extends AHmacDrbgNistTestVectorsTest 
                 "06f44bebc2c1736b5cee283e530bb877b28651d70983c272a10efa80e3794ee428644048d67245dd3ca8b769b6bb192c9468a9fcf2b71c417283713d39e800225ba659c3273022f5177fd7867173f457f3bb66ff2c2e7bb2574dfee54438e35c98506c178d35259b04e7c541016f5c2d980074b4ea865203ae2e8935d745a02ab5cce04d233cbc18719b1900f2e7e98229b851d19fac02fa6e5ac1bc973b20a17509739bd989d4ef5a66fd9e19e3ceef2415b498843e93631b2b168167bdbb8db313eef4c9668d5001cb34767ee41db872163987c3bdc144637b52dcb767ffc19bf44fbad487b1eeae7957b497fd59a95f0988315eba73ab7206542f31c49267");
         testDrbg(entropy, nonce, new byte[0], expected);
     }
-
 
     @Test
     public void testHmacDrbgNistCase8() {

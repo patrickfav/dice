@@ -13,7 +13,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
 @Ignore("simple test for the best encoding while compressed - only run on demand")
@@ -28,14 +32,14 @@ public class CompressionTest {
     @Test
     public void testImage1() throws Exception {
         File imageFile = new File(getClass().getClassLoader().getResource("example_image1.base64").toURI().getPath());
-        String content = new String(Files.readAllBytes(imageFile.toPath()), "UTF-8");
+        String content = new String(Files.readAllBytes(imageFile.toPath()), StandardCharsets.UTF_8);
         testAllByteEncoder(content.getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
     public void testLogData() throws Exception {
         File logFile1 = new File(getClass().getClassLoader().getResource("example_log1.txt").toURI().getPath());
-        String logContent1 = new String(Files.readAllBytes(logFile1.toPath()), "UTF-8");
+        String logContent1 = new String(Files.readAllBytes(logFile1.toPath()), StandardCharsets.UTF_8);
         testAllByteEncoder(logContent1.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -134,7 +138,6 @@ public class CompressionTest {
         int percent = (byteDiff * 100) / differentLength;
         return byteDiff + " byte [+" + percent + "%]";
     }
-
 
     private static byte[] compress(byte[] data) throws Exception {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length)) {

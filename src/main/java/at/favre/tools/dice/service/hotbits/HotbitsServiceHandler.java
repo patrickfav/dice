@@ -32,7 +32,7 @@ import java.nio.charset.StandardCharsets;
  * See https://www.fourmilab.ch/hotbits/
  */
 public final class HotbitsServiceHandler extends AServiceHandler {
-    final static int ENTROPY_SEED_LENGTH_BYTE = 24;
+    static final int ENTROPY_SEED_LENGTH_BYTE = 24;
 
     public HotbitsServiceHandler(boolean debug) {
         super(debug);

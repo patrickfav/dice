@@ -21,6 +21,10 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public final class MiscUtil {
+
+    private MiscUtil() {
+    }
+
     /**
      * <pre>
      * Checks if a string is a valid path.
@@ -45,7 +49,6 @@ public final class MiscUtil {
 
         return true;
     }
-
 
     public static String jarVersion() {
         String version = MiscUtil.class.getPackage().getImplementationVersion();

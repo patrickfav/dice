@@ -19,7 +19,7 @@ package at.favre.tools.dice.rnd;
 import org.junit.Test;
 
 public class HmacDrbgSha256NistTestVectors extends AHmacDrbgNistTestVectorsTest {
-    private final static int DEFAULT_NIST_OUT_LENGTH_BIT = 1024;
+    private static final int DEFAULT_NIST_OUT_LENGTH_BIT = 1024;
 
     // ==== Test vectors for HMAC_DRBG with no personalization. ====
     @Test

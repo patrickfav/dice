@@ -32,7 +32,7 @@ import java.net.UnknownHostException;
  * See https://qrng.anu.edu.au/
  */
 public final class AnuQuantumServiceHandler extends AServiceHandler {
-    final static int ENTROPY_SEED_LENGTH_BYTE = 24;
+    static final int ENTROPY_SEED_LENGTH_BYTE = 24;
 
     public AnuQuantumServiceHandler(boolean debug) {
         super(debug);

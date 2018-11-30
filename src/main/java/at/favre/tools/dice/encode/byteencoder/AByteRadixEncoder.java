@@ -31,6 +31,4 @@ public abstract class AByteRadixEncoder extends AByteEncoder {
     public String encodePadded(byte[] array) {
         return String.format("%" + maxLength(array, getRadix()) + "s", encode(array)).replace(' ', '0');
     }
-
-
 }
