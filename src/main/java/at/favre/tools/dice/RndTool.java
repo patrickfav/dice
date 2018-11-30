@@ -19,20 +19,8 @@ package at.favre.tools.dice;
 import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
-import at.favre.tools.dice.rnd.DeterministicRandomBitGenerator;
-import at.favre.tools.dice.rnd.DrbgParameter;
-import at.favre.tools.dice.rnd.EntropyPool;
-import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.rnd.HmacDrbg;
-import at.favre.tools.dice.rnd.MacFactory;
-import at.favre.tools.dice.rnd.entropy.BCThreadedEntropySource;
-import at.favre.tools.dice.rnd.entropy.ExternalStrongSeedEntropySource;
-import at.favre.tools.dice.rnd.entropy.ExternalWeakSeedEntropySource;
-import at.favre.tools.dice.rnd.entropy.HKDFEntropyPool;
-import at.favre.tools.dice.rnd.entropy.JDKThreadedEntropySource;
-import at.favre.tools.dice.rnd.entropy.NonceEntropySource;
-import at.favre.tools.dice.rnd.entropy.PersonalizationSource;
-import at.favre.tools.dice.rnd.entropy.SecureRandomEntropySource;
+import at.favre.tools.dice.rnd.*;
+import at.favre.tools.dice.rnd.entropy.*;
 import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
@@ -46,17 +34,11 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -283,7 +265,12 @@ public final class RndTool {
     }
 
     private static PrintStream getStream(Arg arguments) throws FileNotFoundException {
-        return arguments.outFile() != null ? new PrintStream(new FileOutputStream(arguments.outFile(), true)) : arguments.cmdLinePrintStream();
+        return arguments.outFile() != null ?
+                new PrintStream(
+                        new BufferedOutputStream(
+                                new FileOutputStream(Objects.requireNonNull(arguments.outFile()), true),
+                                128 * 1024))
+                : arguments.cmdLinePrintStream();
     }
 
     private static String getFriendlyFormattedDate() {
