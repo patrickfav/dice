@@ -16,7 +16,6 @@
 
 package at.favre.tools.dice.encode.byteencoder;
 
-
 import com.github.fzakaria.ascii85.Ascii85;
 
 /**
@@ -43,7 +42,7 @@ public class Base85Encoder extends AByteEncoder {
 
     @Override
     public boolean urlSafe() {
-        return true;
+        return false;
     }
 
     @Override

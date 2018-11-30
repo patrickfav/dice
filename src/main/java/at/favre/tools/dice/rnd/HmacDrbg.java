@@ -82,7 +82,6 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         return b == null ? new byte[0] : b;
     }
 
-
     private byte[] generateSeedMaterial() {
         // 1. seed_material = entropy_input + nonce + personalization_string
         // Note: We are using the 8.6.7 interpretation, where the entropy_input and
@@ -192,7 +191,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      */
     @Override
     public byte[] nextBytes(int lengthBytes) {
-        byte result[] = new byte[lengthBytes];
+        byte[] result = new byte[lengthBytes];
         nextBytes(result, null);
         return result;
     }
