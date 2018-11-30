@@ -44,7 +44,7 @@ public class RndToolTest {
 
     @NotNull
     private PrintStream createPrintStream(ByteArrayOutputStream baos) throws UnsupportedEncodingException {
-        return new PrintStream(baos, true, StandardCharsets.UTF_8);
+        return new PrintStream(baos, true, "UTF-8");
     }
 
     @Test(expected = AppException.class)

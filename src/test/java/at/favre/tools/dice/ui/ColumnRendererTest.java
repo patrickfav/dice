@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +31,7 @@ public class ColumnRendererTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ColumnRenderer(encoderFormat, generator).render(2, new PrintStream(baos), false);
 
-        String out = baos.toString(StandardCharsets.UTF_8);
+        String out = baos.toString("UTF-8");
         assertNotNull(out);
         assertTrue(out.length() > 10);
     }
@@ -61,7 +60,7 @@ public class ColumnRendererTest {
     public void renderMany() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         new ColumnRenderer(encoderFormat, generator).renderSingleColumn(13, new PrintStream(baos));
-        String out = baos.toString(StandardCharsets.UTF_8);
+        String out = baos.toString("UTF-8");
         assertNotNull(out);
         assertTrue(out.length() > 10);
         System.out.println(out);
@@ -77,7 +76,7 @@ public class ColumnRendererTest {
             new ColumnRenderer(encoderFormat, randomGenerator).render(count, new PrintStream(baos), isFile);
         }
 
-        String out = baos.toString(StandardCharsets.UTF_8);
+        String out = baos.toString("UTF-8");
         assertNotNull(out);
         assertTrue(out.length() > 10);
         System.out.println(out);
