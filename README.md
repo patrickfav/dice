@@ -69,11 +69,11 @@ your programming language to get the correct syntax (see below). E.g.:
 
 ### Creating files of entropy
 
-Create a file 1MB full of raw random bytes with this call:
+Create a file 3MiB full of raw random bytes with this call:
 
-    java -jar dice.jar 1024 -c 1024 -e "raw" -f "./outfile.txt"
+    java -jar dice.jar 1024 -c 3072 -e "raw" -f "./rnd-outfile.txt"
 
-Successive calls will append data, not overwrite it.
+This will create random chunks of 1Kib (the maximum allowed size per chunk) repeated 3072 times. Successive calls will append data, not overwrite it.
 
 ## Command Line Interface
 
