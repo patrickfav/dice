@@ -44,8 +44,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class RndTool {
-    static final int MAX_BYTE_PER_RANDOM = 1024;
-    static final long MAX_BYTE_PER_CALL = 10L * 1024L * 1024L * 1024L;
+    static final int MAX_BYTE_PER_RANDOM = 4096;
+    static final long MAX_BYTE_PER_CALL = 10L * 1024L * 1024L * 1024L; //10 GiB
 
     private RndTool() {
     }

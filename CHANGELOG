@@ -3,6 +3,7 @@
 ## v1.6.0
 * use better implementations of Base64 and Hex encoder
 * Improve file writing speed by using bufferedOutputStream (~ +10% faster)
+* increase maximum chunk size of single random to 4 KiB from 1 Kib (~ +20% better bandwidth)
 
 ## v1.5.0
 * enhance img encoder using block symbols

@@ -17,7 +17,7 @@
 package at.favre.tools.dice.rnd;
 
 public class DrbgParameter {
-    private static final int MAX_BYTES_PER_SEED = 1024 * 1024 * 1024;
+    private static final int MAX_BYTES_PER_SEED = 1024 * 1024 * 1024; //1 MiB - increasing this value wont't enhance bandwidth
 
     public final MacFactory macFactory;
     public final int securityStrengthBit;
