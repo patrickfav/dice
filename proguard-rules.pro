@@ -1,9 +1,10 @@
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizations !code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 2
 -dontusemixedcaseclassnames
 -ignorewarnings
 -verbose
 
--keepattributes *Annotation*,EnclosingMethod, InnerClasses, Exceptions, Signature, SourceFile, LineNumberTable
+-keepattributes *Annotation*, EnclosingMethod, InnerClasses, Exceptions, Signature, SourceFile, LineNumberTable
 -renamesourcefileattribute SourceFile
 
 -keepclasseswithmembernames class * {
