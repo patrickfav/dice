@@ -12,8 +12,8 @@ public class MiscUtilTest {
         assertTrue(MiscUtil.isValidPath("c:/test/test2"));
         assertTrue(MiscUtil.isValidPath("c:/test/test2/test3"));
         assertTrue(MiscUtil.isValidPath("c:/test/test2.txt"));
-        assertFalse(MiscUtil.isValidPath("c:/te:t"));
-        assertFalse(MiscUtil.isValidPath("c/te*t"));
+        assertTrue(MiscUtil.isValidPath("/test/test2.txt"));
+        assertTrue(MiscUtil.isValidPath("/test/test2/"));
         assertTrue(MiscUtil.isValidPath("good.txt"));
         assertFalse(MiscUtil.isValidPath("not|good.txt"));
         assertFalse(MiscUtil.isValidPath("not:good.tx"));
