@@ -30,6 +30,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  * RANDOM.ORG offers true random numbers to anyone on the Internet.
@@ -46,7 +48,7 @@ public final class RandomOrgServiceHandler extends AServiceHandler {
 
     @Override
     public Result<RandomOrgBlobResponse> getRandom() {
-        long startTime = System.currentTimeMillis();
+        Instant startTime = Instant.now();
 
         OkHttpClient client = createClient();
         Exception error = null;
@@ -90,7 +92,7 @@ public final class RandomOrgServiceHandler extends AServiceHandler {
                     throw new IllegalArgumentException("response signature could not be verified");
                 }
 
-                return new Result<>(getName(), new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, System.currentTimeMillis() - startTime);
+                return new Result<>(getName(), new Base64().decode(orgBlobResponse.result.random.data[0]), orgBlobResponse, Duration.between(startTime, Instant.now()).toNanos());
             }
 
         } catch (UnknownHostException e) {

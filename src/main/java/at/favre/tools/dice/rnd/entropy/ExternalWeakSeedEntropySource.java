@@ -16,6 +16,7 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
+import at.favre.lib.bytes.Bytes;
 import at.favre.lib.crypto.HKDF;
 
 import java.nio.charset.StandardCharsets;
@@ -33,6 +34,10 @@ public final class ExternalWeakSeedEntropySource extends SecureRandomEntropySour
 
     public ExternalWeakSeedEntropySource(String seed) {
         this(seed.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public ExternalWeakSeedEntropySource(long seed) {
+        this(Bytes.from(seed).array());
     }
 
     public ExternalWeakSeedEntropySource(byte[] seed) {

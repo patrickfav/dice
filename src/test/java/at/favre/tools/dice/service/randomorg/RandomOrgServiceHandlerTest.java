@@ -30,10 +30,11 @@ public class RandomOrgServiceHandlerTest {
             assertNotNull(response.response);
             System.out.println(Bytes.from(response.seed).encodeHex());
             System.out.println(response.response.toString());
-
-            assertFalse(response.response.equals(1));
-            assertFalse(response.response.hashCode() == 0);
-            assertTrue(response.seed.length == ENTROPY_SEED_LENGTH_BIT / 8);
+            assertNotEquals(-1, response.responseTimeMs());
+            assertNotEquals(-1, response.durationNanos);
+            assertNotEquals(1, response.response);
+            assertNotEquals(0, response.response.hashCode());
+            assertEquals(response.seed.length, ENTROPY_SEED_LENGTH_BIT / 8);
         }
     }
 

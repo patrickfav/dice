@@ -25,14 +25,16 @@ public class AnuQuantumServiceHandlerTest {
         } else {
             assertNotNull(response.seed);
             assertNotNull(response.response);
+            assertNotEquals(-1, response.responseTimeMs());
+            assertNotEquals(-1, response.durationNanos);
             System.out.println(Bytes.from(response.seed).encodeHex());
-            assertTrue(response.seed.length == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
+            assertEquals(response.seed.length, AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
             assertTrue(response.response.success);
             assertNotEquals(0, response.response.hashCode());
             assertNotNull(response.response.toString());
             assertFalse(response.response.equals(new AnuQuantumResponse("", -1, null, null, false)));
-            assertTrue(response.response.length == 1);
-            assertTrue(response.response.size == AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
+            assertEquals(1, (int) response.response.length);
+            assertEquals((int) response.response.size, AnuQuantumServiceHandler.ENTROPY_SEED_LENGTH_BYTE);
         }
     }
 }

@@ -64,4 +64,19 @@ public final class MiscUtil {
         }
         return version;
     }
+
+    public static String commitHash() {
+        try {
+            Properties properties = new Properties();
+            properties.load(MiscUtil.class.getClassLoader().getResourceAsStream("git.properties"));
+
+            String id = "git.commit.id";
+
+            if (properties.containsKey(id)) {
+                return String.valueOf(properties.get(id)).substring(0, 7);
+            }
+        } catch (Exception ignored) {
+        }
+        return "<missing>";
+    }
 }

@@ -19,8 +19,20 @@ package at.favre.tools.dice;
 import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
-import at.favre.tools.dice.rnd.*;
-import at.favre.tools.dice.rnd.entropy.*;
+import at.favre.tools.dice.rnd.DeterministicRandomBitGenerator;
+import at.favre.tools.dice.rnd.DrbgParameter;
+import at.favre.tools.dice.rnd.EntropyPool;
+import at.favre.tools.dice.rnd.ExpandableEntropySource;
+import at.favre.tools.dice.rnd.HmacDrbg;
+import at.favre.tools.dice.rnd.MacFactory;
+import at.favre.tools.dice.rnd.entropy.BCThreadedEntropySource;
+import at.favre.tools.dice.rnd.entropy.ExternalStrongSeedEntropySource;
+import at.favre.tools.dice.rnd.entropy.ExternalWeakSeedEntropySource;
+import at.favre.tools.dice.rnd.entropy.HKDFEntropyPool;
+import at.favre.tools.dice.rnd.entropy.JDKThreadedEntropySource;
+import at.favre.tools.dice.rnd.entropy.NonceEntropySource;
+import at.favre.tools.dice.rnd.entropy.PersonalizationSource;
+import at.favre.tools.dice.rnd.entropy.SecureRandomEntropySource;
 import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
@@ -34,11 +46,19 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -196,8 +216,12 @@ public final class RndTool {
 
     private static ServiceHandler.Result<?> updateSeed(ServiceHandler.Result<?> result, Arg arguments, EntropyPool entropyPool) throws IOException {
         if (!result.isError()) {
-            entropyPool.add(new ExternalStrongSeedEntropySource(result.seed));
-            print(result.serviceName + " [" + result.durationMs + "ms] " + getOptionalEntropyWarning(result.seed), arguments);
+            ExpandableEntropySource src = new ExternalStrongSeedEntropySource(result.seed);
+
+            entropyPool.add(src);
+            entropyPool.add(new ExternalWeakSeedEntropySource(result.durationNanos));
+
+            print(result.serviceName + " [" + result.responseTimeMs() + "ms (" + Bytes.wrap(src.generateEntropy(3)).encodeHex() + ")] " + getOptionalEntropyWarning(result.seed), arguments);
             return result;
         } else {
             throw new IOException(result.serviceName + ": " + result.errorMsg + System.lineSeparator() + "Try using --offline to skip online seeding or --debug for more information.", result.throwable);
@@ -257,7 +281,7 @@ public final class RndTool {
     @NotNull
     private static String getSummary(long durationMs, long durationRndGen, long byteGen) {
         double bandwidth = durationRndGen == 0 || byteGen == 0 ? 0 : Math.round((double) byteGen / (double) durationRndGen / 10.24) / 100.0;
-        return System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + "] " + byteGen + " bytes generated in " + durationMs + " ms." + (bandwidth > 0 ? " (" + bandwidth + " MB/s)" : "");
+        return System.lineSeparator() + System.lineSeparator() + "[" + getFriendlyFormattedDate() + "][" + MiscUtil.jarVersion() + " (" + MiscUtil.commitHash() + ")] " + byteGen + " bytes generated in " + durationMs + " ms." + (bandwidth > 0 ? " (" + bandwidth + " MB/s)" : "");
     }
 
     private static ColumnRenderer.RandomGenerator genFromArg(Arg arguments, Encoder encoder, DeterministicRandomBitGenerator drbg) {

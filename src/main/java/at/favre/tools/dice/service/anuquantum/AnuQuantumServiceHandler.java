@@ -24,6 +24,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.net.UnknownHostException;
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  * ANU Quantum Random Numbers Server
@@ -40,7 +42,7 @@ public final class AnuQuantumServiceHandler extends AServiceHandler {
 
     @Override
     public Result<AnuQuantumResponse> getRandom() {
-        long startTime = System.currentTimeMillis();
+        Instant startTime = Instant.now();
 
         OkHttpClient client = createClient();
         Exception error = null;
@@ -58,7 +60,7 @@ public final class AnuQuantumServiceHandler extends AServiceHandler {
             Response<AnuQuantumResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
             if (response != null && response.isSuccessful() && response.body() != null) {
                 byte[] rawResponse = Bytes.parseHex(response.body().data.get(0)).array();
-                return new Result<>(getName(), rawResponse, response.body(), System.currentTimeMillis() - startTime);
+                return new Result<>(getName(), rawResponse, response.body(), Duration.between(startTime, Instant.now()).toNanos());
             }
         } catch (UnknownHostException e) {
             error = e;

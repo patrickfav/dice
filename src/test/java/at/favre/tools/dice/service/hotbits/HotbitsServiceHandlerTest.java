@@ -25,6 +25,8 @@ public class HotbitsServiceHandlerTest {
         } else {
             assertNotNull(response.seed);
             assertNull(response.response);
+            assertNotEquals(-1, response.responseTimeMs());
+            assertNotEquals(-1, response.durationNanos);
             System.out.println(Bytes.from(response.seed).encodeHex());
             assertEquals(response.seed.length, ENTROPY_SEED_LENGTH_BYTE);
         }

@@ -50,14 +50,14 @@ public interface ServiceHandler<T> {
         public final String serviceName;
         public final byte[] seed;
         public final T response;
-        public final long durationMs;
+        public final long durationNanos;
         public final Throwable throwable;
         public final String errorMsg;
 
-        public Result(String serviceName, byte[] seed, T response, long durationMs) {
+        public Result(String serviceName, byte[] seed, T response, long durationNanos) {
             this.serviceName = serviceName;
             this.seed = seed;
-            this.durationMs = durationMs;
+            this.durationNanos = durationNanos;
             this.response = response;
             this.throwable = null;
             this.errorMsg = null;
@@ -65,7 +65,7 @@ public interface ServiceHandler<T> {
 
         public Result(String serviceName, Throwable t, String errorMsg) {
             this.serviceName = serviceName;
-            this.durationMs = 0;
+            this.durationNanos = 0;
             this.response = null;
             this.seed = null;
             this.throwable = t;
@@ -74,6 +74,10 @@ public interface ServiceHandler<T> {
 
         public boolean isError() {
             return seed == null;
+        }
+
+        public long responseTimeMs() {
+            return durationNanos / 1000 * 1000;
         }
     }
 }
