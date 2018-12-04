@@ -2,7 +2,8 @@ package at.favre.tools.dice.util;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class MiscUtilTest {
 
@@ -15,8 +16,6 @@ public class MiscUtilTest {
         assertTrue(MiscUtil.isValidPath("/test/test2.txt"));
         assertTrue(MiscUtil.isValidPath("/test/test2/"));
         assertTrue(MiscUtil.isValidPath("good.txt"));
-        assertFalse(MiscUtil.isValidPath("not*good.txt"));
-        assertFalse(MiscUtil.isValidPath("not?good.tx"));
     }
 
     @Test
