@@ -77,7 +77,7 @@ public interface ServiceHandler<T> {
         }
 
         public long responseTimeMs() {
-            return durationNanos / 1000 * 1000;
+            return (long) ((double) durationNanos / (1000.0 * 1000.0));
         }
     }
 }
