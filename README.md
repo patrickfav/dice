@@ -28,8 +28,8 @@ _More examples:_
     
     java -jar dice.jar 16 --count 100
     java -jar dice.jar 16 --encoding "base64"
-    java -jar dice.jar 16 --encoding "kotlin"
-    java -jar dice.jar 24 --encoding "raw" --file "./rnd-outputfile.txt"
+    java -jar dice.jar 16 --encoding "java"
+    java -jar dice.jar 4096 --encoding "raw" --count 1024 --file "./rnd-4-MiB-outputfile.txt"
     java -jar dice.jar 16 --seed "myBadRandomSeed"
     java -jar dice.jar 16 --offline
     java -jar dice.jar 32 --encoding "base85" --urlencode --padding --crc32
