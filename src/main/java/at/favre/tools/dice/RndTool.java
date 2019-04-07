@@ -19,20 +19,8 @@ package at.favre.tools.dice;
 import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.encode.Encoder;
 import at.favre.tools.dice.encode.EncoderHandler;
-import at.favre.tools.dice.rnd.DeterministicRandomBitGenerator;
-import at.favre.tools.dice.rnd.DrbgParameter;
-import at.favre.tools.dice.rnd.EntropyPool;
-import at.favre.tools.dice.rnd.ExpandableEntropySource;
-import at.favre.tools.dice.rnd.HmacDrbg;
-import at.favre.tools.dice.rnd.MacFactory;
-import at.favre.tools.dice.rnd.entropy.BCThreadedEntropySource;
-import at.favre.tools.dice.rnd.entropy.ExternalStrongSeedEntropySource;
-import at.favre.tools.dice.rnd.entropy.ExternalWeakSeedEntropySource;
-import at.favre.tools.dice.rnd.entropy.HKDFEntropyPool;
-import at.favre.tools.dice.rnd.entropy.JDKThreadedEntropySource;
-import at.favre.tools.dice.rnd.entropy.NonceEntropySource;
-import at.favre.tools.dice.rnd.entropy.PersonalizationSource;
-import at.favre.tools.dice.rnd.entropy.SecureRandomEntropySource;
+import at.favre.tools.dice.rnd.*;
+import at.favre.tools.dice.rnd.entropy.*;
 import at.favre.tools.dice.service.ServiceHandler;
 import at.favre.tools.dice.service.anuquantum.AnuQuantumServiceHandler;
 import at.favre.tools.dice.service.hotbits.HotbitsServiceHandler;
@@ -46,19 +34,11 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -139,7 +119,7 @@ public final class RndTool {
 
                 fetch(handlers, arguments, entropyPool, encoder, start);
             } else {
-                requestFinished(arguments, encoder, entropyPool, start);
+                requestFinished(arguments, encoder, entropyPool, start, false);
             }
             return true;
         });
@@ -181,16 +161,19 @@ public final class RndTool {
         final ExecutorService parallelExecutor = Executors.newFixedThreadPool(4);
         Observable.fromIterable(handlers)
                 .flatMapSingle(handler -> handler.asObservable().subscribeOn(Schedulers.from(parallelExecutor)))
-                .doFinally(() -> println("", arguments))
                 .doFinally(parallelExecutor::shutdown)
                 .blockingSubscribe(result -> updateSeed(result, arguments, entropyPool), t -> {
                     System.err.println(System.lineSeparator() + t.getMessage());
                     System.exit(500);
-                }, () -> wrapInErrorHandling(arguments, () -> requestFinished(arguments, encoder, entropyPool, start)));
+                }, () -> wrapInErrorHandling(arguments, () -> requestFinished(arguments, encoder, entropyPool, start, true)));
     }
 
-    private static boolean requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool, long start) throws Exception {
+    private static boolean requestFinished(Arg arguments, Encoder encoder, EntropyPool entropyPool,
+                                           long start, boolean hadExternalRequests) throws Exception {
         println("", arguments);
+        if (hadExternalRequests) {
+            println("", arguments);
+        }
 
         ExpandableEntropySource nonceSource = new NonceEntropySource();
         ExpandableEntropySource persoSource = new PersonalizationSource();
@@ -228,13 +211,13 @@ public final class RndTool {
         }
     }
 
-    private static void print(String msg, Arg arg) {
+    private static synchronized void print(String msg, Arg arg) {
         if (!arg.robot()) {
             arg.cmdLinePrintStream().print(msg);
         }
     }
 
-    private static void println(String msg, Arg arg) {
+    private static synchronized void println(String msg, Arg arg) {
         if (!arg.robot()) {
             arg.cmdLinePrintStream().println(msg);
         }
