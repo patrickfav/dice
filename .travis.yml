@@ -21,7 +21,7 @@ before_script:
   - sudo apt-get install libc6:i386 libstdc++6:i386
 
 script:
-  - ./mvnw clean install -X -Djarsigner.skip=false checkstyle:check
+  - ./mvnw clean install -X -Djarsigner.skip=false
 
 after_success:
   - ./mvnw test jacoco:report coveralls:report
