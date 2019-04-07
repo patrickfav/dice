@@ -7,6 +7,7 @@
 * add entropy hash to external sources
 * increase maximum chunk size of single random to 4 KiB from 1 Kib (~ +20% better bandwidth)
 * add nanoseconds request time as weak entropy source when using online seeding
+* update random.org API key and endpoint
 
 ## v1.5.0
 * enhance img encoder using block symbols

@@ -27,6 +27,6 @@ import java.util.Map;
 
 public interface RandomOrgService {
     @Headers({"DNT: 1"})
-    @POST("/json-rpc/1/invoke")
+    @POST("/json-rpc/2/invoke")
     Call<String> getRandom(@HeaderMap Map<String, String> headers, @Body RandomOrgBlobRequest request);
 }

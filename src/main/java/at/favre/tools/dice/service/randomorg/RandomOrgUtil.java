@@ -16,6 +16,9 @@
 
 package at.favre.tools.dice.service.randomorg;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
@@ -26,8 +29,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Util for verifying the signature format of random.org's signed request
@@ -76,9 +77,17 @@ final class RandomOrgUtil {
      */
     static boolean verifySignature(String rawResponse, String base64Sig) {
         try {
-            Pattern p = Pattern.compile("\"random\"\\s*:\\s*(\\{.+?})\\s*,");
-            Matcher matcher = p.matcher(rawResponse);
-            return matcher.find() && verifyRSA(parsePublicKey(new Base64().decode(RANDOM_ORG_PUB_KEY)), matcher.group(1).getBytes(StandardCharsets.UTF_8), new Base64().decode(base64Sig));
+            final String randomObj;
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(rawResponse);
+                ObjectNode randomNode = (ObjectNode) jsonNode.findValue("result").findValue("random");
+                randomObj = mapper.writeValueAsString(randomNode);
+            } catch (Exception e) {
+                return false;
+            }
+
+            return verifyRSA(parsePublicKey(new Base64().decode(RANDOM_ORG_PUB_KEY)), randomObj.getBytes(StandardCharsets.UTF_8), new Base64().decode(base64Sig));
         } catch (Exception e) {
             throw new IllegalStateException("could not verify signature", e);
         }
