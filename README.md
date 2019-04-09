@@ -114,7 +114,7 @@ This will create random chunks of 4Kib (the maximum allowed size per chunk) repe
 | base16       | `4a94fdff1eafed`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Lowercase (a-f) letters are used for digits greater than 9. |
 | BASE16       | `4A94FDFF1EAFED`     | 50.0 % | false | Base16 or hex stores each byte as a pair of hexadecimal digits. Uppercase (A-F) letters are used for digits greater than 9. |
 | base26       | `FSSLZZFNQZQZ`       | 58.8 % | true | Base26 uses the twenty-six letters A-Z. |
-| base32       | `JKKP37Y6V7WQ`       | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and ten digits 0-9. Uses the alphabet defined in RFC 4648. |
+| base32       | `JKKP37Y6V7WQ`       | 62.5 % | true | Base32 uses a 32-character subset of the twenty-six letters A-Z and the digits 2-7. Uses the alphabet defined in RFC 4648. |
 | base36       | `5qpdvuwjvu5`        | 64.6 % | true | Base36 translating into a radix-36 (aka Hexatrigesimal) representation. |
 | base58       | `3pvkeHJmHN`         | 73.2 % | true | Base58 is similar to Base64 but has been modified to avoid both non-alphanumeric characters and letters which might look ambiguous when printed. This version uses the alphabet common for Bitcoin protocol. |
 | base64       | `SpT9/x6v7Q`         | 75.0 % | true | Base64 represent binary data in an ASCII string format by translating it into a radix-64 representation. |
