@@ -61,6 +61,8 @@
                 <artifactId>dependency-check-maven</artifactId>
                 <version>5.0.0-M1</version>
                 <configuration>
+                    <skipProvidedScope>true</skipProvidedScope>
+                    <skipRuntimeScope>true</skipRuntimeScope>
                     <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
                 </configuration>
                 <executions>
