@@ -2,6 +2,7 @@ package at.favre.tools.dice.service.anuquantum;
 
 import at.favre.lib.bytes.Bytes;
 import at.favre.tools.dice.service.ServiceHandler;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.UnknownHostException;
@@ -9,6 +10,7 @@ import java.net.UnknownHostException;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
 
+@Ignore
 public class AnuQuantumServiceHandlerTest {
     @Test
     public void getRandom() throws Exception {
