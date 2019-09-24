@@ -1,4 +1,6 @@
 # Releases
+## v1.7.0
+* add OWASP dependency checker
 
 ## v1.6.0
 * use better implementations of Base64 and Hex encoder

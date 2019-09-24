@@ -6,12 +6,13 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dice</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <retrofitVersion>2.5.0</retrofitVersion>
+        <retrofitVersion>2.6.1</retrofitVersion>
+        <okhttp>3.14.3</okhttp>
         <autoValueVersion>1.6.2</autoValueVersion>
     </properties>
     <repositories>
@@ -51,6 +52,21 @@
                         <configuration>
                             <failOnViolation>true</failOnViolation>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>5.0.0-M1</version>
+                <configuration>
+                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -324,7 +340,12 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
-            <version>3.12.0</version>
+            <version>${okhttp}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp}</version>
         </dependency>
         <dependency>
             <groupId>com.google.auto.value</groupId>
