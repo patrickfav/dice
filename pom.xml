@@ -14,7 +14,7 @@
         <retrofitVersion>2.6.1</retrofitVersion>
         <okhttp>3.14.3</okhttp>
         <autoValueVersion>1.6.2</autoValueVersion>
-        <jackson>2.9.10</jackson>
+        <jackson>2.10.1</jackson>
     </properties>
     <repositories>
         <repository>
