@@ -1,7 +1,6 @@
 # To let the CI execute the maven wrapper, use this command and push the change:
 #    git update-index --chmod=+x mvnw
 
-sudo: required
 language: java
 install: true
 jdk:
@@ -28,7 +27,7 @@ after_success:
 
 deploy:
   - provider: releases
-    api_key:
+    token:
       secure: "KuS9eQxSmTiokJTvQWGuLhoJHnG9SePtYMvE5Ha6FD5FToeSa4YprwrVGaXlXTLtdizArJNJ9/Sks8kJ6i2AaNHiOarwrZv/xal/Vy1X8hAufapnkPdKqp/VtMLEEhZGGOYO/dGU/J3p1xkR4wG5cpftqIHOqwG/V7TfGmpqtE/zhJOtilM5oCOZel0XaKx5+xe7X+ENnGHUNBbUEaI5AyidBHfa6D8VSaRb4GJs08+EhNoKuEnzvdG+n71IT0e1nnlDDJ+MaEdAsx7ZoiMTcCrEmIgc8Z1HJVYL1Ks8l3avkGxEXdLaQ+UBLMXBmyaWMyUf+tXtUkVDT0A2KW6LUEmRAmcCChfyRvfgKFr53Xibfi/2CaQvBQT7rhATko324ecaKCJ+RAdFzIMiXRzfizLzIooMMurPEj17sVHobSAI/PV+hXb9XUUoc0nTtb9grwq2Sa9CVAnEsTzY9AxFDV7WdtTPUqTkKvh1jPGfa95yRumrPIWpSBjvh2dSa+mFBeABoFW0B5B0BmWFMfTleeqarXmBhPayWYWW6RIsXo+G2ms0w2ieHKg3MsLyQ4NhGL3kUhsP2FZ45OmpQTDBy8TCNqoij691berbcRM1mSFdshl0pbEp7r/XyxOxuht9RF/vc0ujS+hfCUyEFJiZXif3YrMTu+N9+PkBqkCppxc="
     file_glob: true
     file:
@@ -36,7 +35,7 @@ deploy:
       - "target/dice.exe"
       - "target/proguard_map.txt"
       - "target/*.sha256"
-    skip_cleanup: true
+    cleanup: true
     on:
       branch: master
       tags: true
