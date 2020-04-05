@@ -1,9 +1,7 @@
 package at.favre.tools.dice.encode;
 
-import at.favre.tools.dice.encode.byteencoder.AByteEncoder;
-import at.favre.tools.dice.encode.byteencoder.Base16Encoder;
-import at.favre.tools.dice.encode.byteencoder.Base58Encoder;
-import at.favre.tools.dice.encode.byteencoder.Base64Encoder;
+import at.favre.lib.bytes.Bytes;
+import at.favre.tools.dice.encode.byteencoder.*;
 import at.favre.tools.dice.encode.textencoder.Utf8Encoder;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Ignore;
@@ -13,15 +11,58 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
 @Ignore("simple test for the best encoding while compressed - only run on demand")
 public class CompressionTest {
+
+    @Test
+    public void testBase32() {
+        for (int i = 0; i < 127; i++) {
+            System.out.println(new Base32Encoder().encodePadded(new byte[]{(byte) i, (byte) i}));
+        }
+    }
+
+    @Test
+    public void testBase64() {
+        for (int i = -128; i < 127; i++) {
+            System.out.println(new Base64Encoder(false).encodePadded(new byte[]{(byte) i}));
+        }
+    }
+
+    @Test
+    public void testBaseLengths() {
+        for (int i = 4; i < 17; i += 4) {
+            Bytes subject = Bytes.allocate(i,(byte) (0xFE));
+            System.out.println("\nLength: "+i+" bytes\n");
+            System.out.println(subject.encodeBinary());
+            System.out.println(subject.encodeOctal());
+            System.out.println(subject.encodeDec());
+            System.out.println(subject.encodeHex());
+            System.out.println(new Base26Encoder().encodePadded(subject.array()));
+            System.out.println(subject.encodeBase32());
+            System.out.println(subject.encodeRadix(36));
+            System.out.println(new Base58Encoder.BitcoinStyle().encodePadded(subject.array()));
+            System.out.println(subject.encodeBase64());
+            System.out.println(new Base85Encoder().encodePadded(subject.array()));
+        }
+
+        for (int i = 4; i < 17; i += 4) {
+            Bytes subject = Bytes.allocate(i,(byte) (0x00));
+            System.out.println("\nLength: "+i+" bytes\n");
+            System.out.println(subject.encodeBinary());
+            System.out.println(subject.encodeOctal());
+            System.out.println(subject.encodeDec());
+            System.out.println(subject.encodeHex());
+            System.out.println(new Base26Encoder().encodePadded(subject.array()));
+            System.out.println(subject.encodeBase32());
+            System.out.println(subject.encodeRadix(36));
+            System.out.println(new Base58Encoder.BitcoinStyle().encodePadded(subject.array()));
+            System.out.println(subject.encodeBase64());
+            System.out.println(new Base85Encoder().encodePadded(subject.array()));
+        }
+    }
 
     @Test
     public void testRandomData() throws Exception {

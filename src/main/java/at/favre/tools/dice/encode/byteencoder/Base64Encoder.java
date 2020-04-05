@@ -24,7 +24,7 @@ import java.util.Base64;
 public class Base64Encoder extends AByteEncoder {
     private final boolean urlSafe;
 
-    Base64Encoder(boolean urlSafe) {
+    public Base64Encoder(boolean urlSafe) {
         this.urlSafe = urlSafe;
     }
 
