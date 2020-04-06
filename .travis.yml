@@ -34,7 +34,7 @@ deploy:
       - "target/dice.exe"
       - "target/proguard_map.txt"
       - "target/*.sha256"
-    cleanup: true
+    cleanup: false
     on:
       branch: master
       tags: true
