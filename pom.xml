@@ -15,9 +15,9 @@
     <version>1.7.0</version>
 
     <properties>
-        <retrofitVersion>2.6.1</retrofitVersion>
-        <okhttp>3.14.3</okhttp>
-        <autoValueVersion>1.6.2</autoValueVersion>
+        <retrofitVersion>2.8.1</retrofitVersion>
+        <okhttp>3.14.7</okhttp>
+        <autoValueVersion>1.6.6</autoValueVersion>
     </properties>
 
     <repositories>
