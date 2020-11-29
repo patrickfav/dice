@@ -339,6 +339,6 @@
 
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/patrickfav/dice</url>
+        <url>https://travis-ci.com/patrickfav/dice</url>
     </ciManagement>
 </project>
