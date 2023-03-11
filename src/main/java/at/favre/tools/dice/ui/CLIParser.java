@@ -122,7 +122,7 @@ public final class CLIParser {
         Option encodeing = Option.builder(ARG_ENCODING).longOpt("encoding").argName("string").hasArgs().desc("Output byte-to-text encoding. Available encodings include:\n" + new EncoderHandler().getSupportedEncodingList()).build();
         Option seed = Option.builder(ARG_SEED).longOpt("seed").argName("string|number").hasArgs().desc("Uses either the 64-bit integer interpretation or the utf-8 byte representation of given parameter to seed the internal random generator. Warns if entropy is low.").build();
         Option debugOpt = Option.builder(ARG_DEBUG).longOpt("debug").hasArg(false).desc("Prints additional info for debugging.").build();
-        Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to external random generators (random.org & hotbits) for seeding (use when offline).").build();
+        Option onlineOpt = Option.builder(ARG_ONLINE).longOpt("offline").hasArg(false).desc("Skips request to external random generators (random.org) for seeding (use when offline).").build();
         Option anuQuantumOpt = Option.builder().longOpt(ARG_ANU_QUANTUM).hasArg(false).desc("Enable external, supposed true random generator ANU Quantum; note this service is known to be slow (only when online).").build();
         Option urlencodeOpt = Option.builder(ARG_URLENCODE).longOpt("urlencode").hasArg(false).desc("Uses 'www-form-urlencoded' encoding scheme, also misleadingly known as URL encoding, on the output strings").build();
         Option paddingOpt = Option.builder(ARG_PADDING).longOpt("padding").hasArg(false).desc("If this flag is set, byte-to-text output will be padded to full byte if needed.").build();

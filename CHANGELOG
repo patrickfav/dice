@@ -1,4 +1,9 @@
 # Releases
+
+## v1.8.0
+
+* remove hotsbits, since it is retired since 1st Jan 2023
+
 ## v1.7.0
 * add OWASP dependency checker
 
