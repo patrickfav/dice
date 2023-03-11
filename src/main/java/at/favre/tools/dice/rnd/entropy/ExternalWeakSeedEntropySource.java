@@ -17,7 +17,7 @@
 package at.favre.tools.dice.rnd.entropy;
 
 import at.favre.lib.bytes.Bytes;
-import at.favre.lib.crypto.HKDF;
+import at.favre.lib.hkdf.HKDF;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;

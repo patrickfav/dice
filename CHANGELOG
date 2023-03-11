@@ -1,4 +1,11 @@
 # Releases
+
+## v1.8.0
+
+* remove hotsbits, since it is retired since 1st Jan 2023
+* update various dependencies
+* update to github actions & sonaqube
+
 ## v1.7.0
 * add OWASP dependency checker
 

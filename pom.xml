@@ -7,29 +7,25 @@
     <parent>
         <groupId>at.favre.lib</groupId>
         <artifactId>common-parent</artifactId>
-        <version>12</version>
+        <version>20</version>
     </parent>
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dice</artifactId>
-    <version>1.7.0</version>
+    <version>1.8.0</version>
 
     <properties>
-        <retrofitVersion>2.8.1</retrofitVersion>
-        <okhttp>3.14.7</okhttp>
-        <autoValueVersion>1.6.6</autoValueVersion>
+        <commonConfig.jarSign.skip>false</commonConfig.jarSign.skip>
+        <retrofitVersion>2.9.0</retrofitVersion>
+        <okhttp>4.10.0</okhttp>
+        <autoValueVersion>1.10.1</autoValueVersion>
+        <!-- SonarQube Config -->
+        <sonar.organization>patrickfav</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.language>java</sonar.language>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>jcenter</name>
-            <url>https://jcenter.bintray.com</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
@@ -43,6 +39,11 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <suppressionFiles>
+                        <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+                    </suppressionFiles>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -66,13 +67,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.2.5</version>
+                <version>4.9.10</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
@@ -105,7 +102,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -132,36 +129,6 @@
             <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.14</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                        <configuration>
-                            <includeDependency>false</includeDependency>
-                            <attachArtifactClassifier>proguard</attachArtifactClassifier>
-                            <attach>true</attach>
-                            <proguardVersion>6.0.3</proguardVersion>
-                            <obfuscate>true</obfuscate>
-                            <options>
-                                <option>-include ${project.basedir}/proguard-rules.pro</option>
-                            </options>
-                            <libs>
-                                <lib>${java.home}/lib/rt.jar</lib>
-                            </libs>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>6.0.3</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -170,7 +137,7 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.24</version>
+                <version>2.1.3</version>
                 <executions>
                     <execution>
                         <id>l4j-clui</id>
@@ -182,7 +149,7 @@
                             <headerType>console</headerType>
                             <outfile>target/dice.exe</outfile>
                             <icon>misc/icon.ico</icon>
-                            <jar>target/dice-${project.version}-proguard.jar</jar>
+                            <jar>target/dice-${project.version}-optimized.jar</jar>
                             <errTitle>dice</errTitle>
                             <classPath>
                                 <mainClass>at.favre.tools.dice.RndTool</mainClass>
@@ -236,17 +203,17 @@
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
-            <version>1.4</version>
+            <version>1.5.0</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.11</version>
+            <version>1.15</version>
         </dependency>
         <dependency>
             <groupId>com.github.fzakaria</groupId>
             <artifactId>ascii85</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
@@ -287,17 +254,17 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>15.0</version>
+            <version>24.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxjava</artifactId>
-            <version>2.2.8</version>
+            <version>2.2.21</version>
         </dependency>
         <dependency>
             <groupId>at.favre.lib</groupId>
             <artifactId>hkdf</artifactId>
-            <version>1.1.0</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>at.favre.lib</groupId>
@@ -320,14 +287,14 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.11</version>
+            <version>1.10.13</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <scm>
-        <connection>https://github.com/patrickfav/dice.git</connection>
-        <developerConnection>https://github.com/patrickfav/dice.git</developerConnection>
+        <connection>scm:git:https://github.com/patrickfav/dice.git</connection>
+        <developerConnection>scm:git:https://github.com/patrickfav/dice.git</developerConnection>
         <tag>HEAD</tag>
         <url>https://github.com/patrickfav/dice</url>
     </scm>
@@ -338,7 +305,7 @@
     </issueManagement>
 
     <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.com/patrickfav/dice</url>
+        <system>Github Actions</system>
+        <url>https://github.com/patrickfav/dice/actions</url>
     </ciManagement>
 </project>
