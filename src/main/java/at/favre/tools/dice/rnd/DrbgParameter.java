@@ -17,7 +17,7 @@
 package at.favre.tools.dice.rnd;
 
 public class DrbgParameter {
-    private static final int MAX_BYTES_PER_SEED = 1024 * 1024 * 1024; //1 MiB - increasing this value wont't enhance bandwidth
+    private static final int MAX_BYTES_PER_SEED = 1024 * 1024 * 1024; //1 MiB - increasing this value won't enhance bandwidth
 
     public final MacFactory macFactory;
     public final int securityStrengthBit;
@@ -35,10 +35,6 @@ public class DrbgParameter {
         this.personalizationString = personalizationString;
         this.reseedAllowed = reseedAllowed;
         this.reseedIntervalByte = reseedIntervalByte;
-    }
-
-    public DrbgParameter(MacFactory macFactory, ExpandableEntropySource entropySource, ExpandableEntropySource nonceSource, byte[] personalizationString, boolean reseedAllowed) {
-        this(macFactory, entropySource, nonceSource, personalizationString, reseedAllowed, MAX_BYTES_PER_SEED);
     }
 
     public DrbgParameter(MacFactory macFactory, ExpandableEntropySource entropySource, ExpandableEntropySource nonceSource, byte[] personalizationString) {

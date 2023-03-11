@@ -6,6 +6,7 @@
 * update various dependencies
 * update to github actions & sonaqube
 * add OWASP dependency checker
+* fix lots of typos and minor bugs
 
 ## v1.6.0
 * use better implementations of Base64 and Hex encoder

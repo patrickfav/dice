@@ -17,7 +17,6 @@
 package at.favre.tools.dice.rnd;
 
 import at.favre.lib.bytes.Bytes;
-import org.jetbrains.annotations.Nullable;
 
 import javax.crypto.Mac;
 import java.util.Arrays;
@@ -26,11 +25,11 @@ import java.util.Arrays;
  * Deterministic Random Bit Generator based on any HMAC implementation available to {@link Mac}
  * <p>
  * Also known as: HMAC_DRBG.
- * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf for thorough specification.
+ * See <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf">NIST.SP.800-90Ar1</a> for thorough specification.
  * <p>
  * Reseeding and additional info is supported.
  * <p>
- * See http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf Section 8.6.8.
+ * See <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf">NIST.SP.800-90Ar1</a> Section 8.6.8.
  */
 public final class HmacDrbg implements DeterministicRandomBitGenerator {
 
@@ -38,9 +37,9 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     private static final int MAX_BYTES_PER_REQUEST = 937;
     private static final byte[] BYTE_ARRAY_0 = {0};
     private static final byte[] BYTE_ARRAY_1 = {1};
-    private final DrbgParameter paramter;
+    private final DrbgParameter parameter;
 
-    // "V" from the the spec.
+    // "V" from the spec.
     private byte[] value;
     // An instance of HMAC configured with "Key" from the spec.
     private Mac hmac;
@@ -59,7 +58,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * @param drbgParameter parameter defining this DRBG
      */
     public HmacDrbg(DrbgParameter drbgParameter) {
-        this.paramter = drbgParameter;
+        this.parameter = drbgParameter;
 
         // HMAC_DRBG Instantiate Process
         // See: http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf 10.1.1.2
@@ -87,16 +86,16 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
         // Note: We are using the 8.6.7 interpretation, where the entropy_input and
         // nonce are acquired at the same time from the same source.
         return Bytes.from(
-                paramter.entropySource.generateEntropy(getSecurityStrengthBytes()),
-                paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2),
-                paramter.personalizationString == null ? new byte[0] : paramter.personalizationString).array();
+                parameter.entropySource.generateEntropy(getSecurityStrengthBytes()),
+                parameter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2),
+                parameter.personalizationString == null ? new byte[0] : parameter.personalizationString).array();
     }
 
     /**
      * Set's the "Key" state from the spec.
      */
     private void initHmac(byte[] key) {
-        hmac = paramter.macFactory.create(key);
+        hmac = parameter.macFactory.create(key);
     }
 
     /**
@@ -125,8 +124,8 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
      * This uses the provided entropy sources as well as an optional additionalInfo
      */
     @Override
-    public void requestReseed(@Nullable byte[] additionalInfo) {
-        hmacDrbgReseed(paramter.entropySource.generateEntropy(getSecurityStrengthBytes()), paramter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
+    public void requestReseed(byte[] additionalInfo) {
+        hmacDrbgReseed(parameter.entropySource.generateEntropy(getSecurityStrengthBytes()), parameter.nonceSource.generateEntropy(getSecurityStrengthBytes() / 2), additionalInfo);
     }
 
     /**
@@ -180,10 +179,10 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
     /**
      * Security Strength in Bits; depending on the used HMAC hash
      *
-     * @return bit length
+     * @return a bit length
      */
     private int getSecurityStrengthBytes() {
-        return paramter.securityStrengthBit / 8;
+        return parameter.securityStrengthBit / 8;
     }
 
     /**
@@ -220,7 +219,7 @@ public final class HmacDrbg implements DeterministicRandomBitGenerator {
             hmacDrbgUpdate(additionalInput);
         }
 
-        if (paramter.reseedAllowed && bytesGenerated + count > paramter.reseedIntervalByte) {
+        if (parameter.reseedAllowed && bytesGenerated + count > parameter.reseedIntervalByte) {
             requestReseed(null);
         }
 

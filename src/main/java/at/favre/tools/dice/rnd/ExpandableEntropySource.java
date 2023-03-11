@@ -17,7 +17,7 @@
 package at.favre.tools.dice.rnd;
 
 /**
- * Interface for a entropy source with arbitrary length
+ * Interface for an entropy source with arbitrary length
  */
 public interface ExpandableEntropySource {
 

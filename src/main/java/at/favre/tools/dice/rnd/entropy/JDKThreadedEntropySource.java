@@ -24,7 +24,7 @@ import java.security.PrivilegedAction;
 
 /**
  * This is a port of the Thread Seed Generator in SUN's SeedGenerator class.
- * It use some faster timings which may make it less secure but the original
+ * It uses some faster timings which may make it less secure but the original
  * implementation is awfully slow (min 250 ms per byte).
  * <p>
  * This is the fallback if neither the personalization nor the secureRandom
@@ -58,7 +58,7 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
         // data and using it to mix the trivial permutation.
         // It should be evenly distributed. The specific values
         // are not crucial to the security of this class.
-        private static byte[] rndTab = {
+        private static final byte[] rndTab = {
                 56, 30, -107, -6, -86, 25, -83, 75, -12, -64,
                 5, -128, 78, 21, 16, 32, 70, -81, 37, -51,
                 -43, -46, -108, 87, 29, 17, -55, 22, -11, -111,
@@ -89,7 +89,7 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
         // Thread group for our threads
         ThreadGroup seedGroup;
         // Queue is used to collect seed bytes
-        private byte[] pool;
+        private final byte[] pool;
         private int start, end, count;
 
         /**
@@ -190,7 +190,7 @@ public final class JDKThreadedEntropySource implements ExpandableEntropySource {
         }
 
         byte getSeedByte() {
-            byte b = 0;
+            byte b;
 
             try {
                 // Wait for it...

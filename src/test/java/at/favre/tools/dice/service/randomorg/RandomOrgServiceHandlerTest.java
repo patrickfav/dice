@@ -23,7 +23,7 @@ public class RandomOrgServiceHandlerTest {
             response.throwable.printStackTrace();
         }
 
-        if (response.throwable != null && response.throwable instanceof UnknownHostException) {
+        if (response.throwable instanceof UnknownHostException) {
             System.out.printf(response.errorMsg);
         } else {
             assertNotNull(response.seed);
@@ -34,7 +34,7 @@ public class RandomOrgServiceHandlerTest {
             assertNotEquals(-1, response.durationNanos);
             assertNotEquals(1, response.response);
             assertNotEquals(0, response.response.hashCode());
-            assertEquals(response.seed.length, ENTROPY_SEED_LENGTH_BIT / 8);
+            assertEquals(ENTROPY_SEED_LENGTH_BIT / 8, response.seed.length);
         }
     }
 
@@ -47,7 +47,6 @@ public class RandomOrgServiceHandlerTest {
 
         assertNotNull(response.toString());
         assertNotEquals(0, response.hashCode());
-        assertEquals(response, response);
         assertNotEquals("muh", response);
     }
 

@@ -43,7 +43,7 @@ public final class ColumnRenderer {
     /**
      * Will take a list and a target count and tries to create even columns
      *
-     * @param targetCount approximate count you want to render (may be filled by the auto algorithm)
+     * @param targetCount approximate count you want to render (maybe filled by the auto algorithm)
      * @param outStream   to write the output to
      * @return the actual used count
      */
@@ -128,7 +128,7 @@ public final class ColumnRenderer {
                             }
 
                         } else {
-                            outStream.write(encoderFormat.asBytes(toFile ? encoderFormat.separatorFile() : encoderFormat.separatorFile()));
+                            outStream.write(encoderFormat.asBytes(encoderFormat.separatorFile()));
                         }
                     } catch (Exception e) {
                         throw new IllegalStateException("could not write random to output stream", e);

@@ -68,7 +68,7 @@ public final class RandomOrgServiceHandler extends AServiceHandler {
             final RandomOrgBlobRequest randomOrgBlobRequest = new RandomOrgBlobRequest(new RandomOrgBlobRequest.Params(k, 1, ENTROPY_SEED_LENGTH_BIT));
 
             Response<String> response = service.getRandom(createHeaderMap(), randomOrgBlobRequest).execute();
-            if (response != null && response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful() && response.body() != null) {
                 String rawResponse = response.body();
                 RandomOrgBlobResponse orgBlobResponse = new Gson().fromJson(rawResponse, RandomOrgBlobResponse.class);
 

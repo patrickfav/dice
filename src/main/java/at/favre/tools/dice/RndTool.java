@@ -88,9 +88,10 @@ public final class RndTool {
             throw new AppException("Count parameter must be greater than 0", 402);
         }
 
-        if ((arguments.count() != null && (arguments.count() * (long) arguments.length() > MAX_BYTE_PER_CALL))
-                || (long) arguments.length() > MAX_BYTE_PER_CALL) {
+        if ((arguments.count() != null && (arguments.count() * (long) arguments.length() > MAX_BYTE_PER_CALL))) {
             throw new AppException("This PRNG can only generate " + MAX_BYTE_PER_CALL + " bytes at once.", 403);
+        } else {
+            arguments.length();
         }
 
         if (arguments.outFile() != null && arguments.outFile().getParentFile() != null
@@ -131,7 +132,7 @@ public final class RndTool {
         }
     }
 
-    private static void wrapInErrorHandling(Arg arguments, Callable r) {
+    private static <T> void wrapInErrorHandling(Arg arguments, Callable<T> r) {
         try {
             r.call();
         } catch (Exception e) {

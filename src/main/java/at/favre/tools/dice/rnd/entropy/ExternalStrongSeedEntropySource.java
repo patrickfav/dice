@@ -24,8 +24,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Used with external seeds that are estimated to be strong. The strong seed will
- * used in quasi directly (only HKDF after each call will be preformed additional to
- * adding an monotonic counter, to generate different outputs each call)
+ * be used in quasi directly (only HKDF after each call will be preformed additional to
+ * adding a monotonic counter, to generate different outputs each call)
  */
 public final class ExternalStrongSeedEntropySource implements ExpandableEntropySource {
     private static final byte[] SALT = new byte[]{0x57, 0x58, 0x6E, (byte) 0x9A, 0x7C, (byte) 0xE4, 0x2E, 0x57, 0x61, 0x07, 0x18, (byte) 0xD9, (byte) 0x90, (byte) 0xFE,
@@ -43,7 +43,7 @@ public final class ExternalStrongSeedEntropySource implements ExpandableEntropyS
     }
 
     private void regenerateInternalSeed(byte[] seed) {
-        if (counter >= Long.MAX_VALUE) {
+        if (counter == Long.MAX_VALUE) {
             throw new IllegalStateException("counter reached max value (2^64)");
         }
 

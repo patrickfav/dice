@@ -62,9 +62,9 @@ public final class PersonalizationSource implements ExpandableEntropySource {
 
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(f.toPath())) {
             // We use a Random object to choose what file names
-            // should be used. Otherwise on a machine with too
+            // should be used. Otherwise, on a machine with too
             // many files, the same first 1024 files always get
-            // used. Any, We make sure the first 512 files are
+            // used. Anyway,we make sure the first 512 files are
             // always used.
             Random r = new Random();
             for (Path entry : stream) {

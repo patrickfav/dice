@@ -33,7 +33,7 @@ import java.security.cert.X509Certificate;
 /**
  * Util for verifying the signature format of random.org's signed request
  * <p>
- * See https://api.random.org/verify/manual
+ * See <a href="https://api.random.org/verify/manual">api.random.org</a>
  */
 final class RandomOrgUtil {
     static final String RANDOM_ORG_PUB_KEY =

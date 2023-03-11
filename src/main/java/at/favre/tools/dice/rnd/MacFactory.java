@@ -64,7 +64,7 @@ public interface MacFactory {
          * Creates a factory creating HMAC with SHA-1
          *
          * @return factory
-         * @deprecated sha1 with HMAC should be fine, but not recommended for new protocols; see https://crypto.stackexchange.com/questions/26510/why-is-hmac-sha1-still-considered-secure
+         * @deprecated sha1 with HMAC should be fine, but not recommended for new protocols; see <a href="https://crypto.stackexchange.com/questions/26510/why-is-hmac-sha1-still-considered-secure">why-is-hmac-sha1-still-considered-secure</a>
          */
         @Deprecated
         public static MacFactory hmacSha1() {

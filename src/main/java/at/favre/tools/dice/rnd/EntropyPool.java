@@ -25,7 +25,7 @@ public interface EntropyPool extends ExpandableEntropySource {
     /**
      * Add new entropy source to the pool
      *
-     * @param source
+     * @param source to add
      */
     void add(ExpandableEntropySource source);
 }

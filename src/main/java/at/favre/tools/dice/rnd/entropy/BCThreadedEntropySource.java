@@ -22,6 +22,7 @@ import at.favre.tools.dice.rnd.ExpandableEntropySource;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Threaded Seed Generator based on the one found in Bouncy Castle implementation

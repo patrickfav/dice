@@ -35,7 +35,7 @@ public interface ServiceHandler<T> {
     Single<Result<T>> asObservable();
 
     /**
-     * Get the user friendly and readable name for this service
+     * Get the user-friendly and readable name for this service
      *
      * @return name
      */

@@ -31,7 +31,7 @@ import java.time.Instant;
  * ANU Quantum Random Numbers Server
  * Quantum true random number generator from Australian university
  * <p>
- * See https://qrng.anu.edu.au/
+ * See <a href="https://qrng.anu.edu.au/">qrng.anu.edu.au</a>
  */
 public final class AnuQuantumServiceHandler extends AServiceHandler {
     static final int ENTROPY_SEED_LENGTH_BYTE = 24;
@@ -58,7 +58,7 @@ public final class AnuQuantumServiceHandler extends AServiceHandler {
 
         try {
             Response<AnuQuantumResponse> response = service.getRandom(createHeaderMap(), ENTROPY_SEED_LENGTH_BYTE).execute();
-            if (response != null && response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful() && response.body() != null) {
                 byte[] rawResponse = Bytes.parseHex(response.body().data.get(0)).array();
                 return new Result<>(getName(), rawResponse, response.body(), Duration.between(startTime, Instant.now()).toNanos());
             }
