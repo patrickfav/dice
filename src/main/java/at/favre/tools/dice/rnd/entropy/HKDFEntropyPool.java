@@ -16,7 +16,7 @@
 
 package at.favre.tools.dice.rnd.entropy;
 
-import at.favre.lib.crypto.HKDF;
+import at.favre.lib.hkdf.HKDF;
 import at.favre.tools.dice.rnd.EntropyPool;
 import at.favre.tools.dice.rnd.ExpandableEntropySource;
 
