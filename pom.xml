@@ -19,6 +19,12 @@
         <retrofitVersion>2.9.0</retrofitVersion>
         <okhttp>4.10.0</okhttp>
         <autoValueVersion>1.10.1</autoValueVersion>
+        <!-- SonarQube Config -->
+        <sonar.organization>patrickfav</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <build>
@@ -282,8 +288,8 @@
     </dependencies>
 
     <scm>
-        <connection>https://github.com/patrickfav/dice.git</connection>
-        <developerConnection>https://github.com/patrickfav/dice.git</developerConnection>
+        <connection>scm:git:https://github.com/patrickfav/dice.git</connection>
+        <developerConnection>scm:git:https://github.com/patrickfav/dice.git</developerConnection>
         <tag>HEAD</tag>
         <url>https://github.com/patrickfav/dice</url>
     </scm>
@@ -294,7 +300,7 @@
     </issueManagement>
 
     <ciManagement>
-        <system>Travis</system>
-        <url>https://travis-ci.com/patrickfav/dice</url>
+        <system>Github Actions</system>
+        <url>https://github.com/patrickfav/dice/actions</url>
     </ciManagement>
 </project>

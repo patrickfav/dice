@@ -2,9 +2,11 @@
 
 A cryptographically secure pseudo-random number generator [CLI](https://en.wikipedia.org/wiki/Command-line_interface) tool which generates byte arrays with entropy from the best random source from your machine* optionally externally seeded by multiple true random number generators and supports various [byte-to-text encodings](https://en.wikipedia.org/wiki/Binary-to-text_encoding) like [hex](https://en.wikipedia.org/wiki/Hexadecimal#Transfer_encoding) or [base64](https://en.wikipedia.org/wiki/Base64) and for many programming languages. The output may be printed to the command line or to a file. This implementation uses the HMAC Deterministic Random Bit Generator (DRBG) schema as defined in [NIST](https://www.nist.gov/)  [SP800-90Ar1](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf).
 
- [![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
-[![Build Status](https://travis-ci.com/patrickfav/dice.svg?branch=master)](https://travis-ci.com/patrickfav/dice)
-[![Coverage Status](https://coveralls.io/repos/github/patrickfav/dice/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/dice?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/1de38f9649402c750053/maintainability)](https://codeclimate.com/github/patrickfav/dice/maintainability)
+[![GitHub release](https://img.shields.io/github/release/patrickfav/dice.svg)](https://github.com/patrickfav/dice/releases/latest)
+[![Github Actions](https://github.com/patrickfav/dice/actions/workflows/build.yml/badge.svg)](https://github.com/patrickfav/dice/actions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_dice&metric=coverage)](https://sonarcloud.io/summary/new_code?id=patrickfav_dice)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_dice&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=patrickfav_dice)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_dice&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=patrickfav_dice)
 
 <sup>* depending on the used [provider](https://docs.oracle.com/javase/8/docs/technotes/guides/security/SunProviders.html#SecureRandomImp)</sup>
 
@@ -333,7 +335,7 @@ the plugin versions aswell as providing the checkstyle config rules. Specificall
 * Java 8
 * Maven
 * rxjava2, apache-commons-codec, apache-commons-cli, Retrofit 2
-* Errorprone, Proguard, Launch4j, Jar Signing
+* Proguard, Launch4j, Jar Signing
 
 # Credits
 
