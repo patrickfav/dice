@@ -159,7 +159,7 @@ public class CompressionTest {
                 System.out.println(getPaddedString(result.name, defPadding) + "\t" +
                         getPaddedNumber(result.encodedSizeBytes, defPadding) + "\t" +
                         getPaddedNumber(result.differenceEncoded, defPadding / 2) + "\t" +
-                        getPaddedNumber(result.differenceEncoded * 100 / result.encodedCompressedSizeBytes, 4) + "%\t" +
+                        getPaddedNumber(result.differenceEncoded * 100 / result.encodedSizeBytes, 4) + "%\t" +
                         getPaddedNumber(result.encodedCompressedSizeBytes, defPadding) + "\t" +
                         getPaddedNumber(result.differeneceEncodedCompressed, defPadding / 2) + "\t" +
                         getPaddedNumber(result.differeneceEncodedCompressed * 100 / result.encodedCompressedSizeBytes, 4) + "%"
