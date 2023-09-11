@@ -18,7 +18,7 @@
         <commonConfig.jarSign.skip>false</commonConfig.jarSign.skip>
         <retrofitVersion>2.9.0</retrofitVersion>
         <okhttp>4.10.0</okhttp>
-        <autoValueVersion>1.10.1</autoValueVersion>
+        <autoValueVersion>1.10.4</autoValueVersion>
         <!-- SonarQube Config -->
         <sonar.organization>patrickfav</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
